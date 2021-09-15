@@ -1,0 +1,119 @@
+{% extends './base.html' %}
+{% block content %}
+    
+    <div class="container">
+        {% ifequal accion "default" %}
+        <div class="row">
+            <div class="col-8">
+                <h1>Adjetivos</h1>
+                
+                <div class="table-responsive">
+                    <table id="shows" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Adjetivos</th>                                                 
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for adj in adjetivos %}  
+                            <tr>
+                                <td> {{adj.id}}</td>
+                                <td> {{adj.nombre}}</td>
+                                <td><span data-placement="top" data-toggle="tooltip" title="Editar">
+                                        <a href="/adjetivo/{{adj.id}}/edit" class="btn btn-primary btn-xs" data-title="view" data-toogle="modal" data-target="#view">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>                                   
+                                    </span>
+                                    <span data-placement="top" data-toggle="tooltip" title="Delete">
+                                        <a href="#" data-href="/adjetivo/{{adj.id}}/destroy" class="btn btn-primary btn-xs" data-title="view" data-bs-toggle="modal" data-bs-target="#confirm-delete">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>                                   
+                                    </span>
+                                </td>
+                            </tr>       
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <a href="/adjetivo/new">Agregar Adjetivo</a>
+            </div>
+        </div>
+        {% endifequal %}
+
+        {% ifequal accion "new" %}
+        <div class="row">
+            <div class="col-8">
+                <h1>Nuevo Adjetivo</h1>
+                <form method="POST" action="/adjetivo/new"> 
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingAdj" placeholder="Adjetivo" name="adjetivo">
+                        <label for="floatingAdj">Adjetivo </label>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <a href="/adjetivo/" class="btn btn-danger">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endifequal %}
+        {% ifequal accion "edit" %}
+        <div class="row">
+            <div class="col-8">
+                <h1>Modificar Categoria: {{cat.nombre}}</h1>
+                <form method="POST" action="/adjetivo/{{adj.id}}/edit"> 
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingAdj" placeholder="Adjetivo" name="adjetivo" value="{{adj.nombre}}">
+                        <label for="floatingAdj">Adjetivo </label>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        {% endifequal %}
+    </div>
+    
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    Esta seguro que desea eliminar este registro?
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a class="btn btn-danger btn-ok">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $(document).ready(function() {
+        var oTblReport = $('#shows')
+        oTblReport.DataTable({
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
+            "iDisplayLength":5
+        });
+    });
+
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });     
+</script>
+{% endblock %}

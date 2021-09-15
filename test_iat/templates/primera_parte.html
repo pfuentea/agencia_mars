@@ -1,0 +1,65 @@
+{% extends './base.html' %}
+{% block content %}
+
+<style>
+    .oculto{
+        position: absolute;
+        left:-200px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col-6  text-center">
+            <h1>1ra Parte</h1>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-6 text-center">
+            <h2>Estimulo 1</h2>
+        </div>
+        <div class="col-6 text-center">
+            <h2>Estimulo 2</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col-6  text-center">
+            <h2>Variable-imagen</h2>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col-6  text-center">
+            <a href="paso2" class="btn btn-primary">SIGUIENTE </a>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+
+<form action="">
+    <input type="hidden" value="milisegundos">
+</form>
+
+
+<div id="resultado">
+</div>
+<div class="oculto">
+    <input type="text" id="escribe" >
+</div>
+
+{% load static %}
+<script  src="{% static 'js/tiempo.js' %}"></script>>
+</script> 
+{% endblock %}
