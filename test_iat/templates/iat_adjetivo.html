@@ -1,0 +1,46 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <h1>ADD ADJETIVO </h1>
+            <h3>Test : {{iat.nombre}} </h3>
+            <h3>Caracteristica : {{car.caracteristica.nombre}}</h3>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            Adjetivo 1
+        </div>
+        <div class="col-4">
+            Adjetivo 2
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            {{adj1.nombre}}:({{adj1.id}})
+        </div>
+        <div class="col-4">
+            {{adj2.nombre}}:({{adj2.id}})
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <form action="/iat/adjetivo/add/{{car.id}}" method="POST">
+                {% csrf_token %}
+                <select name="adj_id" id="adj_id">
+                    <option value="">Seleccione un adjetivo</option>
+                    {% for a in adjs_list %}
+                    <option value="{{a.id}}">{{a.nombre}}</option>
+                    {% endfor %}
+                    <option value="otro">Agregar nuevo adjetivo</option>
+                </select>
+                <input type="text" name="new_adj" id="new_adj">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Agregar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

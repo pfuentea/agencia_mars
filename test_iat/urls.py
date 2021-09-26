@@ -33,8 +33,17 @@ urlpatterns = [
     path('adjetivo/<int:adj_id>/edit', views.adjetivo_edit),
     path('adjetivo/<int:adj_id>/destroy', views.adjetivo_destroy), 
     # creacion de test
+    path('iat/', views.iat ), 
+    path('iat/new', views.iat_new), 
+    path('iat/<int:iat_id>/edit', views.iat_edit), 
+    path('iat/<int:iat_id>/destroy', views.iat_destroy),
+    path('iat/<int:iat_id>', views.iat_detalle ), 
+    
     ### analisis categoria 
-    path('config/init', views.config_init), 
-    path('config/cat', views.config_cat), 
+    path('iat/categoria/add/<int:iat_id>', views.iat_add_cat),
+    path('iat/caracteristica/add/<int:iat_id>', views.iat_add_car),
+    path('iat/caracteristica/remove/<int:iat_id>', views.iat_rem_car),
+    path('iat/adjetivo/add/<int:car_id>', views.iat_add_adj),
+
     
 ]

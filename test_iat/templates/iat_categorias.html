@@ -1,0 +1,37 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2>Cliente: {{iat.cliente.nombre}}</h2>
+            <h2>Nombre: {{iat.nombre}}</h2>
+        </div>
+    </div>
+    <form action="/iat/categoria/add/{{iat.id}}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-8">
+                <label for="categoria" class="form-label">Categoria</label>
+                <select name="categoria" id="categoria">
+                    <option value="">Seleccione una categoria</option>
+                    {% for c in categorias %}
+                        <option value="{{c.id}}">{{c.nombre}}</option>
+                    {% endfor %}
+                    <option value="otro">Nueva Categoria</option>
+                </select>
+                <input type="text" class="form-control" id="categoria_new" name="categoria_new">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 mt-3">
+                <a href="/iat" class="btn btn-outline-success btn-sm">Volver</a>
+                <button type="submit" class="btn btn-outline-primary btn-sm">Agregar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}
