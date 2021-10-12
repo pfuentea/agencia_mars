@@ -3,6 +3,36 @@ from django.shortcuts import render, HttpResponse,redirect
 from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos
 from django.contrib import messages
 from django.db import IntegrityError
+import random
+
+def get_combinaciones_analisis01(iat_id):
+    iat=Test.objects.get(id=iat_id)
+    c=[]
+    if iat.categorias.count() > 0:
+        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
+        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        if tcat.car_cat.count() > 0:
+            car_ids=tcat.car_cat.values_list('caracteristica_id')
+            tcar_ids =tcat.car_cat.values_list('id')
+            i=0
+            for r in car_ids:
+                
+                c_aux=Caracteristica.objects.get(id=r[0])
+                tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                if tcar.adj_car.count() > 0:
+                    adj=tcar.adj_car.values_list('adjetivo_id')
+                    tadj=tcar.adj_car.values_list('id')
+                    if tcar.adj_car.count() == 1:
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[0][0],"adj2":""})
+                    elif tcar.adj_car.count() == 2:
+                        #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[0][0],"adj2":tadj[1][0]})
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[1][0],"adj2":tadj[0][0]})
+                else: # Caso cuando no tiene adjetivos 
+                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":""})
+                i+=1
+
+    return c
 
 def index(request):
     context = {
@@ -12,12 +42,19 @@ def index(request):
 
 
 def test(request,test_id):
+    #inicio del test, generamos las combinaciones
+    #las metemos en una variable de sesion
+    #generamos un objeto para guardar los resultados
+
     context = {
         'saludo': 'Hola'
     }
     return render(request, 'inicio.html', context)
 
 def paso1(request):
+    #analisis de categoria
+    #a)pedimos 1 combinacion al azar
+    #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
     context = {        
     }
     return render(request, 'primera_parte.html', context)
@@ -386,7 +423,7 @@ def iat_detalle(request,iat_id):
     categoria="vacio"
     cars=[]
     tcat=[]
-    if iat.categorias.count() >0:
+    if iat.categorias.count() > 0:
         tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
         categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
         result=tcat.car_cat.values_list('caracteristica_id')
@@ -394,10 +431,14 @@ def iat_detalle(request,iat_id):
         i=0
         for r in result:
             c_aux=Caracteristica.objects.get(id=r[0])
-            caract.append({"id": result2[i][0],"nombre":c_aux.nombre})
+            tcar=Tcaracteristicas.objects.get(id=result2[i][0])
+            n_adj=tcar.adj_car.count()
+            caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
             i+=1
             
         cars=Caracteristica.objects.all()
+
+        combinaciones=get_combinaciones_analisis01(iat_id)
 
     context={
         "iat":iat,
@@ -405,7 +446,8 @@ def iat_detalle(request,iat_id):
         "categoria": categoria,
         "tcat": tcat,
         "caract": caract,
-        "cars": cars
+        "cars": cars,
+        "combinaciones":combinaciones
     }
     return render(request, 'iat.html', context)
 
@@ -423,6 +465,8 @@ def iat_add_car(request,iat_id):
     else:
         caract=Caracteristica.objects.get(id=request.POST['car']) 
     #agregamos la caract a la categoria
+    #tcat.car_cat.nombre
+
 
     new_car=Tcaracteristicas.objects.create(caracteristica=caract,categoria=tcat)
     messages.success(request,f'Caracteristica agregada exitosamente!')
@@ -441,21 +485,21 @@ def iat_add_adj(request,car_id):
         tcar=Tcaracteristicas.objects.get(id=car_id)
         iat=tcar.categoria.test
         adjs_list=Adjetivo.objects.all()
-        adj1="Sin asignar"
-        adj2="Sin asignar"
+        adj1={"nombre":"Sin asignar","id":-1}
+        adj2={"nombre":"Sin asignar","id":-1}
         #aca cuento los adjetivos que ya existen
         n_adj=tcar.adj_car.count()
         result=tcar.adj_car.values_list('adjetivo')
-        #result2 =tcar.adj_car.values_list('id')
+        result2 =tcar.adj_car.values_list('id')
 
         if n_adj == 1:
             adjetivo=Adjetivo.objects.get(id=result[0][0])
-            adj1={"nombre":adjetivo.nombre,"id":result[0][0]}
+            adj1={"nombre":adjetivo.nombre,"id":result2[0][0]}
         elif n_adj == 2:
             adjetivo=Adjetivo.objects.get(id=result[0][0])    
-            adj1={"nombre":adjetivo.nombre,"id":result[0][0]}
+            adj1={"nombre":adjetivo.nombre,"id":result2[0][0]}
             adjetivo=Adjetivo.objects.get(id=result[1][0])
-            adj2={"nombre":adjetivo.nombre,"id":adjetivo.id}
+            adj2={"nombre":adjetivo.nombre,"id":result2[1][0]}
         # if tcar
         context={
             "car":tcar,
@@ -466,8 +510,6 @@ def iat_add_adj(request,car_id):
         }
         return render(request, 'iat_adjetivo.html', context)
     if request.method=='POST':
-        adj1="Sin asignar"
-        adj2="Sin asignar"
         
         tcar=Tcaracteristicas.objects.get(id=car_id)
         n_adj=tcar.adj_car.count()
@@ -488,5 +530,9 @@ def iat_add_adj(request,car_id):
 
         return redirect('/iat/adjetivo/add/'+str(car_id))
         
-        
+def iat_rem_adj(request,adj_id):
+    car_id= request.GET['car_id']
+    target=Tadjetivos.objects.get(id=adj_id)
+    target.delete()
+    return redirect('/iat/adjetivo/add/'+str(car_id))
 

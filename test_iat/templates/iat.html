@@ -126,63 +126,92 @@
         </div>
     </div>
     {% endifequal %}
-    {% ifequal accion "detalle" %}
-    <div class="row">
-        <div class="col-8">
-            <h3>Cliente : {{iat.cliente.nombre}}</h3>
-            <h3>Nombre Test : {{iat.nombre}}</h3>
-            <h4>Categoria : 
-                {{categoria.nombre}}
-                {% if categoria == "vacio" %}
-                <a href="/iat/categoria/add/{{iat.id}}">ADD CAT</a>
-                {% endif %}
-            </h4>
-            <h4>Caracteristicas :</h4>
-            {% if tcat.car_cat.count > 0 %}
-            
-            
-            <div class="table-responsive">
-                <table id="caracteristicas" class="table table-striped table-bordered" width="100%" >
-                    <thead>
-                        <tr>
-                            <th>Caracteristica</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for t in caract %}  
-                        <tr>
-                            <td> {{t.nombre}}</td>
-                            <td> 
-                                <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{t.id}}">[X]</a> 
-                                <a href="/iat/adjetivo/add/{{t.id}}">add adj</a>
-                            </td>
-                        </tr>  
-                    {% empty %}     
-                    <tr>
-                        <td> No existen caracteristicas asociadas aún</td>
-                        <td> X </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>    
-                </table>
-            </div>
-            {% endif %}
-            <form action="/iat/caracteristica/add/{{iat.id}}" method="POST">
-                {% csrf_token %}
-                <select name="car" id="car">
-                    {% for c in cars %}
-                    <option value="{{c.id}}">{{c.nombre}}</option>
-                    {% endfor %}
-                    <option value="otro">Nueva Caracteristica</option>
-                </select>
-                <input type="text" name="new_car" id="new_car">
-                <button type="submit" class="btn btn-outline-primary">Agregar nueva caracteristica</a>
-            </form>
-            
-        </div>
-    </div>
 
+    {% ifequal accion "detalle" %}
+    <a href="/iat/">Volver al listado</a>
+        <div class="row">
+            <div class="col-8">
+                <h3>Cliente : {{iat.cliente.nombre}}</h3>
+                <h3>Nombre Test : {{iat.nombre}}</h3>
+                <h4>Categoria : 
+                    {{categoria.nombre}}
+                    {% if categoria == "vacio" %}
+                    <a href="/iat/categoria/add/{{iat.id}}">ADD CAT</a>
+                    {% endif %}
+                </h4>
+
+                <h4>Caracteristicas :</h4>
+            </div>
+        </div>
+        {% if tcat.car_cat.count > 0 %}
+        <div class="row">
+            <div class="col-8">
+                <div class="table-responsive">
+                    <table id="caracteristicas" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>Caracteristica</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for t in caract %}  
+                            <tr>
+                                <td> {{t.nombre}}</td>
+                                <td> 
+                                    <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{t.id}}">[Eliminar]</a> 
+                                    <a href="/iat/adjetivo/add/{{t.id}}">Adjetivos({{t.n_adj}})</a>
+                                </td>
+                            </tr>  
+                        {% empty %}     
+                        <tr>
+                            <td> No existen caracteristicas asociadas aún</td>
+                            <td> X </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% elif tcat.car_cat.count == 0 %}
+        <div class="row">
+            <div class="col-8">
+                NO existen aun Caracteristicas
+            </div>
+        </div>
+        {% endif %}
+
+        <form action="/iat/caracteristica/add/{{iat.id}}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-8">
+                    <select name="car" id="car">
+                        {% for c in cars %}
+                        <option value="{{c.id}}">{{c.nombre}}</option>
+                        {% endfor %}
+                        <option value="otro">Nueva Caracteristica</option>
+                    </select>
+                    <input type="text" name="new_car" id="new_car" placeholder="Nueva Caracteristica" class="form-control form-control-sm d-none mt-3" >
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <button type="submit" class="btn btn-outline-primary mt-3">Agregar nueva caracteristica</a>                                    
+            </div>
+        </div>
+        </form>
+        <div class="row">
+            <div class="col-8">
+                <h2>Combinaciones</h2>
+                {% for c in combinaciones %}
+                    <p>{{c}}</p>
+                {% empty %}     
+                    Sin combinaciones
+                {% endfor %}
+            </div>
+        </div>
     {% endifequal %}
 </div>
 
@@ -196,4 +225,16 @@
         });
     });
 </script>
+<script>
+    $('#car').on('change',function(){
+        if ( $(this).val() =='otro' ){
+            $('#new_car').removeClass('d-none');
+            $('#new_car').focus();
+        }
+        else{
+            $('#new_car').addClass('d-none');
+        }
+    })
+</script>
+
 {% endblock %}

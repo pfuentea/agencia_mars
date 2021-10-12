@@ -37,6 +37,8 @@ urlpatterns = [
     path('iat/new', views.iat_new), 
     path('iat/<int:iat_id>/edit', views.iat_edit), 
     path('iat/<int:iat_id>/destroy', views.iat_destroy),
+
+    
     path('iat/<int:iat_id>', views.iat_detalle ), 
     
     ### analisis categoria 
@@ -44,6 +46,7 @@ urlpatterns = [
     path('iat/caracteristica/add/<int:iat_id>', views.iat_add_car),
     path('iat/caracteristica/remove/<int:iat_id>', views.iat_rem_car),
     path('iat/adjetivo/add/<int:car_id>', views.iat_add_adj),
+    path('iat/adjetivo/remove/<int:adj_id>', views.iat_rem_adj),
 
     
 ]

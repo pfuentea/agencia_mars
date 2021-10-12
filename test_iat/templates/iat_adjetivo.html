@@ -20,13 +20,23 @@
     </div>
     <div class="row">
         <div class="col-4">
-            {{adj1.nombre}}:({{adj1.id}})
+            <b>{{adj1.nombre}}
+                {% if adj1.id > 0 %}
+                    <a href="/iat/adjetivo/remove/{{adj1.id}}?car_id={{car.id}}">[Eliminar]</a>
+                   
+                {% endif %}
+            </b>
         </div>
         <div class="col-4">
-            {{adj2.nombre}}:({{adj2.id}})
+            <b>{{adj2.nombre}}
+                {% if adj2.id > 0 %}
+                <a href="/iat/adjetivo/remove/{{adj2.id}}?car_id={{car.id}}">[Eliminar]</a>
+                {% endif %}
+            </b>
         </div>
     </div>
-    <div class="row">
+    {% if adj2.id == -1 %}
+    <div class="row mt-3">
         <div class="col">
             <form action="/iat/adjetivo/add/{{car.id}}" method="POST">
                 {% csrf_token %}
@@ -42,5 +52,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
+    <a href="/iat/{{iat.id}}">Volver a Caracteristicas</a>
 </div>
 {% endblock %}

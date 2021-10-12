@@ -51,3 +51,9 @@ class Tadjetivos(models.Model):
     caracteristica = models.ForeignKey(Tcaracteristicas, related_name="adj_car", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Tproductos(models.Model):
+    producto =models.ForeignKey(Producto, related_name="t_prod", on_delete = models.CASCADE)
+    categoria = models.ForeignKey(Tcategoria, related_name="prod_cat", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
