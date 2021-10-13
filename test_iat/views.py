@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.db import IntegrityError
 import random
 
+# funcion para generar las combinaciones del analisis 1
 def get_combinaciones_analisis01(iat_id):
     iat=Test.objects.get(id=iat_id)
     c=[]
@@ -15,6 +16,7 @@ def get_combinaciones_analisis01(iat_id):
             car_ids=tcat.car_cat.values_list('caracteristica_id')
             tcar_ids =tcat.car_cat.values_list('id')
             i=0
+            pos=0
             for r in car_ids:
                 
                 c_aux=Caracteristica.objects.get(id=r[0])
@@ -23,16 +25,30 @@ def get_combinaciones_analisis01(iat_id):
                     adj=tcar.adj_car.values_list('adjetivo_id')
                     tadj=tcar.adj_car.values_list('id')
                     if tcar.adj_car.count() == 1:
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[0][0],"adj2":""})
+                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1,"adj2":"","tadj1":tadj[0][0],"tadj2":""})
                     elif tcar.adj_car.count() == 2:
                         #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[0][0],"adj2":tadj[1][0]})
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":tadj[1][0],"adj2":tadj[0][0]})
+                        adj1=Adjetivo.objects.get(id=adj[0][0])  
+                        adj2=Adjetivo.objects.get(id=adj[1][0])  
+                        
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
+                        pos+=1
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
+                        pos+=1
                 else: # Caso cuando no tiene adjetivos 
-                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":""})
+                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":"","tadj1":"","tadj2":""})
                 i+=1
 
     return c
+
+def get_combinaciones_analisis02(iat_id):
+    pass
+def get_combinaciones_analisis03(iat_id):
+    pass
+
+def get_combinaciones_analisis04(iat_id):
+    pass
 
 def index(request):
     context = {
@@ -45,6 +61,13 @@ def test(request,test_id):
     #inicio del test, generamos las combinaciones
     #las metemos en una variable de sesion
     #generamos un objeto para guardar los resultados
+    request.session['iat_id']=5
+    request.session['user_id']=1
+    request.session['analisis01']=get_combinaciones_analisis01(5)
+    request.session['analisis02']=get_combinaciones_analisis02(5)
+    request.session['analisis03']=get_combinaciones_analisis03(5)
+    request.session['analisis04']=get_combinaciones_analisis04(5)
+    
 
     context = {
         'saludo': 'Hola'
@@ -54,12 +77,31 @@ def test(request,test_id):
 def paso1(request):
     #analisis de categoria
     #a)pedimos 1 combinacion al azar
-    #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
-    context = {        
-    }
-    return render(request, 'primera_parte.html', context)
+    if  len(request.session['analisis01']) > 0 :
+        posicion_azar=random.randint(0, len(request.session['analisis01'])-1)
+        combinacion=request.session['analisis01'].pop(posicion_azar)
+        new_list=request.session['analisis01']
+        request.session['analisis01']=new_list
+    
+    
+        #del request.session['iat'][posicion_azar]
+        #restantes
+        restantes=len(request.session['analisis01'])
+        #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
+        context = {    
+            "restantes":restantes,
+            "posicion_azar":posicion_azar ,
+            "combinacion":combinacion
+        }
+        return render(request, 'primera_parte.html', context)
+    else:
+        return redirect('/test/paso2')
 
 def paso2(request):
+    
+    #se acabo la lista de analisis01 y empezamos con la lista analisis02
+    pass
+
     context = {        
     }
     return render(request, 'segunda_parte.html', context)
@@ -84,7 +126,7 @@ def final(request):
     }
     return render(request, 'final.html', context)
 
-
+## MANTENEDORES
 #CLIENTE
 def cliente(request):
     clientes= Cliente.objects.all()
@@ -235,7 +277,6 @@ def caracteristica(request):
     "accion":'default'
     }
     return render(request, 'caracteristicas.html', context)
-
 
 def caracteristica_new(request):
     if request.method=='GET':

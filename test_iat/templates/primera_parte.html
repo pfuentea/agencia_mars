@@ -13,19 +13,34 @@
         <div class="col">
         </div>
         <div class="col-6  text-center">
-            <h1>1ra Parte</h1>
+            <h1>Analisis de categoria</h1>
         </div>
         <div class="col">
+           
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+           
+        </div>
+        <div class="col-6 text-center">
+            restantes: ({{restantes}}) - posicion:({{posicion_azar}}) - original:({{combinacion.pos}}) <br>
+            <h2>{{combinacion.car}}</h2>
+        </div>
+        <div class="col">
+           
         </div>
     </div>
 
 
     <div class="row">
         <div class="col-6 text-center">
-            <h2>Estimulo 1</h2>
+            <h2>{{combinacion.adj1}}</h2>
+            (e)
         </div>
         <div class="col-6 text-center">
-            <h2>Estimulo 2</h2>
+            <h2>{{combinacion.adj2}}</h2>
+            (i)
         </div>
     </div>
     <div class="row">
@@ -33,6 +48,7 @@
         </div>
         <div class="col-6  text-center">
             <h2>Variable-imagen</h2>
+            
         </div>
         <div class="col">
         </div>
@@ -41,15 +57,23 @@
         <div class="col">
         </div>
         <div class="col-6  text-center">
+            {% if restantes == 0 %}
             <a href="paso2" class="btn btn-primary">SIGUIENTE </a>
+            {% endif %}
         </div>
         <div class="col">
         </div>
     </div>
 </div>
 
-<form action="/" mehtod="POST">
-    <input type="hidden" value="milisegundos">
+<form action="/test/paso1" method="POST" id="form_tiempo" name="form_tiempo">
+    {% csrf_token %}
+    <input type="hidden" name="milisegundos" value="" id="milisegundos">
+    <input type="hidden" name="combinacion" value="{{combinacion.pos}}">
+    <input type="hidden" name="analisis" value="1">
+    <input type="hidden" name="iat_id" value="{{request.session.iat_id}}">
+    <input type="hidden" name="user_id" value="{{request.session.user_id}}">
+    
 </form>
 
 

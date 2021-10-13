@@ -34,14 +34,19 @@ $( document ).ready(function() {
 	
 });
 
+$('body').on('click',function(){
+    console.log('fuera del focus');
+    $('#escribe').focus();
+})
+
 function detener_tiempo(){
     end   =  hrtime ();
-    resultado='Tiempo transcurrido:'+(end-start)+' Milisegundos <br>'
-    $('#resultado').append(resultado)
+    delta=end-start;
+    resultado='Tiempo transcurrido:'+(delta)+' Milisegundos <br>';
+    $('#resultado').append(resultado);
+    $('#milisegundos').val(delta);
     console.log ('start:', start, 'end:', end, 'Diferencia:',end-start);
-    
-
-
+    $('#form_tiempo').submit();
     }
 
 $('.stop-button').on( "click", function() {
