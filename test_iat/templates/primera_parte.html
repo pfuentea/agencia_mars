@@ -73,6 +73,7 @@
     <input type="hidden" name="analisis" value="1">
     <input type="hidden" name="iat_id" value="{{request.session.iat_id}}">
     <input type="hidden" name="user_id" value="{{request.session.user_id}}">
+    <input type="hidden" name="opcion" value="" id="opcion">
     
 </form>
 
@@ -84,6 +85,6 @@
 </div>
 
 {% load static %}
-<script  src="{% static 'js/tiempo.js' %}"></script>>
+<script  src="{% static 'js/tiempo.js' %}"></script>
 </script> 
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.db.models.base import Model
+import re
 
 # Create your models here.
 
@@ -57,3 +58,64 @@ class Tproductos(models.Model):
     categoria = models.ForeignKey(Tcategoria, related_name="prod_cat", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+#estas seran las caracteristicas de un producto
+class Tatributos(models.Model):
+    caracteristica =models.ForeignKey(Caracteristica, related_name="t_atr", on_delete = models.CASCADE)
+    producto = models.ForeignKey(Tproductos, related_name="prod_atr", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class UserManager(models.Manager):
+    def validador_basico(self, postData):
+        EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+        SOLO_LETRAS = re.compile(r'^[a-zA-Z. ]+$')
+
+        errors = {}
+
+        if len(postData['name']) < 3:
+            errors['name_len'] = "Nombre debe tener al menos 3 caracteres de largo"
+
+        if not EMAIL_REGEX.match(postData['email']):
+            errors['email'] = "correo invalido"
+            
+        if not SOLO_LETRAS.match(postData['name']):
+            errors['solo_letras'] = "solo letras en nombre por favor"
+
+        if len(postData['password']) < 8:
+            errors['password'] = "contraseña debe tener al menos 8 caracteres"
+
+        if postData['password'] != postData['password_confirm'] :
+            errors['password_confirm'] = "contraseña y confirmar contraseña no son iguales. "
+
+        return errors
+
+class User(models.Model):
+    CHOICES = (
+        ("user", 'User'),
+        ("admin", 'Admin')
+    )
+    email=models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=100)
+    role = models.CharField(max_length=255, choices=CHOICES)
+    password = models.CharField(max_length=70)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = UserManager()
+
+class Combinacion(models.Model):
+    test = models.ForeignKey(Test, related_name="combinaciones", on_delete = models.CASCADE)
+    participante=models.ForeignKey(User, related_name="combinaciones", on_delete = models.CASCADE)
+    indice=models.IntegerField() # número de generación al iniciar el test
+    analisis=models.IntegerField() # del 1 al 4
+    valor=models.CharField(max_length=500)     
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+        
+
+class Resultado(models.Model):
+    milisegundos = models.FloatField()
+    combinacion=models.ForeignKey(Combinacion, related_name="resultados", on_delete = models.CASCADE)
+    opcion = models.CharField(max_length=2)    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  

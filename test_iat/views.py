@@ -1,6 +1,6 @@
 from django.core.checks import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos
+from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
 from django.contrib import messages
 from django.db import IntegrityError
 import random
@@ -30,8 +30,7 @@ def get_combinaciones_analisis01(iat_id):
                     elif tcar.adj_car.count() == 2:
                         #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
                         adj1=Adjetivo.objects.get(id=adj[0][0])  
-                        adj2=Adjetivo.objects.get(id=adj[1][0])  
-                        
+                        adj2=Adjetivo.objects.get(id=adj[1][0])                         
                         c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
                         pos+=1
                         c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
@@ -54,16 +53,51 @@ def index(request):
     context = {
         'saludo': 'Hola'
     }
+    #Combinacion.objects.all().delete()
+    #Resultado.objects.all().delete()
     return render(request, 'index.html', context)
 
+def login(request):
+    context = {
+        'saludo': 'Hola'
+    }
+    return render(request, 'login.html', context)
+def registro(request):
+    context = {
+        'saludo': 'Hola'
+    }
+    return render(request, 'registro.html', context)
+
+def save_combinaciones(combis,test_id,user_id,analisis_id):
+    test=Test.objects.get(id=test_id)
+    participante=User.objects.get(id=user_id)
+    index=0
+    #revisamos si no existe y si no guardamos
+    c_test=Combinacion.objects.filter(test=test,participante=participante)
+
+
+    if c_test.count()>0:
+        print("combinaciones ya existen para ese test y usuario")
+    else:
+        print("combinaciones no existen para ese test y usuario, se agregan")        
+        for c in combis:
+            #guardamos los registros            
+            Combinacion.objects.create(test=test,participante=participante,indice=index,valor=c,analisis=analisis_id)
+            index+=1
+        print(f"Se guardaron {index} registros ")
+    
 
 def test(request,test_id):
     #inicio del test, generamos las combinaciones
     #las metemos en una variable de sesion
     #generamos un objeto para guardar los resultados
-    request.session['iat_id']=5
-    request.session['user_id']=1
+    t_id=5
+    request.session['iat_id']=t_id
+    #request.session['user_id']=1
     request.session['analisis01']=get_combinaciones_analisis01(5)
+    
+    save_combinaciones(request.session['analisis01'],t_id,request.session['user_id'],1)
+
     request.session['analisis02']=get_combinaciones_analisis02(5)
     request.session['analisis03']=get_combinaciones_analisis03(5)
     request.session['analisis04']=get_combinaciones_analisis04(5)
@@ -76,6 +110,26 @@ def test(request,test_id):
 
 def paso1(request):
     #analisis de categoria
+    
+    if request.method == "POST":
+        milisegundos=request.POST['milisegundos']
+        combinacion_id=request.POST['combinacion']
+        analisis=request.POST['analisis']
+        opcion=request.POST['opcion']
+        test=Test.objects.get(id=request.POST['iat_id'])
+        user=User.objects.get(id=request.POST['user_id'])        
+        print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #print("combinaciones:")
+        #print(combi.count())
+        for c in combi:
+            print("c:")
+            print(c)
+        #Respuesta
+            res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion)    
+
+
+
     #a)pedimos 1 combinacion al azar
     if  len(request.session['analisis01']) > 0 :
         posicion_azar=random.randint(0, len(request.session['analisis01'])-1)
@@ -480,6 +534,20 @@ def iat_detalle(request,iat_id):
         cars=Caracteristica.objects.all()
 
         combinaciones=get_combinaciones_analisis01(iat_id)
+        participantes=[]
+        for c in iat.combinaciones.all():
+            p={"nombre":c.participante.name,"user_id":c.participante.id}
+            participantes.append(p)
+        
+        participantes=[dict(t) for t in {tuple(d.items()) for d in participantes}]
+        
+        for x in participantes:
+            print(x['nombre'])
+        #resultados=Resultado.objects.filter(combinacion__test=iat)
+        #print(resultados[0].combinacion.participante.name)
+        par=[]
+        
+
 
     context={
         "iat":iat,
@@ -488,7 +556,8 @@ def iat_detalle(request,iat_id):
         "tcat": tcat,
         "caract": caract,
         "cars": cars,
-        "combinaciones":combinaciones
+        "combinaciones":combinaciones,
+        "participantes":participantes
     }
     return render(request, 'iat.html', context)
 
@@ -577,3 +646,13 @@ def iat_rem_adj(request,adj_id):
     target.delete()
     return redirect('/iat/adjetivo/add/'+str(car_id))
 
+def resultado(request,iat_id,user_id):
+    iat=Test.objects.get(id=iat_id)
+    participante=User.objects.get(id=user_id)
+    resultados=Resultado.objects.filter(combinacion__test=iat,combinacion__participante=participante)
+    
+    print(resultado)
+    context={
+        "resultados":resultados
+        }
+    return render(request, 'resultado.html', context)

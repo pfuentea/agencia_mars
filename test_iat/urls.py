@@ -1,8 +1,11 @@
 from django.urls import path
-from . import views
+from . import views,auth
 
 urlpatterns = [
     path('', views.index),
+    path('registro', auth.registro),
+    path('login', auth.login),
+    path('logout', auth.logout),
     #ejecucion
     path('test/<int:test_id>', views.test),
     path('test/paso1', views.paso1),
@@ -48,5 +51,5 @@ urlpatterns = [
     path('iat/adjetivo/add/<int:car_id>', views.iat_add_adj),
     path('iat/adjetivo/remove/<int:adj_id>', views.iat_rem_adj),
 
-    
+    path('iat/resultado/<int:iat_id>/<int:user_id>', views.resultado), 
 ]

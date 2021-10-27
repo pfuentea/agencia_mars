@@ -23,11 +23,11 @@ $( document ).ready(function() {
 	$("#escribe").keydown(function(event){
 		if(event.which==69){
 			$("#parrafo").text("presionó la tecla e");
-			detener_tiempo();
+			detener_tiempo("1");
 			}
 		if(event.which==73){
 			$("#parrafo").text("presionó la tecla i");
-			detener_tiempo();
+			detener_tiempo("2");
 			}	
 		$("#escribe").val("");
 	}); 
@@ -39,13 +39,15 @@ $('body').on('click',function(){
     $('#escribe').focus();
 })
 
-function detener_tiempo(){
+function detener_tiempo(opcion){
     end   =  hrtime ();
     delta=end-start;
     resultado='Tiempo transcurrido:'+(delta)+' Milisegundos <br>';
-    $('#resultado').append(resultado);
+   // $('#resultado').append(resultado);
     $('#milisegundos').val(delta);
-    console.log ('start:', start, 'end:', end, 'Diferencia:',end-start);
+    $('#opcion').val(opcion);
+    //alert("opcion:",opcion)
+    //console.log ('start:', start, 'end:', end, 'Diferencia:',end-start);
     $('#form_tiempo').submit();
     }
 
