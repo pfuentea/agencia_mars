@@ -52,4 +52,6 @@ urlpatterns = [
     path('iat/adjetivo/remove/<int:adj_id>', views.iat_rem_adj),
 
     path('iat/resultado/<int:iat_id>/<int:user_id>', views.resultado), 
+    #iat elecciones
+    path('iat2/', views.iat_elecciones),
 ]

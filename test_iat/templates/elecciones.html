@@ -15,8 +15,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
-                            <th>Cliente</th>   
-                            <th>Creación</th>                                              
+                            <th>Cliente</th>                                                 
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -26,7 +25,6 @@
                             <td> {{iat.id}}</td>
                             <td> {{iat.nombre}}</td>
                             <td> {{iat.cliente.nombre}}</td>
-                            <td> {{iat.created_at}}</td>
                             <td><span data-placement="top" data-toggle="tooltip" title="Editar">
                                     <a href="/iat/{{iat.id}}/edit" class="btn btn-primary btn-xs" data-title="view" data-toogle="modal" data-target="#view">
                                         <i class="bi bi-pencil-fill"></i>
@@ -71,12 +69,6 @@
                                 <option value="{{c.id}}">{{c.nombre}}</option>
                             {% endfor %}
                             <option value="otro">Nuevo Cliente</option>
-                        </select>
-                        <label for="tipo" class="form-label">Tipo</label>
-                        <select name="tipo" id="tipo">
-                            <option value="">Seleccione un tipo</option>                           
-                            <option value="normal">Normal</option>
-                            <option value="elecciones2021">Elecciones 2021</option>
                         </select>
                         <input type="text" class="form-control" id="cliente_nuevo" name="cliente_nuevo">
                     </div>

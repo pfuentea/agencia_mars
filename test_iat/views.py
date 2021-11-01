@@ -443,6 +443,7 @@ def iat_new(request):
         return render(request, 'iat.html', context)
     if request.method == "POST":
         testName=request.POST['testName']
+        tipo=request.POST['tipo']
         if request.POST['cliente']=='otro':
             cliente_nuevo=request.POST['cliente_nuevo']
             target=Cliente.objects.create(nombre=cliente_nuevo)
@@ -451,7 +452,7 @@ def iat_new(request):
             cliente_id=request.POST['cliente']
             target=Cliente.objects.get(id=cliente_id)
     
-        new_iat=Test.objects.create(cliente=target,nombre=testName)
+        new_iat=Test.objects.create(cliente=target,nombre=testName,tipo=tipo)
     
         messages.success(request,f'Creación de nuevo IAT exitoso!')
         return redirect('/iat')
@@ -518,6 +519,8 @@ def iat_detalle(request,iat_id):
     categoria="vacio"
     cars=[]
     tcat=[]
+    combinaciones=[]
+    participantes=[]
     if iat.categorias.count() > 0:
         tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
         categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
@@ -534,7 +537,8 @@ def iat_detalle(request,iat_id):
         cars=Caracteristica.objects.all()
 
         combinaciones=get_combinaciones_analisis01(iat_id)
-        participantes=[]
+
+        
         for c in iat.combinaciones.all():
             p={"nombre":c.participante.name,"user_id":c.participante.id}
             participantes.append(p)
@@ -591,53 +595,104 @@ def iat_rem_car(request,iat_id):
     return redirect('/iat/'+str(iat_id))
 
 def iat_add_adj(request,car_id):
+
     if request.method=='GET':       
         tcar=Tcaracteristicas.objects.get(id=car_id)
         iat=tcar.categoria.test
         adjs_list=Adjetivo.objects.all()
-        adj1={"nombre":"Sin asignar","id":-1}
-        adj2={"nombre":"Sin asignar","id":-1}
-        #aca cuento los adjetivos que ya existen
-        n_adj=tcar.adj_car.count()
-        result=tcar.adj_car.values_list('adjetivo')
-        result2 =tcar.adj_car.values_list('id')
+        #inicializacion de adjetivos
+        adjs=[]
+        adj_totales=[]
+        #cuando es normal tiene 2 opciones
+        if iat.tipo=="normal":
+            #aca cuento los adjetivos que ya existen
+            n_adj=tcar.adj_car.count()
+            result=tcar.adj_car.values_list('adjetivo')
+            result2 =tcar.adj_car.values_list('id')
 
-        if n_adj == 1:
-            adjetivo=Adjetivo.objects.get(id=result[0][0])
-            adj1={"nombre":adjetivo.nombre,"id":result2[0][0]}
-        elif n_adj == 2:
-            adjetivo=Adjetivo.objects.get(id=result[0][0])    
-            adj1={"nombre":adjetivo.nombre,"id":result2[0][0]}
-            adjetivo=Adjetivo.objects.get(id=result[1][0])
-            adj2={"nombre":adjetivo.nombre,"id":result2[1][0]}
+            if n_adj == 1:
+                adjetivo=Adjetivo.objects.get(id=result[0][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[0][0]})
+                adj_totales.append(1)
+            elif n_adj == 2:
+                adjetivo=Adjetivo.objects.get(id=result[0][0])    
+                adjetivo=Adjetivo.objects.get(id=result[1][0])
+            
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[0][0]})
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[1][0]})
+                adj_totales.append(1)
+                adj_totales.append(2)
+        #en el caso de las elecciones son 6
+        if iat.tipo=="elecciones2021":
+            
+            result=tcar.adj_car.values_list('adjetivo')
+            result2 =tcar.adj_car.values_list('id')
+            n_adj=tcar.adj_car.count()
+            if n_adj > 0:
+                adjetivo=Adjetivo.objects.get(id=result[0][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[0][0]})
+                adj_totales.append(1)            
+            if n_adj > 1:
+                adjetivo=Adjetivo.objects.get(id=result[1][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[1][0]}) 
+                adj_totales.append(2)        
+            if n_adj > 2:
+                adjetivo=Adjetivo.objects.get(id=result[2][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[2][0]}) 
+                adj_totales.append(3)
+            if n_adj > 3:
+                adjetivo=Adjetivo.objects.get(id=result[3][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[3][0]}) 
+                adj_totales.append(4)
+            if n_adj > 4:
+                adjetivo=Adjetivo.objects.get(id=result[4][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[4][0]}) 
+                adj_totales.append(5)
+            if n_adj > 5:
+                adjetivo=Adjetivo.objects.get(id=result[5][0])
+                adjs.append({"nombre":adjetivo.nombre,"id":result2[5][0]}) 
+                adj_totales.append(6)
+        #en otro caso puede tener mas     
+        else:
+            pass
+
         # if tcar
         context={
             "car":tcar,
             "iat":iat,
             "adjs_list":adjs_list,
-            "adj1":adj1,
-            "adj2":adj2
+            "adjs":adjs,
+            "adj_totales":adj_totales,
         }
         return render(request, 'iat_adjetivo.html', context)
     if request.method=='POST':
-        
+        print(f"POST:{request.POST['adj_id']}")
         tcar=Tcaracteristicas.objects.get(id=car_id)
         n_adj=tcar.adj_car.count()
         adj_id= request.POST['adj_id']
         adjs_list=Adjetivo.objects.all()
         iat=tcar.categoria.test
-        if n_adj < 2:
+        if iat.tipo=="normal":
+            if n_adj < 2:
+                if adj_id == 'otro':
+                    new_adj=request.POST['new_adj']
+                    adj=Adjetivo.objects.create(nombre=new_adj)
+                    messages.success(request,f'Nuevo adjetivo creado!')
+                else:
+                    adj=Adjetivo.objects.get(id=adj_id)
+                tadj=Tadjetivos.objects.create(adjetivo=adj,caracteristica=tcar)
+                messages.success(request,f'Nuevo adjetivo añadido!')
+            else:
+                messages.warning(request,f'Cantidad de adjetivos máxima alcanzada!')
+        if iat.tipo=="elecciones2021":
             if adj_id == 'otro':
-                new_adj=request.POST['new_adj']
-                adj=Adjetivo.objects.create(nombre=new_adj)
-                messages.success(request,f'Nuevo adjetivo creado!')
+                    new_adj=request.POST['new_adj']
+                    adj=Adjetivo.objects.create(nombre=new_adj)
+                    messages.success(request,f'Nuevo adjetivo creado!')
             else:
                 adj=Adjetivo.objects.get(id=adj_id)
             tadj=Tadjetivos.objects.create(adjetivo=adj,caracteristica=tcar)
             messages.success(request,f'Nuevo adjetivo añadido!')
-        else:
-            messages.warning(request,f'Cantidad de adjetivos máxima alcanzada!')
-
         return redirect('/iat/adjetivo/add/'+str(car_id))
         
 def iat_rem_adj(request,adj_id):
@@ -656,3 +711,10 @@ def resultado(request,iat_id,user_id):
         "resultados":resultados
         }
     return render(request, 'resultado.html', context)
+
+def iat_elecciones(request):
+    
+    context={
+        "accion":"default"
+        }
+    return render(request, 'elecciones.html', context)
