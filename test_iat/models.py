@@ -28,6 +28,9 @@ class Test(models.Model):
     class Meta:
         ordering = ('-created_at',)
 
+    def __str__ (self):
+        return self.nombre
+
 class Caracteristica(models.Model):
     nombre =  models.CharField(max_length=255,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -98,18 +101,49 @@ class UserManager(models.Manager):
 
         return errors
 
+class Region(models.Model):
+    nombre = models.CharField(max_length=100)
+    ordinal = models.CharField(max_length=5)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Provincia(models.Model):
+    nombre = models.CharField(max_length=100)
+    region = models.ForeignKey(Region, related_name="provincias", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Comuna(models.Model):
+    nombre = models.CharField(max_length=100)
+    provincia = models.ForeignKey(Provincia, related_name="comunas", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class User(models.Model):
     CHOICES = (
         ("user", 'User'),
+        ("mars", 'MARS'),
         ("admin", 'Admin')
+    )
+    SEXO = (
+        ("M", 'Masculino'),
+        ("F", 'Femenino'),
+        ("O","Otro"),
+        ("N","Ninguno")
     )
     email=models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=100)
     role = models.CharField(max_length=255, choices=CHOICES)
     password = models.CharField(max_length=70)
+    edad= models.IntegerField(default=0)
+    sexo =  models.CharField(max_length=2, choices=SEXO, default="N")
+    #comuna = models.ForeignKey(Comuna, related_name="pobladores", on_delete = models.CASCADE, default='' )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
+    
+    def __str__ (self):
+        return self.name
 
 class Combinacion(models.Model):
     test = models.ForeignKey(Test, related_name="combinaciones", on_delete = models.CASCADE)
@@ -124,7 +158,22 @@ class Combinacion(models.Model):
 class Resultado(models.Model):
     milisegundos = models.FloatField()
     combinacion=models.ForeignKey(Combinacion, related_name="resultados", on_delete = models.CASCADE)
-    opcion = models.CharField(max_length=2)    
+    opcion = models.CharField(max_length=2)
+    pregunta = models.CharField(max_length=100)
+    respuesta = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  
 
+class Sondeo(models.Model):
+    ESTADOS = (
+        ("A", 'Activo'),
+        ("I", 'Inactivo'),
+        ("R", 'Respondido'),        
+    )
+    test = models.ForeignKey(Test, related_name="sondeos", on_delete = models.CASCADE)
+    participante=models.ForeignKey(User, related_name="sondeos", on_delete = models.CASCADE)
+    estado =  models.CharField(max_length=255, choices=ESTADOS)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  
+
+    

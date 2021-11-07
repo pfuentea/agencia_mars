@@ -11,9 +11,11 @@
                             <th>Participante</th>
                             <th>Milisegundos</th>
                             <th>Analisis</th>
-                            <th>Valores</th>
+                            <th>Pregunta</th>
+                            <th>Respuesta</th>
                             <th>Selección</th>
                             <th>Fecha</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -31,7 +33,10 @@
                                 {{r.combinacion.analisis}}
                             </td>
                             <td>
-                                {{r.combinacion.valor}}
+                                {{r.pregunta}}
+                            </td>
+                            <td>
+                                {{r.respuesta}}
                             </td>
                             <td>
                                 {{r.opcion}}
@@ -39,6 +44,7 @@
                             <td>
                                 {{r.created_at}}
                             </td>
+                            
                         </tr>  
                     {% empty %}     
                     <tr>

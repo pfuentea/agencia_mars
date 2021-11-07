@@ -1,0 +1,87 @@
+{% extends './base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <h2>Sondeos</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+
+            <h3>Activar Sondeos </h3>
+            <form action="/sondeos/activar" method="post">
+                {% csrf_token %}
+                User:
+                <select name="user" id="user">
+                    {% for p in participantes %}
+                        <option value="{{p.id}}">{{p.name}}</option>
+                    {% endfor %}
+                </select>
+                Test:
+                <select name="iat" id="iat">
+                    {% for t in iats %}
+                    <option value="{{t.id}}">{{t.nombre}}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-sm btn-primary" type="submit">Activar</button>
+            </form>
+
+
+        </div>
+    </div>
+    <div class="row">
+      
+        <div class="col-10">
+            <h3>Sondeos Activos</h3>
+            <div class="table-responsive">
+                <table id="caracteristicas" class="table table-striped table-bordered" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Participante</th>
+                            <th>Test</th>
+                            <th>Estado</th>                            
+                            <th>Desactivar</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in sondeos %}  
+                        <tr>
+                            <td>
+                                <a href="/usuario/{{s.participante.id}}">
+                                    {{s.participante.name}}
+                                </a>
+                            </td>
+                            <td>
+                                {{s.test.nombre}}
+                            </td>
+                            <td>
+                                {{s.estado}}
+                            </td>
+                            <td>
+                                <a href="/sondeos/desactivar/{{s.id}}">[X]</a>
+                            </td>                          
+                            
+                        </tr>  
+                    {% empty %}     
+                    <tr>
+                        <td rowspan=3> No existen caracteristicas asociadas aún</td>
+                        
+                    </tr>
+                    {% endfor %}
+                    </tbody>    
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}

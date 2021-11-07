@@ -1,9 +1,11 @@
 from django.core.checks import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
+from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado, Sondeo
 from django.contrib import messages
 from django.db import IntegrityError
 import random
+import json
+from .decorators import login_required 
 
 # funcion para generar las combinaciones del analisis 1
 def get_combinaciones_analisis01(iat_id):
@@ -49,7 +51,10 @@ def get_combinaciones_analisis03(iat_id):
 def get_combinaciones_analisis04(iat_id):
     pass
 
+@login_required
 def index(request):
+    user=User.objects.get(id=request.session['user']['id'])
+    #estudios=Estudios.objects.get(participante=user,activo=1)
     context = {
         'saludo': 'Hola'
     }
@@ -86,7 +91,7 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
             index+=1
         print(f"Se guardaron {index} registros ")
     
-
+@login_required
 def test(request,test_id):
     #inicio del test, generamos las combinaciones
     #las metemos en una variable de sesion
@@ -96,7 +101,7 @@ def test(request,test_id):
     #request.session['user_id']=1
     request.session['analisis01']=get_combinaciones_analisis01(5)
     
-    save_combinaciones(request.session['analisis01'],t_id,request.session['user_id'],1)
+    save_combinaciones(request.session['analisis01'],t_id,request.session['user']['id'],1)
 
     request.session['analisis02']=get_combinaciones_analisis02(5)
     request.session['analisis03']=get_combinaciones_analisis03(5)
@@ -705,8 +710,14 @@ def resultado(request,iat_id,user_id):
     iat=Test.objects.get(id=iat_id)
     participante=User.objects.get(id=user_id)
     resultados=Resultado.objects.filter(combinacion__test=iat,combinacion__participante=participante)
+    #print(resultados)
+    valores=resultados[0].combinacion.valor
+    json_acceptable_string = valores.replace("'", "\"")
+    quest = json.loads(json_acceptable_string)
+    pregunta=quest['car']
     
-    print(resultado)
+    #print(resultados[0].combinacion.valor)
+    #print(resultados.combinacion)
     context={
         "resultados":resultados
         }
@@ -718,3 +729,54 @@ def iat_elecciones(request):
         "accion":"default"
         }
     return render(request, 'elecciones.html', context)
+
+def usuarios(request):
+    users=User.objects.all()
+    context={
+        "accion":"default",
+        "users":users
+        }
+    return render(request, 'usuarios.html', context)
+
+def usuarios_detalle(request,user_id):
+    user=User.objects.get(id=user_id)
+    context={
+        "accion":"detalle",
+        "Usuario":user
+        }
+    return render(request, 'usuarios.html', context)
+
+
+def sondeos(request):
+    if request.method=='POST':
+        test = Test.objects.get(id=request.POST['iat'])
+        user =  User.objects.get(id=request.POST['user'])
+        s=Sondeo.objects.filter(test=test,participante=user)
+        print(f"t:{request.POST['iat']},u:{request.POST['user']}")
+        if len(s) == 0 :
+            sond= Sondeo.objects.create(test=test,participante=user,estado="A")
+            print("nuevo")
+        else:
+            print("existe")
+            result= s.values_list('id')
+            sond=Sondeo.objects.get(id=result[0][0])
+            sond.estado="A"
+            sond.save()
+
+
+    iats= Test.objects.all()
+    participantes=User.objects.all()
+    sondeos_activos=Sondeo.objects.all()
+    context={
+        "accion":"default",
+        "iats":iats,
+        "participantes":participantes,
+        "sondeos":sondeos_activos
+        }
+    return render(request, 'sondeos.html', context)
+
+def sondeos_deactivate(request,s_id):
+    sondeo=Sondeo.objects.get(id=s_id)
+    sondeo.estado='I'
+    sondeo.save()
+    return redirect('/sondeos')

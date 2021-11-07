@@ -19,12 +19,12 @@ def login(request):
             log_user = user[0]
 
             if bcrypt.checkpw(request.POST['password'].encode(), log_user.password.encode()):
-
+                #print(f"Log_user:{log_user.id}")
                 user = {
                     "id" : log_user.id,
-                    "name": f"{log_user}",
+                    "name": f"{log_user.name}",
                     "email": log_user.email,
-                    "role": log_user.role
+                    "role": log_user.role,
                 }
 
                 request.session['user'] = user
@@ -74,7 +74,8 @@ def registro(request):
             request.session['user'] = {
                 "id" : usuario_nuevo.id,
                 "name": f"{usuario_nuevo.name}",
-                "email": usuario_nuevo.email
+                "email": usuario_nuevo.email,
+                "role": usuario_nuevo.role,
             }
             return redirect("/")
 
