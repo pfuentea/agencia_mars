@@ -97,6 +97,7 @@ def elecciones_start(request,iat_id):
     #print(f"user:{request.session['user']['id']}")
 
     validaciones= get_minimo_atributos(request.session['user']['id'])
+    print(f"validaciones:{validaciones}")
     if validaciones > 0:
         #Resultado.objects.all().delete()
         #Combinacion.objects.all().delete()
@@ -105,12 +106,17 @@ def elecciones_start(request,iat_id):
         save_combinaciones(request.session['analisis01'],iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
-        sondeo=sondeos[0]
-        #print(f"S:{sondeo.id}")
-        if sondeo.estado == "A": #en el caso que no lo finalice aun
-            ok=1
-        elif sondeo.estado == "R": #en el caso que lo finalice
+        if len(sondeos)>0:
+            sondeo=sondeos[0]
+            #print(f"Sondeo_id:{sondeo.id}")
+            if sondeo.estado == "A": #en el caso que no lo finalice aun
+                ok=1
+            elif sondeo.estado == "R": #en el caso que lo finalice
+                ok=2
+        elif len(sondeos) == 0:
             ok=2
+        
+        
         context = {
             'saludo': 'Hola',
             "ok":ok,
