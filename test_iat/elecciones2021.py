@@ -80,8 +80,6 @@ def elecciones_start(request,iat_id):
     iat=Test.objects.get(id=iat_id)
     user=User.objects.get(id=request.session['user']['id'])
 
-
-
     if request.method == "POST":
         sexo=request.POST['sexo']
         edad=request.POST['edad']
@@ -108,6 +106,7 @@ def elecciones_start(request,iat_id):
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
         if len(sondeos)>0:
             sondeo=sondeos[0]
+            request.session['sondeo_id']=sondeo.id
             #print(f"Sondeo_id:{sondeo.id}")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
