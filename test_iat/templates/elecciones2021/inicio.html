@@ -40,6 +40,10 @@
                     <option value="M">Masculino</option>
                     <option value="O">Otro</option>
                 </select>
+                Comuna:
+                <input type="text" name="comuna" id="comuna" value="{% if comuna_ok == 1 %} {{comuna}} {% endif %}">
+                Ciudad:
+                <input type="text" name="ciudad" id="ciudad" value="{% if ciudad_ok == 1 %} {{ciudad}} {% endif %}">
                 <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
             </div>
         </div>

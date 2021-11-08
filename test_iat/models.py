@@ -148,12 +148,14 @@ class User(models.Model):
     edad= models.IntegerField(default=0)
     sexo =  models.CharField(max_length=2, choices=SEXO, default="N")
     #comuna = models.ForeignKey(Comuna, related_name="pobladores", on_delete = models.CASCADE, default='' )
+    comuna =  models.CharField(max_length=70,default="")
+    ciudad =  models.CharField(max_length=70,default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = UserManager()
     
     def __str__ (self):
-        return self.name
+        return f"{self.name} ({self.id})"
 
 class Combinacion(models.Model):
     test = models.ForeignKey(Test, related_name="combinaciones", on_delete = models.CASCADE)

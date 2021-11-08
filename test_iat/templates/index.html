@@ -35,9 +35,24 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-10">
-                        Para continuar, solicitamos que ingrese su correo:
-                        <input type="email" name="email" id="email">
-                        <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
+                        Para continuar, solicitamos que ingrese su nombre y correo:<br>
+                        <div class="row">
+                            <div class="col-2">
+                                <label for="nombre" class="form-label">Nombre:</label>                               
+                            </div>
+                            <div class="col">
+                                <input type="text" name="nombre" id="nombre">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2"> <label for="email" class="form-label">Email:</label></div>
+                            <div class="col"> <input type="email" name="email" id="email"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 d-flex justify-content-center">
+                                <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

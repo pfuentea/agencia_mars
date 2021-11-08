@@ -56,8 +56,11 @@ def index(request):
     invitado_antiguo=0
     if request.method == "POST":
         email=request.POST['email']
+        nombre=request.POST['nombre']
+        if nombre =="":
+            nombre="Invitado"
         try:
-            new_user=User.objects.create(email=email,name="Invitado",role='guest')
+            new_user=User.objects.create(email=email,name=nombre,role='guest')
             user = {
                     "id" : new_user.id,
                     "name": f"{new_user.name}",
@@ -68,25 +71,48 @@ def index(request):
             request.session['user'] = user
         except IntegrityError:
             invitado_antiguo=1
-        
+            result=User.objects.filter(email=email)
+            new_user=result[0]
+            #print(f"EMAIL:{new_user.email}")
+            user = {
+                    "id" : new_user.id,
+                    "name": f"{new_user.name}",
+                    "email": new_user.email,
+                    "role": new_user.role,
+                }
+
+            request.session['user'] = user
 
     #print("INDEX")
     invitado_nuevo=1
     if "user" not in request.session:
-        print("INVITADO!")
+        print("INVITADO NUEVO!")
         #le pedimos su Correo, a menos que sea antiguo, en ese caso no
     else:
-        user=User.objects.get(id=request.session['user']['id'])
+        #usuario=User.objects.get(id=request.session['user']['id'])
+        print("INVITADO ANTIGUO!")
         invitado_nuevo=0
     
+    #revisamos si puede hacer el sondeo
+    if invitado_antiguo == 1:
+        iat=Test.objects.get(id=8)
+        s=Sondeo.objects.filter(test=iat , participante=new_user)
+        if len(s)==0:
+            invitado_antiguo=0
+            invitado_nuevo=0
+            print("NO TIENE SONDEO!")
+        else:
+            print("TIENE SONDEO!")
+
     #estudios=Estudios.objects.get(participante=user,activo=1)
+    #print("viene el ctx!")
     context = {
-        'saludo': 'Hola',
         'invitado_nuevo':invitado_nuevo,
-        'invitado_antiguo': invitado_antiguo
+        'invitado_antiguo': invitado_antiguo,
     }
     #Combinacion.objects.all().delete()
     #Resultado.objects.all().delete()
+    #print("viene el render!")
     return render(request, 'index.html', context)
 
 def login(request):

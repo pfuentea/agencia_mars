@@ -60,13 +60,18 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
 
 def get_minimo_atributos(user_id):
     u=User.objects.get(id=user_id)
-    resultado=-1
+    resultado=-3
     if u.edad > 0:
         resultado+=1
 
     if u.sexo != "N":
         resultado+=1
+
+    if u.comuna != "":
+        resultado+=1
     
+    if u.ciudad != "":
+        resultado+=1
     #print(f"edad:{u.edad},sexo:{u.sexo}")
     #if u.comuna != "":
     #    resultado+=1
@@ -79,13 +84,23 @@ def get_minimo_atributos(user_id):
 def elecciones_start(request,iat_id):
     iat=Test.objects.get(id=iat_id)
     user=User.objects.get(id=request.session['user']['id'])
-
+    print("Elecciones_start!")
+    comuna_ok=0
+    ciudad_ok=0
     if request.method == "POST":
-        sexo=request.POST['sexo']
-        edad=request.POST['edad']
+        sexo = request.POST['sexo']
+        edad = request.POST['edad']
+        comuna = request.POST['comuna']
+        ciudad = request.POST['ciudad']
         #user=User.objects.get(id=request.session['user']['id'])
+        if len(comuna) >0:
+            comuna_ok=1
+        if len(ciudad) >0:
+            ciudad_ok=1
         user.sexo=sexo
         user.edad=edad
+        user.comuna=comuna
+        user.ciudad=ciudad
         user.save()
         #dejamos el sondeo activo
         s=Sondeo.objects.create(test=iat, participante=user,estado="A")
@@ -107,7 +122,7 @@ def elecciones_start(request,iat_id):
         if len(sondeos)>0:
             sondeo=sondeos[0]
             request.session['sondeo_id']=sondeo.id
-            #print(f"Sondeo_id:{sondeo.id}")
+            print(f"Sondeo_id:{sondeo.id}")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
             elif sondeo.estado == "R": #en el caso que lo finalice
@@ -119,14 +134,22 @@ def elecciones_start(request,iat_id):
         context = {
             'saludo': 'Hola',
             "ok":ok,
-            "iat_id": iat_id
+            "iat_id": iat_id,
+            "comuna_ok":comuna_ok,
+            "ciudad_ok":ciudad_ok,
+            "comuna":comuna,
+            "ciudad":ciudad
         }
         
     else:
         context = {
             'saludo': 'Hola',
             "ok":0,
-            "iat_id": iat_id
+            "iat_id": iat_id,
+            "comuna_ok":comuna_ok,
+            "ciudad_ok":ciudad_ok,
+            "comuna":comuna,
+            "ciudad":ciudad
         }
     return render(request, './elecciones2021/inicio.html', context)
 
