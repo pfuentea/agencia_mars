@@ -51,12 +51,39 @@ def get_combinaciones_analisis03(iat_id):
 def get_combinaciones_analisis04(iat_id):
     pass
 
-@login_required
+
 def index(request):
-    user=User.objects.get(id=request.session['user']['id'])
+    invitado_antiguo=0
+    if request.method == "POST":
+        email=request.POST['email']
+        try:
+            new_user=User.objects.create(email=email,name="Invitado",role='user')
+            user = {
+                    "id" : new_user.id,
+                    "name": f"{new_user.name}",
+                    "email": new_user.email,
+                    "role": new_user.role,
+                }
+
+            request.session['user'] = user
+        except IntegrityError:
+            invitado_antiguo=1
+        
+
+    #print("INDEX")
+    invitado_nuevo=1
+    if "user" not in request.session:
+        print("INVITADO!")
+        #le pedimos su Correo, a menos que sea antiguo, en ese caso no
+    else:
+        user=User.objects.get(id=request.session['user']['id'])
+        invitado_nuevo=0
+    
     #estudios=Estudios.objects.get(participante=user,activo=1)
     context = {
-        'saludo': 'Hola'
+        'saludo': 'Hola',
+        'invitado_nuevo':invitado_nuevo,
+        'invitado_antiguo': invitado_antiguo
     }
     #Combinacion.objects.all().delete()
     #Resultado.objects.all().delete()
@@ -91,7 +118,7 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
             index+=1
         print(f"Se guardaron {index} registros ")
     
-@login_required
+
 def test(request,test_id):
     #inicio del test, generamos las combinaciones
     #las metemos en una variable de sesion

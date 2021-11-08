@@ -14,21 +14,49 @@
             estudio IAT de Elecciones Presidenciales 2021, este estudio busca medir las asociaciones implícitas entre los diferentes conceptos tratados y los candidatos políticos presentes en la papeleta 2021.
         </div>
     </div>
-    <div class="row">
-        <div class="col-10 mb-4">
-            A continuación se presentara un concepto o tema y usted deberá elegir haciendo 
-            click sobre la foto del candidato presidencial que usted considera que lo hará mejor o asocia mas a ese atributo o concepto.
-        </div>
+        {% if invitado_antiguo == 0 %}
+            <div class="row">
+                <div class="col-10 mb-4">
+                    <h4>
+                        A continuación se presentara un concepto o tema y usted deberá elegir haciendo 
+                        click sobre la foto del candidato presidencial que usted considera que lo hará mejor o asocia mas a ese atributo o concepto.
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-10">
+                    <h4>
+                        Agencia Mars – Proyecto Implícita
+                    </h4>
+                </div>
+            </div>
+            {% if invitado_nuevo == 1 %}
+            <form method="post" action="/">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-10">
+                        Para continuar, solicitamos que ingrese su correo:
+                        <input type="email" name="email" id="email">
+                        <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        {% endif %}
+    {% if invitado_antiguo == 0 %}    
     </div>
-    <div class="row">
-        <div class="col-10">
-            <h4>
-                Agencia Mars – Proyecto Implícita
-            </h4>
+        {% if invitado_nuevo == 0 %}
+        <div class="text-center">
+            <a href="/elecciones2021/start/8" class="btn btn-primary btn-sm">Comenzar el test</a>
         </div>
+        {% endif %}
+    {% endif %}
+    {% if invitado_antiguo == 1 %}  
+    <div class="text-center">
+        <p class="text-info bg-dark">
+            Usted ya ha respondido este estudio. Le agradecemos que lo haya hecho y pronto lo invitaremos a nuevos estudios.
+        </p>
     </div>
-</div>
-<div class="text-center">
-    <a href="/elecciones2021/start/8" class="btn btn-primary btn-sm">Comenzar el test</a>
-</div>
+    {% endif %}
+    
 {% endblock %}
