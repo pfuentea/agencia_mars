@@ -5,7 +5,7 @@ def login_required(function):
 
     def wrapper(request, *args, **kwargs):
         if 'user' not in request.session:
-            return redirect('/login')
+            return redirect('/')
         resp = function(request, *args, **kwargs)
         return resp
     

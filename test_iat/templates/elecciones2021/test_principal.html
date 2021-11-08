@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    {% if request.session.user.role != "user" %}
+    {% if request.session.user.role == "admin" %}
     <div class="row">
         <div class="col">
            
@@ -83,7 +83,7 @@
         <div class="col">
         </div>
         <div class="col-6  text-center">
-            {% if restantes == 0 %}
+            {% if restantes < 0 %}
             <a href="paso2" class="btn btn-primary">SIGUIENTE </a>
             {% endif %}
         </div>

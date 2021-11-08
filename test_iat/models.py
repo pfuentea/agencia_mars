@@ -132,6 +132,7 @@ class User(models.Model):
     CHOICES = (
         ("user", 'User'),
         ("mars", 'MARS'),
+         ("guest", 'Invitado'),
         ("admin", 'Admin')
     )
     SEXO = (

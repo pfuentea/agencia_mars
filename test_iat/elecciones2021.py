@@ -189,6 +189,8 @@ def elecciones_end(request):
     sondeo=Sondeo.objects.get(id=request.session['sondeo_id'])
     sondeo.estado='R'
     sondeo.save()
+    if 'user' in request.session:
+        del request.session['user']
     context = {    
         }
     return render(request, 'elecciones2021/final.html', context)

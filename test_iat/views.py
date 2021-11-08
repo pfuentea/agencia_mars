@@ -57,7 +57,7 @@ def index(request):
     if request.method == "POST":
         email=request.POST['email']
         try:
-            new_user=User.objects.create(email=email,name="Invitado",role='user')
+            new_user=User.objects.create(email=email,name="Invitado",role='guest')
             user = {
                     "id" : new_user.id,
                     "name": f"{new_user.name}",
