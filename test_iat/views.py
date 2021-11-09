@@ -99,6 +99,7 @@ def index(request):
     #revisamos si puede hacer el sondeo
     if invitado_antiguo == 1:
         iat=Test.objects.get(id=8)
+        print(f"participante:{new_user.name}")
         s=Sondeo.objects.filter(test=iat , participante=new_user)
         if len(s)==0:
             invitado_antiguo=0

@@ -87,6 +87,8 @@ def elecciones_start(request,iat_id):
     print("Elecciones_start!")
     comuna_ok=0
     ciudad_ok=0
+    comuna=""
+    ciudad=""
     if request.method == "POST":
         sexo = request.POST['sexo']
         edad = request.POST['edad']
