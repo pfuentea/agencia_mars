@@ -54,6 +54,9 @@ def get_combinaciones_analisis04(iat_id):
 
 def index(request):
     invitado_antiguo=0
+    if request.method == "GET":
+        if 'user' in request.session:
+            del request.session['user']
     if request.method == "POST":
         email=request.POST['email']
         nombre=request.POST['nombre']
@@ -101,6 +104,7 @@ def index(request):
             invitado_antiguo=0
             invitado_nuevo=0
             print("NO TIENE SONDEO!")
+
         else:
             print("TIENE SONDEO!")
 
