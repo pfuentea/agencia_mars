@@ -78,6 +78,12 @@ def get_minimo_atributos(user_id):
 
     return resultado
 
+def respuesta_final_save(sondeo_id,respuesta_final):
+    sondeo=Sondeo.objects.get(id=sondeo_id)
+    sondeo.respuesta_final= respuesta_final
+    sondeo.save()
+
+
 #en esta parte debemos setear primero los datos que nos piden para
 # perfilar al usuario antes de mostrar el START! (OK- solo falta la comuna)
 @login_required
@@ -89,16 +95,32 @@ def elecciones_start(request,iat_id):
     ciudad_ok=0
     comuna=""
     ciudad=""
+    edad=0
+    sexo="N"
     if request.method == "POST":
-        sexo = request.POST['sexo']
-        edad = request.POST['edad']
-        comuna = request.POST['comuna']
-        ciudad = request.POST['ciudad']
+        if request.POST['sexo'] != "":
+            sexo = request.POST['sexo']
+        else :
+            messages.warning(request,f'Debe seleccionar una opción de sexo.')
+            sexo = 'N'
+
+        if request.POST['edad'] != "":
+            edad = request.POST['edad']
+        else :
+            messages.warning(request,f'Debe ingresar un valor valido para la edad.')  
+            edad = 0  
+        
+        comuna = request.POST['comuna'].strip()
+        ciudad = request.POST['ciudad'].strip()
         #user=User.objects.get(id=request.session['user']['id'])
         if len(comuna) >0:
             comuna_ok=1
+        else:
+            messages.warning(request,f'Debe ingresar una comuna por favor.')  
         if len(ciudad) >0:
             ciudad_ok=1
+        else:
+            messages.warning(request,f'Debe ingresar una ciudad por favor.')
         user.sexo=sexo
         user.edad=edad
         user.comuna=comuna
@@ -121,7 +143,7 @@ def elecciones_start(request,iat_id):
         save_combinaciones(request.session['analisis01'],iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
-        if len(sondeos)>0:
+        if len(sondeos)>0: #que exista un sondeo
             sondeo=sondeos[0]
             request.session['sondeo_id']=sondeo.id
             print(f"Sondeo_id:{sondeo.id}")
@@ -129,7 +151,7 @@ def elecciones_start(request,iat_id):
                 ok=1
             elif sondeo.estado == "R": #en el caso que lo finalice
                 ok=2
-        elif len(sondeos) == 0:
+        elif len(sondeos) == 0: #que no exista un sondeo
             ok=2
         
         
@@ -140,7 +162,9 @@ def elecciones_start(request,iat_id):
             "comuna_ok":comuna_ok,
             "ciudad_ok":ciudad_ok,
             "comuna":comuna,
-            "ciudad":ciudad
+            "ciudad":ciudad,
+            "edad":edad,
+            "sexo":sexo,
         }
         
     else:
@@ -151,7 +175,9 @@ def elecciones_start(request,iat_id):
             "comuna_ok":comuna_ok,
             "ciudad_ok":ciudad_ok,
             "comuna":comuna,
-            "ciudad":ciudad
+            "ciudad":ciudad,
+            "edad":edad,
+            "sexo":sexo,
         }
     return render(request, './elecciones2021/inicio.html', context)
 
@@ -211,11 +237,26 @@ def elecciones_test(request):
 
 @login_required
 def elecciones_end(request):
-    sondeo=Sondeo.objects.get(id=request.session['sondeo_id'])
-    sondeo.estado='R'
-    sondeo.save()
-    if 'user' in request.session:
-        del request.session['user']
-    context = {    
+
+    #print("elecciones_end")
+    if request.method == "POST":
+        respuesta_final=request.POST['respuesta_final']
+        print(f"R:{respuesta_final}")
+
+        respuesta_final_save(request.session['sondeo_id'],respuesta_final)        
+    
+        sondeo=Sondeo.objects.get(id=request.session['sondeo_id'])
+        sondeo.estado='R'
+        sondeo.save()
+        if 'user' in request.session:
+            del request.session['user']
+            return redirect('/')
+
+
+        context = {    
+            }
+        return render(request, 'elecciones2021/final.html', context)
+    else:
+        context = {    
         }
-    return render(request, 'elecciones2021/final.html', context)
+        return render(request, 'elecciones2021/final.html', context)

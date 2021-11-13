@@ -1,56 +1,84 @@
 {% extends '../base.html' %}
 {% block content %}
-<div class="cointainer">
+<div class="cointainer ms-4">
     <div class="row">
         <div class="col-10">
             <h1>Estudio IAT Elecciones Presidenciales 2021</h1>
         </div>
     </div>
+    {% if ok != 1 %}
     <div class="row">
         <div class="col-10">
             <h6>
                 <p>
-                Bienvenido a un estudio experimental de Agencia Mars, todos los datos entregados a nuestra empresa no serán usados con fines ajenos a los del siguiente estudio, ni con fines comerciales, y no serán vendidos o entregados a ningún tercero.
+                    Hola <span class="text-danger">{{request.session.user.name}}</span>, muchas gracias por aceptar esta invitación a participar de nuestro estudio. Ahora te solicitaremos algunos datos sobre ti, que nos permitirán estratificar la muestra con fines metodológicos. Recuerda que no usaremos tus datos para ningún fin que no sea este estudio, así que relájate, es un pacto de confianza. 
                 </p>
+                <p> Procura que los datos entregados sean fidedignos.</p>
             </h6>
         </div>
     </div>
+    {% endif %}
    
 
     {% if ok == 0 %}
-    <div class="row">
-        <div class="col-10">
-            <h6>
-                
-                <p>
-                    Los datos compartidos nos permitirán estratificar la muestra con fines metodológicos y nos permitirá invitarlo a futuros estudios, por lo que rogamos los datos entregados sean lo más fidedigno posible.
-                </p>
-            </h6>
-        </div>
-    </div>
+   
     <form action="/elecciones2021/start/{{iat_id}}" method="post">
         {% csrf_token %}
         <div class="row">
             <div class="col-10">
-                Edad:
-                <input type="number" name="edad" id="edad" value="18">
-                Sexo:
-                <select name="sexo" id="sexo">
-                    <option value="F">Femenino</option>
-                    <option value="M">Masculino</option>
-                    <option value="O">Otro</option>
-                </select>
-                Comuna:
-                <input type="text" name="comuna" id="comuna" value="{% if comuna_ok == 1 %} {{comuna}} {% endif %}">
-                Ciudad:
-                <input type="text" name="ciudad" id="ciudad" value="{% if ciudad_ok == 1 %} {{ciudad}} {% endif %}">
-                <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                <div class="row">
+                    <div class="col">
+                        <label for="edad" class="form-label">¿Cual es tu edad?</label>
+                        <input type="number" name="edad" id="edad" value="{{edad}}" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-1">
+                        <label for="sexo" class="form-label"> ¿Eres?</label>
+                        <select name="sexo" id="sexo" class="form-control">
+                            <option value="">Seleccione una Opción</option>
+                            <option value="F" {% if sexo == "F" %} selected {% endif %} >Mujer</option>
+                            <option value="M" {% if sexo == "M" %} selected {% endif %} >Hombre</option>
+                            <option value="O" {% if sexo == "O" %} selected {% endif %} >Otro</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-1">
+                        <label for="comuna" class="form-label"> ¿En qué comuna vives?</label>
+                        <input type="text" name="comuna" id="comuna" value="{% if comuna_ok == 1 %}{{comuna}}{% endif %}" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-3">
+                        <label for="ciudad" class="form-label"> ¿Y cual es tu ciudad de residencia?</label>
+                        <input type="text" name="ciudad" id="ciudad" value="{% if ciudad_ok == 1 %}{{ciudad}}{% endif %}" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb-4">
+                        <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
+
+                    </div>
+                </div>
             </div>
         </div>
     </form>
     {% endif %}
 
     {% if ok == 1 %}
+    <div class="row">
+        <div class="col-10">
+            <h6>A continuación presentaremos un <b>concepto</b>  o <b>tema</b>  y deberás elegir haciendo click sobre la foto del candidato presidencial que consideres que lo <b>hará mejor</b> o <b>asocias más</b> a ese atributo o concepto.</h6>
+            <p>
+                El test debe ser realizado lo más rápido y preciso como sea posible.
+            </p>
+            <p>
+                La duración del test no supera los 3 minutos.
+            </p>
+        </div>
+    </div>
+
     <a href="/elecciones2021/test" class="btn btn-sm btn-primary">Estamos listos!</a>
     {% endif %}
 

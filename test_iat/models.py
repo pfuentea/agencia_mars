@@ -182,8 +182,14 @@ class Sondeo(models.Model):
         ("I", 'Inactivo'),
         ("R", 'Respondido'),        
     )
+    RESPUESTAS =(
+        ("N","No"),
+        ("S","Si"),
+        ("A","Sin Respuesta"),
+    )
     test = models.ForeignKey(Test, related_name="sondeos", on_delete = models.CASCADE)
     participante=models.ForeignKey(User, related_name="sondeos", on_delete = models.CASCADE)
+    respuesta_final= models.CharField(max_length=255, choices=RESPUESTAS,default="A")
     estado =  models.CharField(max_length=255, choices=ESTADOS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  

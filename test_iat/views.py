@@ -118,7 +118,10 @@ def index(request):
     #Combinacion.objects.all().delete()
     #Resultado.objects.all().delete()
     #print("viene el render!")
-    return render(request, 'index.html', context)
+    if invitado_nuevo == 0 and invitado_antiguo == 0:
+        return redirect('/elecciones2021/start/8')
+    else:
+        return render(request, 'index.html', context)
 
 def login(request):
     context = {
