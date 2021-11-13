@@ -104,10 +104,10 @@ def elecciones_start(request,iat_id):
             messages.warning(request,f'Debe seleccionar una opción de sexo.')
             sexo = 'N'
 
-        if request.POST['edad'] != "":
+        if int(request.POST['edad']) > 0 and request.POST['edad'] != "" :
             edad = request.POST['edad']
         else :
-            messages.warning(request,f'Debe ingresar un valor valido para la edad.')  
+            messages.warning(request,f'Debe ingresar una edad valida.')  
             edad = 0  
         
         comuna = request.POST['comuna'].strip()
