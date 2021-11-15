@@ -19,8 +19,7 @@ def get_combinaciones_analisis01(iat_id):
             tcar_ids =tcat.car_cat.values_list('id')
             i=0
             pos=0
-            for r in car_ids:
-                
+            for r in car_ids:                
                 c_aux=Caracteristica.objects.get(id=r[0])
                 tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
                 if tcar.adj_car.count() > 0:
@@ -47,7 +46,6 @@ def get_combinaciones_analisis02(iat_id):
     pass
 def get_combinaciones_analisis03(iat_id):
     pass
-
 def get_combinaciones_analisis04(iat_id):
     pass
 
@@ -83,7 +81,6 @@ def index(request):
                     "email": new_user.email,
                     "role": new_user.role,
                 }
-
             request.session['user'] = user
 
     #print("INDEX")
@@ -105,7 +102,6 @@ def index(request):
             invitado_antiguo=0
             invitado_nuevo=0
             print("NO TIENE SONDEO!")
-
         else:
             print("TIENE SONDEO!")
 
@@ -128,6 +124,7 @@ def login(request):
         'saludo': 'Hola'
     }
     return render(request, 'login.html', context)
+
 def registro(request):
     context = {
         'saludo': 'Hola'
@@ -140,8 +137,6 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
     index=0
     #revisamos si no existe y si no guardamos
     c_test=Combinacion.objects.filter(test=test,participante=participante)
-
-
     if c_test.count()>0:
         print("combinaciones ya existen para ese test y usuario")
     else:
@@ -152,7 +147,6 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
             index+=1
         print(f"Se guardaron {index} registros ")
     
-
 def test(request,test_id):
     #inicio del test, generamos las combinaciones
     #las metemos en una variable de sesion
@@ -161,14 +155,13 @@ def test(request,test_id):
     request.session['iat_id']=t_id
     #request.session['user_id']=1
     request.session['analisis01']=get_combinaciones_analisis01(5)
-    
     save_combinaciones(request.session['analisis01'],t_id,request.session['user']['id'],1)
 
+    #esto esta incompleto
     request.session['analisis02']=get_combinaciones_analisis02(5)
     request.session['analisis03']=get_combinaciones_analisis03(5)
     request.session['analisis04']=get_combinaciones_analisis04(5)
     
-
     context = {
         'saludo': 'Hola'
     }
@@ -194,15 +187,12 @@ def paso1(request):
         #Respuesta
             res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion)    
 
-
-
     #a)pedimos 1 combinacion al azar
     if  len(request.session['analisis01']) > 0 :
         posicion_azar=random.randint(0, len(request.session['analisis01'])-1)
         combinacion=request.session['analisis01'].pop(posicion_azar)
         new_list=request.session['analisis01']
         request.session['analisis01']=new_list
-    
     
         #del request.session['iat'][posicion_azar]
         #restantes
@@ -218,7 +208,6 @@ def paso1(request):
         return redirect('/test/paso2')
 
 def paso2(request):
-    
     #se acabo la lista de analisis01 y empezamos con la lista analisis02
     pass
 
@@ -255,7 +244,6 @@ def cliente(request):
     "accion":'default'
     }
     return render(request, 'clientes.html', context)
-
 
 def cliente_new(request):
     if request.method=='GET':
@@ -294,7 +282,6 @@ def cliente_destroy(request,cli_id):
     messages.success(request,f'Cliente eliminado con exito!')
     return redirect('/cliente')
 
-
 #CATEGORIAS
 def categorias(request):
     categorias= Categoria.objects.all()
@@ -303,7 +290,6 @@ def categorias(request):
     "accion":'default'
     }
     return render(request, 'categorias.html', context)
-
 
 def categorias_new(request):
     if request.method=='GET':
@@ -350,7 +336,6 @@ def producto(request):
     "accion":'default'
     }
     return render(request, 'productos.html', context)
-
 
 def producto_new(request):
     if request.method=='GET':
@@ -444,7 +429,6 @@ def adjetivo(request):
     }
     return render(request, 'adjetivos.html', context)
 
-
 def adjetivo_new(request):
     if request.method=='GET':
         context = {        
@@ -521,8 +505,7 @@ def iat_new(request):
         new_iat=Test.objects.create(cliente=target,nombre=testName,tipo=tipo)
     
         messages.success(request,f'Creación de nuevo IAT exitoso!')
-        return redirect('/iat')
-    
+        return redirect('/iat')  
 
 def iat_edit(request,iat_id):
     if request.method=='GET':
@@ -550,10 +533,7 @@ def iat_edit(request,iat_id):
         messages.success(request,f'Modificación de IAT exitosa!')
         return redirect('/iat')
 
-
-
-def iat_destroy(request,iat_id):    
-    
+def iat_destroy(request,iat_id):        
     return redirect('/iat')
 
 def iat_add_cat(request,iat_id):
@@ -575,7 +555,6 @@ def iat_add_cat(request,iat_id):
             categoria=Categoria.objects.get(id=request.POST['categoria'])
 
         tcat=Tcategoria.objects.create(categoria=categoria,test=iat)
-
         
         return redirect('/iat')
 
@@ -604,20 +583,18 @@ def iat_detalle(request,iat_id):
 
         combinaciones=get_combinaciones_analisis01(iat_id)
 
-        
         for c in iat.combinaciones.all():
             p={"nombre":c.participante.name,"user_id":c.participante.id}
             participantes.append(p)
-        
+
         participantes=[dict(t) for t in {tuple(d.items()) for d in participantes}]
         
-        for x in participantes:
-            print(x['nombre'])
+        #for x in participantes:
+        #    print(x['nombre'])
+        
         #resultados=Resultado.objects.filter(combinacion__test=iat)
         #print(resultados[0].combinacion.participante.name)
-        par=[]
         
-
 
     context={
         "iat":iat,
@@ -646,8 +623,6 @@ def iat_add_car(request,iat_id):
         caract=Caracteristica.objects.get(id=request.POST['car']) 
     #agregamos la caract a la categoria
     #tcat.car_cat.nombre
-
-
     new_car=Tcaracteristicas.objects.create(caracteristica=caract,categoria=tcat)
     messages.success(request,f'Caracteristica agregada exitosamente!')
     
@@ -784,8 +759,7 @@ def resultado(request,iat_id,user_id):
         }
     return render(request, 'resultado.html', context)
 
-def iat_elecciones(request):
-    
+def iat_elecciones(request): 
     context={
         "accion":"default"
         }
@@ -807,7 +781,6 @@ def usuarios_detalle(request,user_id):
         }
     return render(request, 'usuarios.html', context)
 
-
 def sondeos(request):
     if request.method=='POST':
         test = Test.objects.get(id=request.POST['iat'])
@@ -823,7 +796,6 @@ def sondeos(request):
             sond=Sondeo.objects.get(id=result[0][0])
             sond.estado="A"
             sond.save()
-
 
     iats= Test.objects.all()
     participantes=User.objects.all()

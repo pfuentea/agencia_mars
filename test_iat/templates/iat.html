@@ -226,10 +226,11 @@
             <div class="col-6">
                 <h2>Resultados:</h2>
                 <div class="table-responsive">
-                    <table id="caracteristicas" class="table table-striped table-bordered" width="100%" >
+                    <table id="respuestas" class="table table-striped table-bordered" width="100%" >
                         <thead>
                             <tr>
                                 <th>Participante</th>
+                                <th>Id</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,8 +238,11 @@
                             <tr>
                                 <td>
                                     <a href="/iat/resultado/{{iat.id}}/{{p.user_id}}">
-                                        {{p.nombre}}
+                                        {{p.nombre}} 
                                     </a>
+                                </td>
+                                <td>
+                                    {{p.user_id}}
                                 </td>
                             </tr>  
                         {% empty %}     
@@ -262,6 +266,12 @@
             "search": 'Buscar',
             "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
             "iDisplayLength":5
+        });
+        var oTblUsers = $('#respuestas')
+        oTblUsers.DataTable({
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
+            "iDisplayLength":35
         });
     });
 </script>
