@@ -52,9 +52,11 @@ def get_combinaciones_analisis04(iat_id):
 
 def index(request):
     invitado_antiguo=0
+
     if request.method == "GET":
-        if 'user' in request.session:
+        if 'user' in request.session and 'from_login' not in request.session :
             del request.session['user']
+
     if request.method == "POST":
         email=request.POST['email']
         nombre=request.POST['nombre']
@@ -767,9 +769,10 @@ def iat_elecciones(request):
 
 def usuarios(request):
     users=User.objects.all()
+    
     context={
         "accion":"default",
-        "users":users
+        "participantes":users
         }
     return render(request, 'usuarios.html', context)
 

@@ -2,7 +2,73 @@
 {% block content %}
 <h2>Usuarios - Participantes</h2>
 
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table id="usuarios" class="table table-striped table-bordered" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Participante</th>
+                            <th>Edad</th>
+                            <th>Sexo</th>
+                            <th>Comuna</th>
+                            <th>Ciudad</th>
+                            <th>Invitaciones?</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in participantes %}  
+                        <tr>
+                            <td>
+                                {{p.id}}
+                            </td>
+                            <td>
+                                <a href="/usuarios/{{p.id}}">
+                                    {{p.name}} 
+                                </a>
+                            </td>
+                            <td>
+                                {{p.edad}}
+                            </td>
+                            <td>
+                                {{p.sexo}}
+                            </td>
+                            <td>
+                                {{p.comuna}}
+                            </td>
+                            <td>
+                                {{p.ciudad}}
+                            </td>
+                            <td>
+                                {{p.sondeos.respuesta_final}}
+                            </td>
+                        </tr>  
+                    {% empty %}     
+                    <tr>
+                        <td> No existen caracteristicas asociadas aún</td>
+                        
+                    </tr>
+                    {% endfor %}
+                    </tbody>    
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
-
+<script>
+    $(document).ready(function() {
+        var oTblReport = $('#usuarios')
+        oTblReport.DataTable({
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
+            "iDisplayLength":15
+        });
+    
+    });
+</script>
 
 {% endblock %}

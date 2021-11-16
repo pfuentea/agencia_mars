@@ -26,8 +26,9 @@ def login(request):
                     "email": log_user.email,
                     "role": log_user.role,
                 }
-
+                #print(f"User:{user}")
                 request.session['user'] = user
+                request.session['from_login']="y"
                 messages.success(request, "Logueado correctamente.")
                 return redirect("/")
             else:
