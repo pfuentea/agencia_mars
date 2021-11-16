@@ -63,6 +63,10 @@
     $(document).ready(function() {
         var oTblReport = $('#usuarios')
         oTblReport.DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             "search": 'Buscar',
             "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
             "iDisplayLength":15
