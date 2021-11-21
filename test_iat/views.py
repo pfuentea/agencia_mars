@@ -1,6 +1,6 @@
 from django.core.checks import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .models import Categoria, Cliente, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado, Sondeo
+from .models import Categoria, Cliente, Descargas, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado, Sondeo
 from django.contrib import messages
 from django.db import IntegrityError
 import random
@@ -49,6 +49,24 @@ def get_combinaciones_analisis03(iat_id):
 def get_combinaciones_analisis04(iat_id):
     pass
 
+def index_resultados(request):
+    context = {
+        "saludo":"hola"
+    }
+    return render(request, 'index.html', context)
+
+def descarga_resultados(request):
+    if request.method == "POST":
+        email=request.POST['email']
+        nombre=request.POST['nombre']
+        descarga= Descargas.objects.create(email=email,name=nombre)
+        context = {
+            "nombre":nombre
+        }
+        return render(request, 'descarga.html', context)
+
+    if request.method == "GET":
+        return redirect('')
 
 def index(request):
     invitado_antiguo=0

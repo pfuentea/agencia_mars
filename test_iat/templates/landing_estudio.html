@@ -11,14 +11,21 @@
     <div class="row">
         <div class="col-10 mb-4">
             <p>
-                Muchas gracias por su participación en la primera versión del 
+                Muchas Gracias por su participación en la primera versión del 
                 estudio IAT de Elecciones Presidenciales 2021.
             </p>
             <p>
-                Descarga el Estudio de Elecciones Presidenciales 2021 de Implicita</p>
+                Este es un estudio experimental, realizado 100% por Agencia Mars y busca medir las asociaciones implícitas entre los diferentes conceptos tratados y los candidatos políticos presentes en la papeleta 2021.
+            </p>
+            <p>
+                Todos los datos entregados a nuestra empresa no serán usados con fines ajenos a este estudio, ni con fines comerciales, y no serán vendidos o entregados a ningún tercero.
+            </p>
+            <p>¡Comencemos!</p>
         </div>
     </div>
-            <form method="post" action="/descarga">
+        {% if invitado_antiguo == 0 %}
+            {% if invitado_nuevo == 1 %}
+            <form method="post" action="/">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-10">
@@ -42,12 +49,27 @@
                         </div>
                        
                             <div class=" d-flex justify-content-center mb-3">
-                                <button type="submit" class="btn btn-sm btn-primary">Descargar</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
                             </div>
                     </div>
                 </div>
             </form>
-           
-   
+            {% endif %}
+        {% endif %}
+    {% if invitado_antiguo == 0 %}    
+    </div>
+        {% if invitado_nuevo == 0 %}
+        <div class="text-center">
+            <a href="/elecciones2021/start/8" class="btn btn-primary btn-sm">Comenzar el test</a>
+        </div>
+        {% endif %}
+    {% endif %}
+    {% if invitado_antiguo == 1 %}  
+    <div class="text-center">
+        <p class="text-info bg-dark">
+            Usted ya ha respondido este estudio. Le agradecemos que lo haya hecho y pronto lo invitaremos a nuevos estudios.
+        </p>
+    </div>
+    {% endif %}
     
 {% endblock %}

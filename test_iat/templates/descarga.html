@@ -1,0 +1,29 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <h1>
+                Estudio IAT Elecciones Presidenciales 2021
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 mb-4">
+            <p>
+                Muchas gracias {{nombre}} por su participación en la primera versión del 
+                estudio IAT de Elecciones Presidenciales 2021.
+            </p>
+            <p>
+                Descarga el Estudio de Elecciones Presidenciales 2021 de Implicita.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            {% load static %}
+            <p><a href="{% static "/downloads/iat_presidenciables.pdf" %}">Estudio PDF</a> </p>
+        </div>
+    </div>
+            
+    
+{% endblock %}

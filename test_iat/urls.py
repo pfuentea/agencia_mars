@@ -2,7 +2,9 @@ from django.urls import path
 from . import views,auth,elecciones2021
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.index_resultados),
+    path('descarga', views.descarga_resultados),
+    #path('', views.index),
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),
