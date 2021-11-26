@@ -553,7 +553,10 @@ def iat_edit(request,iat_id):
         messages.success(request,f'Modificación de IAT exitosa!')
         return redirect('/iat')
 
-def iat_destroy(request,iat_id):        
+def iat_destroy(request,iat_id):    
+    iat=Test.objects.get(id=iat_id).delete()
+    messages.success(request,f'Eliminación de IAT exitosa!')
+    
     return redirect('/iat')
 
 def iat_add_cat(request,iat_id):
