@@ -53,7 +53,7 @@ def index_resultados(request):
     context = {
         "saludo":"hola"
     }
-    return render(request, 'index.html', context)
+    return render(request, 'index_resultados.html', context)
 
 def descarga_resultados(request):
     if request.method == "POST":
@@ -70,10 +70,13 @@ def descarga_resultados(request):
 
 def index(request):
     invitado_antiguo=0
-
+    # aca seteamos el id que dejamos disponible
+    iat_id=9
+    
     if request.method == "GET":
         if 'user' in request.session and 'from_login' not in request.session :
             del request.session['user']
+            print("delete session-user")
 
     if request.method == "POST":
         email=request.POST['email']
@@ -115,7 +118,7 @@ def index(request):
     
     #revisamos si puede hacer el sondeo
     if invitado_antiguo == 1:
-        iat=Test.objects.get(id=8)
+        iat=Test.objects.get(id=iat_id)
         print(f"participante:{new_user.name}")
         s=Sondeo.objects.filter(test=iat , participante=new_user)
         if len(s)==0:
@@ -135,9 +138,9 @@ def index(request):
     #Resultado.objects.all().delete()
     #print("viene el render!")
     if invitado_nuevo == 0 and invitado_antiguo == 0:
-        return redirect('/elecciones2021/start/8')
+        return redirect('/elecciones2021/start/'+str(iat_id))
     else:
-        return render(request, 'index.html', context)
+        return render(request, 'landing_estudio02.html', context)
 
 def login(request):
     context = {

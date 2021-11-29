@@ -21,42 +21,92 @@ def get_combinaciones_elecciones2021(iat_id):
             for r in car_ids:                
                 c_aux=Caracteristica.objects.get(id=r[0])
                 tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                max_adj=tcar.adj_car.count()
+                #print(f"ADJ_MAX:{max_adj}")
                 if tcar.adj_car.count() > 0:
                     adj=tcar.adj_car.values_list('adjetivo_id')
                     tadj=tcar.adj_car.values_list('id')
                     #aca van las combinaciones por adjetivos 1-2, 3-4, 5-6
-                    adj1=Adjetivo.objects.get(id=adj[0][0])  
-                    adj2=Adjetivo.objects.get(id=adj[1][0])
-                    adj3=Adjetivo.objects.get(id=adj[2][0])  
-                    adj4=Adjetivo.objects.get(id=adj[3][0])
-                    adj5=Adjetivo.objects.get(id=adj[4][0])  
-                    adj6=Adjetivo.objects.get(id=adj[5][0])
+                    dict_comb={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+                    dict_comb_2={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+            
+                    if max_adj == 2:
+                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                        dict_comb['adj1']=adj1.nombre
+                        dict_comb['tadj1']=tadj[0][0]
+                        dict_comb['img1']=adj1.nombre+".JPG"
+                        dict_comb['pos']=pos
+                        
+                        adj2=Adjetivo.objects.get(id=adj[1][0])
+                        dict_comb['adj2']=adj2.nombre
+                        dict_comb['tadj2']=tadj[1][0]
+                        dict_comb['img2']=adj2.nombre+".JPG"
+                        pos+=1      
+                        dict_comb_2['adj1']=adj2.nombre
+                        dict_comb_2['tadj1']=tadj[1][0]
+                        dict_comb_2['img1']=adj2.nombre+".JPG"
+                        
+                        dict_comb_2['adj2']=adj1.nombre
+                        dict_comb_2['tadj2']=tadj[0][0]
+                        dict_comb_2['img2']=adj1.nombre+".JPG"
+                        dict_comb_2['pos']=pos
+                        pos+=1
+
+
+                    if max_adj == 4:
+                        adj3=Adjetivo.objects.get(id=adj[2][0])  
+                        dict_comb['ajd3']=adj3.nombre
+                        dict_comb['tajd3']=tadj[2][0]
+                        dict_comb['img1']=adj3.nombre+".JPG"
+                        adj4=Adjetivo.objects.get(id=adj[3][0])
+                        dict_comb['ajd4']=adj4.nombre
+                        dict_comb['tajd4']=tadj[3][0]
+                        dict_comb['img2']=adj4.nombre+".JPG"
+                    
+                    if max_adj == 6:
+                        adj5=Adjetivo.objects.get(id=adj[4][0])  
+                        dict_comb['ajd5']=adj5.nombre
+                        dict_comb['tajd5']=tadj[4][0]
+                        dict_comb['img1']=adj5.nombre+".JPG"
+
+                        adj6=Adjetivo.objects.get(id=adj[5][0])
+                        dict_comb['ajd6']=adj6.nombre
+                        dict_comb['tajd6']=tadj[5][0]
+                        dict_comb['img2']=adj6.nombre+".JPG"
+
                     # 1 con 2
-                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"adj3":adj3.nombre,"adj4":adj4.nombre,"tadj3":tadj[2][0],"tadj4":tadj[3][0],"adj5":adj5.nombre,"adj6":adj6.nombre,"tadj5":tadj[4][0],"tadj6":tadj[5][0],"pos":pos,"img1":adj1.nombre+".JPG","img2":adj2.nombre+".JPG","img3":adj3.nombre+".JPG","img4":adj4.nombre+".JPG","img5":adj5.nombre+".JPG","img6":adj6.nombre+".JPG"})
-                    pos+=1
-                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"adj3":adj4.nombre,"adj4":adj3.nombre,"tadj3":tadj[3][0],"tadj4":tadj[2][0],"adj5":adj6.nombre,"adj6":adj5.nombre,"tadj5":tadj[5][0],"tadj6":tadj[4][0],"pos":pos,"img1":adj2.nombre+".JPG","img2":adj1.nombre+".JPG","img3":adj4.nombre+".JPG","img4":adj3.nombre+".JPG","img5":adj6.nombre+".JPG","img6":adj5.nombre+".JPG"})
-                    pos+=1
+                    c.append(dict_comb)
+                    
+                    c.append(dict_comb_2)
+                    
                 i+=1
 
     return c
 
 def save_combinaciones(combis,test_id,user_id,analisis_id):
+    print("init: save_combinaciones")
     test=Test.objects.get(id=test_id)
     participante=User.objects.get(id=user_id)
     index=0
     #revisamos si no existe y si no guardamos
     c_test=Combinacion.objects.filter(test=test,participante=participante)
-
+    #con borra=1 elimino las combinaciones
+    borrar=0
+    if borrar == 1:
+        c_test.delete()        
+        print("se borraron las combinaciones")
 
     if c_test.count()>0:
         print("combinaciones ya existen para ese test y usuario")
     else:
         print("combinaciones no existen para ese test y usuario, se agregan")        
         for c in combis:
-            #guardamos los registros            
+            #guardamos los registros       
             Combinacion.objects.create(test=test,participante=participante,indice=index,valor=c,analisis=analisis_id)
             index+=1
         print(f"Se guardaron {index} registros ")
+    
+    print("end: save_combinaciones")
 
 def get_minimo_atributos(user_id):
     u=User.objects.get(id=user_id)
@@ -127,7 +177,10 @@ def elecciones_start(request,iat_id):
         user.ciudad=ciudad
         user.save()
         #dejamos el sondeo activo
-        s=Sondeo.objects.create(test=iat, participante=user,estado="A")
+        s=Sondeo.objects.filter(test=iat , participante=user)
+        if len(s)==0:
+            s=Sondeo.objects.create(test=iat, participante=user,estado="A")
+           
         #print(f"sondeo_id:{s.id}")
         request.session['sondeo_id']=s.id
         #print("POR ACA PASE")
@@ -143,16 +196,19 @@ def elecciones_start(request,iat_id):
         save_combinaciones(request.session['analisis01'],iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
+
         if len(sondeos)>0: #que exista un sondeo
             sondeo=sondeos[0]
             request.session['sondeo_id']=sondeo.id
-            print(f"Sondeo_id:{sondeo.id}")
+            print(f"Sondeo_id:{sondeo.id},estado:{sondeo.estado}")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
-            elif sondeo.estado == "R": #en el caso que lo finalice
+            elif sondeo.estado == "R": #en el caso que lo finalice ya
                 ok=2
         elif len(sondeos) == 0: #que no exista un sondeo
-            ok=2
+            s=Sondeo.objects.create(test=iat, participante=user,estado="A")
+            ok=1
+            
         
         
         context = {
@@ -168,6 +224,11 @@ def elecciones_start(request,iat_id):
         }
         
     else:
+        user=User.objects.get(id=request.session['user']['id'])
+        sexo=user.sexo
+        edad=user.edad
+        comuna=user.comuna
+        ciudad=user.ciudad
         context = {
             'saludo': 'Hola',
             "ok":0,
@@ -214,10 +275,11 @@ def elecciones_test(request):
             res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)    
 
 
-
+    print(f"Largo analisis01:{len(request.session['analisis01'])}")
     if  len(request.session['analisis01']) > 0 :
         posicion_azar=random.randint(0, len(request.session['analisis01'])-1)
         combinacion=request.session['analisis01'].pop(posicion_azar)
+        print(f"Sacamos la combinacion:{combinacion}")
         new_list=request.session['analisis01']
         request.session['analisis01']=new_list
     
@@ -260,3 +322,8 @@ def elecciones_end(request):
         context = {    
         }
         return render(request, 'elecciones2021/final.html', context)
+
+def regresar(request):
+    if 'user' in request.session:
+            del request.session['user']
+    return redirect('/')

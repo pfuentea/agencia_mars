@@ -2,9 +2,9 @@ from django.urls import path
 from . import views,auth,elecciones2021
 
 urlpatterns = [
-    path('', views.index_resultados),
+    #path('', views.index_resultados),
     path('descarga', views.descarga_resultados),
-    #path('', views.index),
+    path('', views.index),
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),
@@ -58,6 +58,7 @@ urlpatterns = [
     path('elecciones2021/start/<int:iat_id>', elecciones2021.elecciones_start),
     path('elecciones2021/test', elecciones2021.elecciones_test), 
     path('elecciones2021/end', elecciones2021.elecciones_end), 
+    path('elecciones2021/regresar', elecciones2021.regresar), 
 
     path('usuarios', views.usuarios), 
     path('usuarios/<int:user_id>', views.usuarios_detalle),  

@@ -1,0 +1,53 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <h1>
+                Estudio IAT Elecciones Presidenciales 2021
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 mb-4">
+            <p>
+                Muchas gracias por su participación en la primera versión del 
+                estudio IAT de Elecciones Presidenciales 2021.
+            </p>
+            <p>
+                Descarga el Estudio de Elecciones Presidenciales 2021 de Implicita</p>
+        </div>
+    </div>
+            <form method="post" action="/descarga">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-10">
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <label for="nombre" class="form-label">
+                                    Escribe tu nombre:
+                                </label>   
+                                <input type="text" name="nombre" id="nombre" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+
+                            <div class="col"> 
+                                <label for="email" class="form-label">
+                                    Escribe tu correo:
+                                </label>
+                                <input type="email" name="email" id="email" class="form-control">
+                            </div>
+                        </div>
+                       
+                            <div class=" d-flex justify-content-center mb-3">
+                                <button type="submit" class="btn btn-sm btn-primary">Descargar</button>
+                            </div>
+                    </div>
+                </div>
+            </form>
+           
+   
+    
+{% endblock %}
