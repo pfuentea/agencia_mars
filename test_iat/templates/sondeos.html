@@ -43,13 +43,14 @@
                             <th>Test</th>
                             <th>Estado</th>                            
                             <th>Desactivar</th> 
+                            <th>Eliminar</th> 
                         </tr>
                     </thead>
                     <tbody>
                     {% for s in sondeos %}  
                         <tr>
                             <td>
-                                <a href="/usuario/{{s.participante.id}}">
+                                <a href="/usuarios/{{s.participante.id}}">
                                     {{s.participante.name}}
                                 </a>
                             </td>
@@ -61,7 +62,10 @@
                             </td>
                             <td>
                                 <a href="/sondeos/desactivar/{{s.id}}">[X]</a>
-                            </td>                          
+                            </td>          
+                            <td>
+                                <a href="/sondeos/{{s.id}}/destroy">[X]</a>
+                            </td>                 
                             
                         </tr>  
                     {% empty %}     

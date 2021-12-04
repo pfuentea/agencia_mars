@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+<div class="row">
+    <div class="col"><h2>Caracteristicas</h2> </div>
+</div>
+
+<div class="row justify-content-center">
+    {% for c in preguntas %}
+    <div class="col-2">
+
+        <h6>{{c}}</h6>
+
+
+    </div>
+    {% endfor %}
+</div>
+
+
+
+
+</div>
+{% endblock %}

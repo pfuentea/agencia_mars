@@ -3,6 +3,7 @@
 <h2>Usuarios - Participantes</h2>
 
 <div class="container">
+    {% ifequal accion "default" %}
     <div class="row">
         <div class="col">
             <div class="table-responsive">
@@ -57,6 +58,46 @@
             </div>
         </div>
     </div>
+    {% endifequal %}
+    {% ifequal accion "detalle" %}
+    <div class="row">
+        <div class="col">
+            <h1>Detalles del usuario <b>{{Usuario.name}}</b> </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Correo : {{Usuario.email}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Edad : {{Usuario.edad}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Sexo : {{Usuario.sexo}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Comuna : {{Usuario.comuna}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Ciudad : {{Usuario.ciudad}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Rol : {{Usuario.role}}
+        </div>
+    </div>
+    <a href="/usuarios" class="btn btn-sm btn-primary">Volver a Usuarios</a>
+    {% endifequal %}
+
 </div>
 
 <script>

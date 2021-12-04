@@ -23,10 +23,12 @@ $( document ).ready(function() {
 	$("#escribe").keydown(function(event){
 		if(event.which==69){
 			$("#parrafo").text("presionó la tecla e");
+            console.log("e");
 			detener_tiempo("1");
 			}
 		if(event.which==73){
 			$("#parrafo").text("presionó la tecla i");
+            console.log("i");
 			detener_tiempo("2");
 			}	
 		$("#escribe").val("");

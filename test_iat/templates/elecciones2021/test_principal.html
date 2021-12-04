@@ -92,7 +92,7 @@
     </div>
 </div>
 
-<form action="/elecciones2021/test" method="POST" id="form_tiempo" name="form_tiempo">
+<form action="/elecciones2021/test/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">
     {% csrf_token %}
     <input type="hidden" name="milisegundos" value="" id="milisegundos">
     <input type="hidden" name="combinacion" value="{{combinacion.pos}}">
@@ -110,7 +110,14 @@
     <input type="text" id="escribe" >
 </div>
 
-{% load static %}
-<script  src="{% static 'js/tiempo_click.js' %}"></script>
-</script> 
+    {% if dispositivo != "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo_click.js' %}"></script>
+        </script> 
+    {% endif %}
+    {% if dispositivo == "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo.js' %}"></script>
+        </script> 
+    {% endif %}
 {% endblock %}

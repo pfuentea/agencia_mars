@@ -122,6 +122,7 @@ def get_minimo_atributos(user_id):
     
     if u.ciudad != "":
         resultado+=1
+
     #print(f"edad:{u.edad},sexo:{u.sexo}")
     #if u.comuna != "":
     #    resultado+=1
@@ -132,6 +133,24 @@ def respuesta_final_save(sondeo_id,respuesta_final):
     sondeo=Sondeo.objects.get(id=sondeo_id)
     sondeo.respuesta_final= respuesta_final
     sondeo.save()
+
+def get_faltantes(iat_id,user_id,analisis_id):
+    iat=Test.objects.get(id=iat_id)
+    user=User.objects.get(id=user_id)
+    combi=Combinacion.objects.filter(test=iat,participante=user,analisis=analisis_id)
+    faltantes=[]
+    nada=0
+    for c in combi:
+        res=Resultado.objects.filter(combinacion=c)
+        if(len(res)>0):		
+            #print("Respondida!")
+            nada=1
+        else:
+            valores=c.valor
+            json_acceptable_string = valores.replace("'", "\"")
+            quest = json.loads(json_acceptable_string)
+            faltantes.append(quest)
+    return faltantes
 
 
 #en esta parte debemos setear primero los datos que nos piden para
@@ -179,11 +198,14 @@ def elecciones_start(request,iat_id):
         #dejamos el sondeo activo
         s=Sondeo.objects.filter(test=iat , participante=user)
         if len(s)==0:
+            print("Participante no tiene sondeo, le creamos uno")
             s=Sondeo.objects.create(test=iat, participante=user,estado="A")
-           
-        #print(f"sondeo_id:{s.id}")
-        request.session['sondeo_id']=s.id
-        #print("POR ACA PASE")
+            sondeo=s
+        else:
+            sondeo=s[0]
+        print(f"sondeo_id:{sondeo.id}")
+        request.session['sondeo_id']=sondeo.id
+        
     #print(f"user:{request.session['user']['id']}")
 
     validaciones= get_minimo_atributos(request.session['user']['id'])
@@ -192,8 +214,8 @@ def elecciones_start(request,iat_id):
         #Resultado.objects.all().delete()
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
-        request.session['analisis01']=get_combinaciones_elecciones2021(iat_id)
-        save_combinaciones(request.session['analisis01'],iat_id,request.session['user']['id'],1)
+        combis=get_combinaciones_elecciones2021(iat_id)
+        save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
 
@@ -244,26 +266,30 @@ def elecciones_start(request,iat_id):
 
 #esta parte está lista
 @login_required
-def elecciones_test(request):
+def elecciones_test(request,disp):
     s_id=request.session['sondeo_id']
+    iat=Test.objects.get(id=request.session['iat_id'])
+    user=User.objects.get(id=request.session['user']['id'])
     #print(f"S-id:{s_id}")
 
     if request.method == "POST":
+        # recibo la respuesta
         milisegundos=request.POST['milisegundos']
         combinacion_id=request.POST['combinacion']
         analisis=request.POST['analisis']
         opcion=request.POST['opcion']
-
+        #obtengo el usuario y el estudio
         test=Test.objects.get(id=request.POST['iat_id'])
         user=User.objects.get(id=request.POST['user_id'])        
 
         print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        #busco la combinacion
         combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #genero una llave con la respuesta para decir cual es el adj-n que respondió
         llave="adj"+str(opcion)
-        #print(combi.count())
+        #print(f"n_combinaciones:{combi.count()}")
         for c in combi:
-            print("c:")
-            print(c)
+            print(f"c:{c.valor}")
             valores=c.valor
             json_acceptable_string = valores.replace("'", "\"")
             quest = json.loads(json_acceptable_string)
@@ -274,24 +300,24 @@ def elecciones_test(request):
         #Respuesta
             res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)    
 
+    #preguntamos si quedan preguntas(combinaciones) por responder
+    #llenamos con las preguntas que faltan responder
+    faltantes=[]
+    faltantes=get_faltantes(iat.id,user.id,1)
+    print(f"Largo analisis01:{len(faltantes)}")
+    
+    if len(faltantes) > 0 :
+        posicion_azar=random.randint(0, len(faltantes)-1)
+        combinacion=faltantes.pop(posicion_azar)        
+        print(f"Sacamos la combinacion:{combinacion}, Tipo{type(combinacion)}")
 
-    print(f"Largo analisis01:{len(request.session['analisis01'])}")
-    if  len(request.session['analisis01']) > 0 :
-        posicion_azar=random.randint(0, len(request.session['analisis01'])-1)
-        combinacion=request.session['analisis01'].pop(posicion_azar)
-        print(f"Sacamos la combinacion:{combinacion}")
-        new_list=request.session['analisis01']
-        request.session['analisis01']=new_list
-    
-    
-        #del request.session['iat'][posicion_azar]
-        #restantes
-        restantes=len(request.session['analisis01'])
+        restantes=len(faltantes)
         #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
         context = {    
             "restantes":restantes,
             "posicion_azar":posicion_azar ,
-            "combinacion":combinacion
+            "combinacion":combinacion,
+            "dispositivo":disp,
         }
         return render(request, 'elecciones2021/test_principal.html', context)
     else:
@@ -299,21 +325,20 @@ def elecciones_test(request):
 
 @login_required
 def elecciones_end(request):
-
     #print("elecciones_end")
     if request.method == "POST":
         respuesta_final=request.POST['respuesta_final']
         print(f"R:{respuesta_final}")
-
+        #guardo la respuesta de la pregunta final
         respuesta_final_save(request.session['sondeo_id'],respuesta_final)        
-    
+        #dejo el sondeo como (R)esuelto
         sondeo=Sondeo.objects.get(id=request.session['sondeo_id'])
         sondeo.estado='R'
         sondeo.save()
+        #limpiamos USER para que alguien más pueda responder
         if 'user' in request.session:
             del request.session['user']
             return redirect('/')
-
 
         context = {    
             }
@@ -327,3 +352,9 @@ def regresar(request):
     if 'user' in request.session:
             del request.session['user']
     return redirect('/')
+
+#Solo pasará por aca si es un dispositivo=desktop
+def instrucciones(request):
+    context = {    
+            }
+    return render(request, 'elecciones2021/instrucciones_desktop.html', context)

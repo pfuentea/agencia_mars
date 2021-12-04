@@ -212,6 +212,8 @@ class Sondeo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  
 
+    def __str__ (self):
+        return f"Test:{self.test.id} (P:{self.participante.name})[E:{self.estado}] "
     
 class Descargas(models.Model):
     email=models.EmailField(max_length=255)

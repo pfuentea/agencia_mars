@@ -1,6 +1,8 @@
-from .models import Cliente
+from ..models import Cliente
 from django.core.checks import messages
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import IntegrityError
 
 #CLIENTE
 def cliente(request):
@@ -19,9 +21,12 @@ def cliente_new(request):
         return render(request, 'clientes.html', context)
     if request.method == "POST":
         cli=request.POST['cliente']
-        Cliente.objects.create(nombre=cli)
-        messages.success(request,f'Creación de Cliente exitosa!')
-        clientes= Cliente.objects.all()
+        try:
+            Cliente.objects.create(nombre=cli)
+            messages.success(request,f'Creación de Cliente exitosa!')
+        except IntegrityError:
+            messages.warning(request,f'El cliente ya existe!')
+        clientes= Cliente.objects.all().order_by('-id')
         context = {        
         "clientes":clientes,
         "accion":'default'
