@@ -3,9 +3,9 @@ from . import views,auth,elecciones2021,resumen
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo
 
 urlpatterns = [
-    #path('', views.index_resultados),
+    path('', views.index_resultados),
     path('descarga', views.descarga_resultados),
-    path('', views.index),
+    #path('', views.index),
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),

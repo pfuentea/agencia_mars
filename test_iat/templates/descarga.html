@@ -11,19 +11,24 @@
     <div class="row">
         <div class="col-10 mb-4">
             <p>
-                Muchas gracias {{nombre}} por su participación en la primera versión del 
-                estudio IAT de Elecciones Presidenciales 2021.
+                Muchas gracias <b>{{nombre}}</b> por su participación en la primera versión del estudio IAT de Elecciones Presidenciales 2021.
             </p>
             <p>
-                Descarga el Estudio de Elecciones Presidenciales 2021 de Implicita.</p>
+                Descarga los Estudios de Elecciones Presidenciales 2021 de Implicita.</p>
         </div>
     </div>
     <div class="row">
         <div class="col-10">
             {% load static %}
-            <p><a href="{% static "/downloads/iat_presidenciables.pdf" %}">Estudio PDF</a> </p>
+            <p><a href="{% static "/downloads/iat_presidenciables.pdf" %}">Estudio PDF(Primera vuelta)</a> </p>
         </div>
     </div>
-            
+    <div class="row">
+        <div class="col-10">
+            {% load static %}
+            <p><a href="{% static "/downloads/iat_presidenciables_2da.pdf" %}">Estudio PDF(Segunda vuelta)</a> </p>
+        </div>
+    </div>
+</div>         
     
 {% endblock %}
