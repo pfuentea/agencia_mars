@@ -3,9 +3,9 @@ from . import views,auth,elecciones2021,resumen
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo
 
 urlpatterns = [
-    path('', views.index_resultados),
+    #path('', views.index_resultados), # se comenta cuando hay test activo
     path('descarga', views.descarga_resultados),
-    #path('', views.index),
+    path('', views.index),# se descomenta cuando hay test activo
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),
@@ -58,13 +58,18 @@ urlpatterns = [
     path('iat/adjetivo/remove/<int:adj_id>', iat.iat_rem_adj),
 
     path('iat/resultado/<int:iat_id>/<int:user_id>', views.resultado), 
-    #iat elecciones
+    #iat elecciones 2021
     path('elecciones2021/start/<int:iat_id>', elecciones2021.elecciones_start),
     path('elecciones2021/test/<str:disp>', elecciones2021.elecciones_test), 
     path('elecciones2021/end', elecciones2021.elecciones_end), 
     path('elecciones2021/regresar', elecciones2021.regresar), 
     path('elecciones2021/instrucciones', elecciones2021.instrucciones),  
-    
+    #iat elecciones 2022
+    path('elecciones2022/start/<int:iat_id>', elecciones2021.elecciones_start),
+    path('elecciones2022/test/<str:disp>', elecciones2021.elecciones_test), 
+    path('elecciones2022/end', elecciones2021.elecciones_end), 
+    path('elecciones2022/regresar', elecciones2021.regresar), 
+    path('elecciones2022/instrucciones', elecciones2021.instrucciones),  
 
     path('usuarios', usuarios.usuarios), 
     path('usuarios/<int:user_id>', usuarios.usuarios_detalle),  

@@ -30,7 +30,7 @@ def index(request):
 
     invitado_antiguo=0
     # aca seteamos el id que dejamos disponible
-    iat_id=9
+    iat_id=10
     
     #entro al index, existe la variable USER(ingreso al index antes), pero no FROM_LOGIN(usuario tipo user y no guest) => limpiamos USER
     if request.method == "GET":
@@ -106,9 +106,9 @@ def index(request):
     #Resultado.objects.all().delete()
     #print("viene el render!")
     if user_nuevo == 0 and invitado_antiguo == 0:
-        return redirect('/elecciones2021/start/'+str(iat_id))
+        return redirect('/elecciones2022/start/'+str(iat_id))  #esa ruta debe ser variable segun test activo
     else:
-        return render(request, 'landing_estudio02.html', context)
+        return render(request, 'landing_estudio03.html', context) #esa ruta debe ser variable segun test activo
 
 def login(request):
     context = {
