@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 {% block content %}
 <div class="container">
-    {% ifequal accion "default" %}
+    {% if accion == "default" %}
     <div class="row">
         <div class="col">
             Listado de IATs
@@ -76,8 +76,8 @@
     </div>
 </div>
 
-    {% endifequal %}
-    {% ifequal accion "new" %}
+    {% endif %}
+    {% if accion == "new" %}
     <div class="row">
         <div class="col">
             <form action="/iat/new" method="POST">
@@ -115,8 +115,8 @@
             </form>
         </div>
     </div>
-    {% endifequal %}
-    {% ifequal accion "edit" %}
+    {% endif %}
+    {% if accion == "edit" %}
     <div class="row">
         <div class="col">
             <form action="/iat/{{iat.id}}/edit" method="POST">
@@ -153,9 +153,9 @@
             </form>
         </div>
     </div>
-    {% endifequal %}
+    {% endif %}
 
-    {% ifequal accion "detalle" %}
+    {% if accion == "detalle" %}
     <a href="/iat/">Volver al listado</a>
         <div class="row">
             <div class="col-6">
@@ -276,7 +276,7 @@
                 </div>
             </div>
         </div>
-    {% endifequal %}
+    {% endif %}
 </div>
 
 <script>
