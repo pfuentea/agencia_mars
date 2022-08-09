@@ -30,7 +30,7 @@ def index(request):
 
     invitado_antiguo=0
     # aca seteamos el id que dejamos disponible
-    iat_id=10
+    iat_id=11
     
     #entro al index, existe la variable USER(ingreso al index antes), pero no FROM_LOGIN(usuario tipo user y no guest) => limpiamos USER
     if request.method == "GET":
@@ -70,6 +70,7 @@ def index(request):
         #comenzamos asumiento que invitado_antiguo=0 (falso)    
         #en este punto hay dos posibilidades usuario-nuevo=>user, usuario_antiguo=>user
     #print("INDEX")
+
 
     #esto lo hacemos para verificar si ya habia entrado y cerro la página o viene de otro lado (escribio la url de nuevo )
     user_nuevo=1

@@ -15,6 +15,7 @@ def login(request):
     if request.method == "POST":
         print(request.POST)
         user = User.objects.filter(email=request.POST['email'])
+        print(len(user))
         if user:
             log_user = user[0]
 
