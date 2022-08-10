@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-#rom environs import Env
+#from environs import Env
 
 #env=Env()
 #env.read_env()
@@ -37,7 +37,7 @@ if env=='cloud':
 else:
     ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+STATIC_ROOT=os.path.join(BASE_DIR,'/static')
 
 # Application definition
 
