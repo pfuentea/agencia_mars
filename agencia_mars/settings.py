@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from .env import env
+from environs import Env
+
+env=Env()
+env.read_env()
+#from .env import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,13 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zxwcee_p8ylweop)r7t6i8^cz-7%x(gcm+w!2u--uzh9=f7zk0'
+SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if env=='cloud':
     ALLOWED_HOSTS = ['137.184.84.173','implicita.cl','www.implicita.cl']
+else:
+    ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
