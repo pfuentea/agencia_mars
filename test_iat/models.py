@@ -94,10 +94,10 @@ class UserManager(models.Manager):
             errors['solo_letras'] = "solo letras en nombre por favor"
 
         if len(postData['password']) < 8:
-            errors['password'] = "contraseña debe tener al menos 8 caracteres"
+            errors['password'] = "el password debe tener al menos 8 caracteres"
 
         if postData['password'] != postData['password_confirm'] :
-            errors['password_confirm'] = "contraseña y confirmar contraseña no son iguales. "
+            errors['password_confirm'] = "password y confirmar password no son iguales. "
 
         return errors
 
