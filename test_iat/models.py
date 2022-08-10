@@ -136,7 +136,8 @@ class Provincia(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__ (self):
-        return f"{self.nombre}({self.id})"
+        resultado=self.nombre+"("+self.id+")"
+        return resultado
 
 class Comuna(models.Model):
     nombre = models.CharField(max_length=100)
@@ -174,7 +175,8 @@ class User(models.Model):
     objects = UserManager()
     
     def __str__ (self):
-        return f"{self.name} ({self.id})"
+        resultado=self.nombre+"("+self.id+")"
+        return resultado
 
 class Combinacion(models.Model):
     test = models.ForeignKey(Test, related_name="combinaciones", on_delete = models.CASCADE)
@@ -214,7 +216,8 @@ class Sondeo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  
 
     def __str__ (self):
-        return f"Test:{self.test.id} (P:{self.participante.name})[E:{self.estado}] "
+        resultado="Test:"+self.test.id+"(P:"+self.participante.name+")[E:"+self.estado+"]"
+        return resultado
     
 class Descargas(models.Model):
     email=models.EmailField(max_length=255)
@@ -225,4 +228,5 @@ class Descargas(models.Model):
     objects = DescargaManager()
 
     def __str__ (self):
-        return f"{self.id}:{self.name} ({self.email})"
+        resultado=self.id +":"+self.name+"(" +self.email+")"
+        return resultado
