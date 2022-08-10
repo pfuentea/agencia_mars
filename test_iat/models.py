@@ -126,7 +126,7 @@ class Region(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__ (self):
-        resultado=f"{self.ordinal} : {self.nombre}"
+        resultado={self.ordinal}+":"+ {self.nombre}
         return resultado
 
 class Provincia(models.Model):
