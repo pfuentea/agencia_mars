@@ -33,7 +33,7 @@ SECRET_KEY='django-insecure-zxwcee_p8ylweop)r7t6i8^cz-7%x(gcm+w!2u--uzh9=f7zk0'
 DEBUG = False
 
 if env=='cloud':
-    ALLOWED_HOSTS = ['137.184.84.173','implicita.cl','www.implicita.cl']
+    ALLOWED_HOSTS = ['54.196.146.200','implicita.cl','www.implicita.cl']
 else:
     ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
