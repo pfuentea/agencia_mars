@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-#from environs import Env
-
-#env=Env()
-#env.read_env()
 from .env import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,19 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = env.str("SECRET_KEY")
 SECRET_KEY='django-insecure-zxwcee_p8ylweop)r7t6i8^cz-7%x(gcm+w!2u--uzh9=f7zk0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 if env=='cloud':
     ALLOWED_HOSTS = ['54.196.146.200','implicita.cl','www.implicita.cl']
 else:
     ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
-STATIC_ROOT=os.path.join(BASE_DIR,'agencia_mars')
-STATIC_URL = '/static/'
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
 # Application definition
 
@@ -89,7 +83,8 @@ WSGI_APPLICATION = 'agencia_mars.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, '/db.sqlite3'),
+        #'NAME': os.path.join(BASE_DIR, '/db.sqlite3'),
+        'NAME': str(BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -130,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

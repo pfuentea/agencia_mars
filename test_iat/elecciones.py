@@ -158,8 +158,10 @@ def get_faltantes(iat_id,user_id,analisis_id):
 @login_required
 def elecciones_start(request,iat_id):
     iat=Test.objects.get(id=iat_id)
+    request.session['iat_nombre']=iat.nombre
     user=User.objects.get(id=request.session['user']['id'])
     print("Elecciones_start!")
+    #print(iat.nombre)
     comuna_ok=0
     ciudad_ok=0
     comuna=""
@@ -340,7 +342,8 @@ def elecciones_end(request):
             del request.session['user']
             return redirect('/')
 
-        context = {    
+        context = {  
+
             }
         return render(request, 'elecciones2022/final.html', context)
     else:

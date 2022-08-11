@@ -3,7 +3,7 @@
 <div class="cointainer ms-4">
     <div class="row">
         <div class="col-10">
-            <h1>Estudio IAT Plebiscito Constitucional 2022</h1>
+            <h1>Estudio IAT {{request.session.iat_nombre}} </h1>
         </div>
     </div>
     {% if ok != 1 %}
@@ -74,7 +74,7 @@
                 El test debe ser realizado lo más <b>rápido</b> y <b>preciso</b> como sea posible.
             </p>
             <p>
-                La duración del test no supera los 3 minutos.
+                La duración del test no supera el minuto.
             </p>
         </div>
     </div>

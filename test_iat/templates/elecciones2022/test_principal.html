@@ -6,7 +6,7 @@
         position: absolute;
         left:-200px;
     }
-    .candidato{
+    .candidato2{
         height: auto; 
         width: auto; 
         max-width: 150px; 
@@ -19,7 +19,7 @@
         <div class="col">
         </div>
         <div class="col-8  text-center">
-            <h5>Estudio IAT Plebiscito Constitucional 2022</h5>
+            <h5>Estudio IAT {{request.session.iat_nombre}}</h5>
         </div>
         <div class="col">
            
@@ -55,9 +55,11 @@
     <div class="row">
         <div class="col-6 text-center">
             <img src="{% static "/image/"%}{{combinacion.img1}}" alt="my image" class="candidato" id="1">
+
         </div>
         <div class="col-6 text-center">
             <img src="{% static "/image/"%}{{combinacion.img2}}" alt="my image" class="candidato" id="2">
+           
         </div>
     </div>
     <!--
@@ -92,7 +94,7 @@
     </div>
 </div>
 
-<form action="/elecciones2021/test/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">
+<form action="/elecciones2022/test/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">
     {% csrf_token %}
     <input type="hidden" name="milisegundos" value="" id="milisegundos">
     <input type="hidden" name="combinacion" value="{{combinacion.pos}}">

@@ -2,7 +2,7 @@
 {% block content %}
     
     <div class="container">
-        {% ifequal accion "default" %}
+        {% if accion == "default" %}
         <div class="row">
             <div class="col-8">
                 <h1>Caracteristicas</h1>
@@ -44,9 +44,9 @@
                 <a href="/caracteristica/new">Agregar Caracteristica</a>
             </div>
         </div>
-        {% endifequal %}
+        {% endif %}
 
-        {% ifequal accion "new" %}
+        {% if accion == "new" %}
         <div class="row">
             <div class="col-8">
                 <h1>Nueva Caracteristica</h1>
@@ -63,8 +63,8 @@
                 </form>
             </div>
         </div>
-        {% endifequal %}
-        {% ifequal accion "edit" %}
+        {% endif %}
+        {% if accion == "edit" %}
         <div class="row">
             <div class="col-8">
                 <h1>Modificar Caracteristica: {{car.nombre}}</h1>
@@ -81,7 +81,7 @@
 
             </div>
         </div>
-        {% endifequal %}
+        {% endif %}
     </div>
     
 
