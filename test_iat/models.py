@@ -175,7 +175,7 @@ class User(models.Model):
     objects = UserManager()
     
     def __str__ (self):
-        resultado=self.nombre+"("+self.id+")"
+        resultado=self.name+"("+str(self.id)+")"
         return resultado
 
 class Combinacion(models.Model):
