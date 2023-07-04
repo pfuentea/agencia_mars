@@ -238,6 +238,7 @@ def iat_add_adj(request,car_id):
         if iat.tipo=="normal":
             #aca cuento los adjetivos que ya existen
             n_adj=tcar.adj_car.count()
+            print(f"n_adj:{n_adj}")
             result=tcar.adj_car.values_list('adjetivo')
             result2 =tcar.adj_car.values_list('id')
 

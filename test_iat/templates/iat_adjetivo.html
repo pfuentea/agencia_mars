@@ -5,10 +5,13 @@
         <div class="col">
 
             <h1>ADD ADJETIVO </h1>
-            <h3>Test : {{iat.nombre}} </h3>
+            <h3>Test : {{iat.nombre}} ({{iat.tipo}})</h3>
             <h3>Caracteristica : {{car.caracteristica.nombre}}</h3>
 
         </div>
+    </div>
+    <div class="row">
+        Adjetivos:
     </div>
     <div class="row">
         {% for cant in adj_totales %}
@@ -30,7 +33,7 @@
     {% endfor %}
 </div>
     {% if iat.tipo == "normal" %}
-        {% if adj2.id == -1 %}
+        
         <div class="row mt-3">
             <div class="col">
                 <form action="/iat/adjetivo/add/{{car.id}}" method="POST">
@@ -47,7 +50,7 @@
                 </form>
             </div>
         </div>
-        {% endif %}
+        
     {% else %}
     <div class="row mt-3">
         <div class="col">
