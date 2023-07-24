@@ -41,8 +41,11 @@
                                 {% if iat.categorias.count < 1 %} 
                                     <a href="/iat/categoria/add/{{iat.id}}">ADD CAT</a>
                                 {% endif %}
-                                <a href="/iat/{{iat.id}}" data-href="/iat/{{iat.id}}" class="btn btn-primary btn-xs" data-title="view" title="detalles" >
-                                    <i class="bi bi-eye"></i>
+                                <a href="/iat/{{iat.id}}" data-href="/iat/{{iat.id}}" class="btn btn-primary btn-xs" data-title="view" title="configurar" >
+                                    <i class="bi bi-card-list"></i>
+                                </a>
+                                <a href="/test/{{iat.id}}" data-href="/test/{{iat.id}}" class="btn btn-primary btn-xs" data-title="view" title="ejecutar" >
+                                    <i class="bi bi-play-circle"></i>
                                 </a>
                             </td>
                         </tr>       
@@ -156,7 +159,7 @@
     {% endif %}
 
     {% if accion == "detalle" %}
-    <a href="/iat/">Volver al listado</a>
+    <a href="/iat/">Volver al listado</a> / <a href="/iat/{{iat.id}}">Config</a>
         <div class="row">
             <div class="col-6">
                 <h3>Cliente : {{iat.cliente.nombre}}</h3>
@@ -216,10 +219,12 @@
         <div class="row">
             <div class="col-8">
                     <select name="car" id="car">
+                        <option value="">Seleccione Caracteristica</option>
+                        <option value="otro">Nueva Caracteristica</option>
                         {% for c in cars %}
                         <option value="{{c.id}}">{{c.nombre}}</option>
                         {% endfor %}
-                        <option value="otro">Nueva Caracteristica</option>
+                        
                     </select>
                     <input type="text" name="new_car" id="new_car" placeholder="Nueva Caracteristica" class="form-control form-control-sm d-none mt-3" >
                     
@@ -231,16 +236,30 @@
             </div>
         </div>
         </form>
-        <div class="row">
-            <div class="col-8">
-                <h2>Combinaciones</h2>
-                {% for c in combinaciones %}
-                    <p>{{c}}</p>
-                {% empty %}     
-                    Sin combinaciones
-                {% endfor %}
-            </div>
+
+        <div class="rounded-3 p-1 bg-secondary">
+
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        <h2>Combinaciones ({{combinaciones|length}})</h2>
+                        
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        {% for c in combinaciones %}
+                            <p>{{c}}</p>
+                        {% empty %}     
+                            Sin combinaciones
+                        {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
+        
         <div class="row">
 
             <div class="col-6">
@@ -257,7 +276,7 @@
                         {% for p in participantes %}  
                             <tr>
                                 <td>
-                                    <a href="/iat/resultado/{{iat.id}}/{{p.user_id}}">
+                                    <a href="/iat/resultado/{{iat.id}}/1/{{p.user_id}}">
                                         {{p.nombre}} 
                                     </a>
                                 </td>
@@ -290,8 +309,8 @@
         var oTblUsers = $('#respuestas')
         oTblUsers.DataTable({
             "search": 'Buscar',
-            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
-            "iDisplayLength":35
+            "aLengthMenu":[[5,10,20,40,-1],[5,10,20,40,"All"]],
+            "iDisplayLength":20
         });
     });
 </script>

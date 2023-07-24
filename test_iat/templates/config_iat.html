@@ -1,0 +1,92 @@
+{% extends './base.html' %}
+{% block content %}
+<style>
+    .mobile{
+        display: none;
+    }
+    .tablet{
+        display: none;
+    }
+    .desktop{
+        display: inline-block;
+    }
+    
+    @media only screen and (max-width: 1100px){
+        .mobile{
+            display: none;
+        }
+        .tablet{
+            display: inline-block;
+        }
+        .desktop{
+            display: none;
+        }            
+    }
+    @media only screen and (max-width: 600px){
+        .mobile{
+            display: inline-block;
+        }
+        .tablet{
+            display: none;
+        }
+        .desktop{
+            display: none;
+        }            
+    }
+</style>
+<div class="row ms-4">
+    <div class="col">
+        <a href="/config_01/{{iat_id}}">Configurar Analisis 01</a>
+        <p><a href="/estudio/paso1">Ejecutar Analisis 01</a></p>
+
+        <div class="mobile" id="mobile">
+            <a href="/estudio/paso1/m" class="btn btn-sm btn-primary">Ejecutar Analisis 01(mobile)</a>
+        </div>
+        <div class="tablet" id="tablet">
+            <a href="/estudio/paso1/t" class="btn btn-sm btn-primary">Ejecutar Analisis 01(tablet)</a>
+        </div>
+        <div class="desktop" id="desktop">
+            <a href="/elecciones2022/instrucciones" class="btn btn-sm btn-primary">Ejecutar Analisis 01(desktop)</a>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/config_02/{{iat_id}}">Configurar Analisis 02</a>
+        <p><a href="/siguiente_paso/1/{{iat_id}}">Ejecutar Analisis 02</a></p>
+        <div class="mobile" id="mobile">
+            <a href="/siguiente_paso/1/{{iat_id}}/m" class="btn btn-sm btn-primary">Ejecutar Analisis 01(mobile)</a>
+        </div>
+        <div class="tablet" id="tablet">
+            <a href="/siguiente_paso/1/{{iat_id}}/t" class="btn btn-sm btn-primary">Ejecutar Analisis 01(tablet)</a>
+        </div>
+        <div class="desktop" id="desktop">
+            <a href="/siguiente_paso/1/{{iat_id}}/d" class="btn btn-sm btn-primary">Ejecutar Analisis 01(desktop)</a>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/config_03/{{iat_id}}">Configurar Analisis 03</a>
+        <p><a href="/siguiente_paso/2/{{iat_id}}">Ejecutar Analisis 03</a></p>
+        <div class="mobile" id="mobile">
+            <a href="/siguiente_paso/2/{{iat_id}}/m" class="btn btn-sm btn-primary">Ejecutar Analisis 01(mobile)</a>
+        </div>
+        <div class="tablet" id="tablet">
+            <a href="/siguiente_paso/2/{{iat_id}}/t" class="btn btn-sm btn-primary">Ejecutar Analisis 01(tablet)</a>
+        </div>
+        <div class="desktop" id="desktop">
+            <a href="/siguiente_paso/2/{{iat_id}}/d" class="btn btn-sm btn-primary">Ejecutar Analisis 01(desktop)</a>
+        </div>
+    </div>
+    <div class="col">
+        <a href="/config_04/{{iat_id}}">Configurar Analisis 04</a>
+        <p><a href="/siguiente_paso/3/{{iat_id}}">Ejecutar Analisis 04</a></p>
+        <div class="mobile" id="mobile">
+            <a href="/siguiente_paso/3/{{iat_id}}/m" class="btn btn-sm btn-primary">Ejecutar Analisis 01(mobile)</a>
+        </div>
+        <div class="tablet" id="tablet">
+            <a href="/siguiente_paso/3/{{iat_id}}/t" class="btn btn-sm btn-primary">Ejecutar Analisis 01(tablet)</a>
+        </div>
+        <div class="desktop" id="desktop">
+            <a href="/siguiente_paso/3/{{iat_id}}/d" class="btn btn-sm btn-primary">Ejecutar Analisis 01(desktop)</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

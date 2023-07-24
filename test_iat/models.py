@@ -45,6 +45,8 @@ class Producto(models.Model):
     nombre =  models.CharField(max_length=255,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def __str__ (self):
+        return self.nombre
 
 class Tcategoria(models.Model):
     categoria=models.ForeignKey(Categoria, related_name="t_cat", on_delete = models.CASCADE)
@@ -64,18 +66,29 @@ class Tadjetivos(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+#estos seran los productos de una categoria (analisis 02)
 class Tproductos(models.Model):
     producto =models.ForeignKey(Producto, related_name="t_prod", on_delete = models.CASCADE)
     categoria = models.ForeignKey(Tcategoria, related_name="prod_cat", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    def __str__ (self):
+        return self.producto
 
-#estas seran las caracteristicas de un producto
+#estas seran las caracteristicas de un producto (analisis 02)
 class Tatributos(models.Model):
     caracteristica =models.ForeignKey(Caracteristica, related_name="t_atr", on_delete = models.CASCADE)
-    producto = models.ForeignKey(Tproductos, related_name="prod_atr", on_delete = models.CASCADE)
+    categoria = models.ForeignKey(Tcategoria, related_name="atr_cat", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+#estos seran los calificativos de un atributo (analisis 02)
+class Tcalificativos(models.Model):
+    calificativo=models.ForeignKey(Adjetivo, related_name="t_calif", on_delete = models.CASCADE)
+    atributo = models.ForeignKey(Tatributos, related_name="calif_atrib", on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class UserManager(models.Manager):
     def validador_basico(self, postData):
@@ -152,7 +165,7 @@ class User(models.Model):
     CHOICES = (
         ("user", 'User'),
         ("mars", 'MARS'),
-         ("guest", 'Invitado'),
+        ("guest", 'Invitado'),
         ("admin", 'Admin')
     )
     SEXO = (

@@ -1,0 +1,246 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+    <p>
+        En este analisis se deben generar las combinaciones: {producto_i,caracteristica_j,adjetivo_k} 
+    </p>
+    <a href="/iat/">Volver al listado</a> / <a href="/iat/{{iat.id}}">Config</a>
+    <div class="row">
+        <div class="col-6">
+            <h3>Cliente : {{iat.cliente.nombre}}</h3>
+            <h3>Nombre Test : {{iat.nombre}}</h3>
+            <h4>Categoria : 
+                {{categoria.nombre}}
+                {% if categoria == "vacio" %}
+                <a href="/iat/categoria/add/{{iat.id}}">ADD CAT</a>
+                {% endif %}
+            </h4>
+        </div>    
+    </div>
+    
+    <div class="row">
+        <div class="col"><h1>PRODUCTOS: {{tcat.prod_cat.count}}</h1></div>
+    </div>
+    
+    {% if tcat.prod_cat.count > 0 %}
+        <div class="row">
+            <div class="col-6">
+                <div class="table-responsive">
+                    <table id="productos" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in productos %}  
+                            <tr>
+                                <td> {{p.nombre}}</td>
+                                <td> 
+                                    <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{t.id}}">[Eliminar]</a>                                
+                                </td>
+                            </tr>  
+                        {% empty %}     
+                            <tr>
+                                <td> No existen productos asociados aún</td>
+                                <td> X </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+    {% elif tcat.prod_cat.count == 0 %}
+        <div class="row">
+            <div class="col-8">
+                No existen aun Productos
+            </div>
+        </div>
+    {% endif %}
+    
+    <form action="/config_02/producto/add/{{iat.id}}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-8">
+                <select name="prod" id="prod">
+                    <option value="">Seleccione Producto</option>
+                    <option value="otro">Nuevo Producto</option>
+                    {% for pr in prods %}
+                    <option value="{{pr.id}}">{{pr.nombre}}</option>
+                    {% endfor %}
+                    
+                </select>
+                <input type="text" name="new_prod" id="new_prod" placeholder="Nuevo producto" class="form-control form-control-sm d-none mt-3" >
+                    
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <button type="submit" class="btn btn-outline-primary mt-3">Agregar nuevo producto</a>                                    
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col"><h1>ATRIBUTOS-ADJETIVOS</h1></div>
+    </div>
+    {% if tcat.atr_cat.count > 0 %}
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive">
+                    <table id="atributos" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>Atributos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for atr in atributos %}  
+                            <tr>
+                                <td> {{atr.nombre}}</td>
+                                <td> 
+                                    <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{atr.id}}">[Eliminar]</a>        
+                                    <a href="/config_02/calificativo/add/{{atr.id}}">Calificativos({{atr.n_calif}})</a>
+                                     {{atr}}                       
+                                </td>
+                            </tr>  
+                        {% empty %}     
+                            <tr>
+                                <td> No existen atributos asociados aún</td>
+                                <td> X </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+       
+    {% elif tcat.atr_cat.count == 0 %}
+        <div class="row">
+            <div class="col-8">
+                No existen aun Atributos
+            </div>
+        </div>
+    {% endif %}
+    
+    
+    <form action="/config_02/atributo/add/{{iat.id}}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-8">
+                    <select name="atrib" id="atrib">
+                        <option value="">Seleccione Atributo</option>
+                        <option value="otro">Nuevo Atributo</option>
+                        {% for atrib in atribs %}
+                        <option value="{{atrib.id}}">{{atrib.nombre}}</option>
+                        {% endfor %}
+                        
+                    </select>
+                    <input type="text" name="new_atrib" id="new_atrib" placeholder="Nuevo atributo" class="form-control form-control-sm d-none mt-3" >
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <button type="submit" class="btn btn-outline-primary mt-3">Agregar nuevo atributo</a>                                    
+            </div>
+        </div>
+        </form>
+</div>
+
+<div class="container mb-4">
+    Acá podría ir un acordeon con las combinaciones
+    <div class="rounded-3 p-1 bg-secondary">
+
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    <h2>Combinaciones ({{combinaciones|length}})</h2>
+                    
+                </button>
+              </h2>
+              <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    {% for c in combinaciones %}
+                        <p>{{c}}</p>
+                    {% empty %}     
+                        Sin combinaciones
+                    {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="row">
+    
+                <div class="col-6">
+                    <h2>Resultados:</h2>
+                    <div class="table-responsive">
+                        <table id="respuestas" class="table table-striped table-bordered" width="100%" >
+                            <thead>
+                                <tr>
+                                    <th>Participante</th>
+                                    <th>Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for p in participantes %}  
+                                <tr>
+                                    <td>
+                                        <a href="/iat/resultado/{{iat.id}}/2/{{p.user_id}}">
+                                            {{p.nombre}} 
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{p.user_id}}
+                                    </td>
+                                </tr>  
+                            {% empty %}     
+                            <tr>
+                                <td> No existen caracteristicas asociadas aún</td>
+                                
+                            </tr>
+                            {% endfor %}
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#atrib').on('change',function(){
+        if ( $(this).val() =='otro' ){
+            $('#new_atrib').removeClass('d-none');
+            $('#new_atrib').focus();
+        }
+        else{
+            $('#new_atrib').addClass('d-none');
+        }
+    });
+
+    $('#prod').on('change',function(){
+        if ( $(this).val() =='otro' ){
+            $('#new_prod').removeClass('d-none');
+            $('#new_prod').focus();
+        }
+        else{
+            $('#new_prod').addClass('d-none');
+        }
+    });
+</script>
+{% endblock %}

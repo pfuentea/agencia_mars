@@ -1,0 +1,45 @@
+{% extends '../base.html' %}
+{% block content %}
+<div class="cointainer ms-5">
+    <div class="row">
+        <div class="col-10">
+            <h1>Estudio IAT {{request.session.iat_nombre}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10">
+            <h6>
+                <p>
+                    ¡Muchas gracias por tu tiempo!
+                </p>
+                <p>
+                    ¿Te gustaría seguir recibiendo más estudios de este tipo en el futuro?
+                </p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="respuesta_final" id="respuesta_final1" checked value="S">
+                        <label class="form-check-label" for="respuesta_final1">
+                            SI
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="respuesta_final" id="respuesta_final2" value="N">
+                        <label class="form-check-label" for="respuesta_final2">
+                            NO
+                        </label>
+                    </div>
+                    <div class="">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Terminar
+                        </button>
+                    </div>
+                </form>
+            </h6>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

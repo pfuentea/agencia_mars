@@ -1,0 +1,33 @@
+{% extends '../base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <p>El navegador redirigirá dentro de <span id="countdown"></span> segundos al estudio.
+            </p>
+            <p>Para responder este estudio por favor posicione su dedo índice de la mano izquierda sobre la tecla <b>E</b> y el índice de su mano derecha sobre la tecla <b>I</b>, el test debe ser respondido lo más rápido y preciso posible.
+            </p>
+            <p>Afirmaciones serán mostradas a la izquierda o a la derecha y usted deberá teclear la letra <b>E</b>  cuando la frase asociada está a la <b>izquierda</b>  o la letra <b>I</b>  cuando la frase asociada está a la  <b>derecha</b>   .</p>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    setTimeout( function() { 
+        window.location.href = "/estudio/test/d"; 
+    }, 25000 );
+    
+    window.onload = updateClock;
+    var totalTime = 25;
+    function updateClock() {
+        document.getElementById('countdown').innerHTML = totalTime;
+        if(totalTime > 0){
+            totalTime-=1;
+            setTimeout("updateClock()",1000);
+        }
+    }   
+</script>
+
+
+{% endblock %}

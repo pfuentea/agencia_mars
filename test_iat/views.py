@@ -30,7 +30,7 @@ def index(request):
 
     invitado_antiguo=0
     # aca seteamos el id que dejamos disponible
-    iat_id=1
+    iat_id=10
     
     #entro al index, existe la variable USER(ingreso al index antes), pero no FROM_LOGIN(usuario tipo user y no guest) => limpiamos USER
     if request.method == "GET":
@@ -107,7 +107,7 @@ def index(request):
     #Resultado.objects.all().delete()
     #print("viene el render!")
     if user_nuevo == 0 and invitado_antiguo == 0:
-        return redirect('/elecciones2022/start/'+str(iat_id))  #esa ruta debe ser variable segun test activo
+        return redirect('/estudio/start/'+str(iat_id))  #esa ruta debe ser variable segun test activo
     else:
         return render(request, 'landing_estudio03.html', context) #esa ruta debe ser variable segun test activo
 
@@ -143,16 +143,21 @@ def registro(request):
 #Creación de nuevo test:
 
 
-def resultado(request,iat_id,user_id):
+def resultado(request,iat_id,analisis_id,user_id):
     iat=Test.objects.get(id=iat_id)
     participante=User.objects.get(id=user_id)
-    resultados=Resultado.objects.filter(combinacion__test=iat,combinacion__participante=participante)
-    #print(resultados)
+    resultados=Resultado.objects.filter(combinacion__test=iat,combinacion__participante=participante,combinacion__analisis=analisis_id)
+    '''
+    print(f"Resultados total:{len(resultados)}")
     valores=resultados[0].combinacion.valor
     json_acceptable_string = valores.replace("'", "\"")
     quest = json.loads(json_acceptable_string)
-    pregunta=quest['car']
-    
+    print(f"quest:{quest}")
+    if analisis_id == 1:
+        pregunta = quest['car']
+    elif analisis_id == 2:
+        pregunta = quest['producto']+'-'+quest['atributo']
+    '''
     #print(resultados[0].combinacion.valor)
     #print(resultados.combinacion)
     context={

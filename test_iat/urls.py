@@ -1,21 +1,22 @@
 from django.urls import path
-from . import views,auth,elecciones2021,resumen, elecciones
+from . import views,auth,elecciones2021,resumen, elecciones, estudio
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo
 
 urlpatterns = [
-    path('', views.index_resultados), # se comenta cuando hay test activo
+    #path('', views.index_resultados), # se comenta cuando hay test activo
     path('descarga', views.descarga_resultados),
-    #path('', views.index),# se descomenta cuando hay test activo
+    path('', views.index),# se descomenta cuando hay test activo
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),
+    #ir al test especifico
+    #path('exec_test/<int:test_id>', iat.exec_test),
     #ejecucion
     path('test/<int:test_id>', iat.test),
     path('test/paso1', iat.paso1),
     path('test/paso2', iat.paso2),
     path('test/paso3', iat.paso3),
     path('test/paso4', iat.paso4),
-    path('test/paso5', iat.paso5),
     path('test/final', iat.final),
     #mantenedores
     path('cliente/', cliente.cliente), 
@@ -48,7 +49,7 @@ urlpatterns = [
     path('iat/new', iat.iat_new), 
     path('iat/<int:iat_id>/edit', iat.iat_edit), 
     path('iat/<int:iat_id>/destroy', iat.iat_destroy),
-    path('iat/<int:iat_id>', iat.iat_detalle ), 
+    path('iat/<int:iat_id>', iat.config ),   
     
     ### analisis categoria 
     path('iat/categoria/add/<int:iat_id>', iat.iat_add_cat),
@@ -57,7 +58,9 @@ urlpatterns = [
     path('iat/adjetivo/add/<int:car_id>', iat.iat_add_adj),
     path('iat/adjetivo/remove/<int:adj_id>', iat.iat_rem_adj),
 
-    path('iat/resultado/<int:iat_id>/<int:user_id>', views.resultado), 
+
+    path('iat/resultado/<int:iat_id>/<int:analisis_id>/<int:user_id>', views.resultado), 
+
     #iat elecciones 2021
     path('elecciones2021/start/<int:iat_id>', elecciones2021.elecciones_start),
     path('elecciones2021/test/<str:disp>', elecciones2021.elecciones_test), 
@@ -71,6 +74,20 @@ urlpatterns = [
     path('elecciones2022/regresar', elecciones.regresar), 
     path('elecciones2022/instrucciones', elecciones.instrucciones),  
 
+    #iat cualquiera:
+    path('estudio/start/<int:iat_id>', estudio.start), 
+    path('estudio/test/<str:disp>', estudio.test), 
+    path('estudio/paso1/<str:disp>', estudio.paso1), #analisis 01
+    path('estudio/paso2/<str:disp>', estudio.paso2), #analisis 02
+    path('estudio/paso3/<str:disp>', estudio.paso3), #analisis 03
+    path('estudio/paso4/<str:disp>', estudio.paso4), #analisis 04
+    path('estudio/end', estudio.end), 
+    path('estudio/regresar', estudio.regresar), 
+    path('estudio/instrucciones', estudio.instrucciones),  
+    path('siguiente_paso/<int:paso_anterior>/<int:iat_id>/<str:disp>', estudio.siguiente_paso), 
+    
+
+
     path('usuarios', usuarios.usuarios), 
     path('usuarios/<int:user_id>', usuarios.usuarios_detalle),  
 
@@ -78,7 +95,23 @@ urlpatterns = [
     path('sondeos/activar', sondeo.sondeos), 
     path('sondeos/desactivar/<int:s_id>', sondeo.sondeos_deactivate), 
     path('sondeos/<int:s_id>/destroy', sondeo.sondeos_destroy), 
-
     path('resumen/<int:iat_id>', resumen.resumen), 
+
+    path('config_01/<int:iat_id>', iat.iat_detalle), 
+    path('config_02/<int:iat_id>', iat.config_pms), 
+    path('config_02/producto/add/<int:iat_id>', iat.iat_add_prod),
+    path('config_02/producto/remove/<int:iat_id>', iat.iat_rem_prod),
+    path('config_02/atributo/add/<int:iat_id>', iat.iat_add_atrib), 
+    path('config_02/atributo/remove/<int:iat_id>', iat.iat_rem_atrib),
+
+    path('config_02/calificativo/add/<int:atrib_id>', iat.iat_add_calif), 
+    path('config_02/calificativo/remove/<int:calif_id>', iat.iat_rem_calif), 
+
+    path('config_03/<int:iat_id>', iat.config_cat), 
+    
+    
+
+
+
 
 ]

@@ -6,7 +6,7 @@
 
             <h1>ADD ADJETIVO (en modo normal solo se pueden agregar hasta 2) </h1>
             <h3>Test : {{iat.nombre}} ({{iat.tipo}})</h3>
-            <h3>Caracteristica : {{car.caracteristica.nombre}}</h3>
+            <h3>Atributo : {{atrib.caracteristica.nombre}}</h3>
 
         </div>
     </div>
@@ -14,19 +14,19 @@
         Adjetivos:
     </div>
     <div class="row">
-        {% for cant in adj_totales %}
+        {% for cant in calif_totales %}
         <div class="col">
-            Adjetivo {{cant}}
+            Calificativo {{cant}}
         </div>        
         {% endfor %}
     </div>
 
 <div class="row">
-    {% for r in adjs %}
+    {% for cal in calif %}
     <div class="col">
-        <b>N:{{r.nombre}}
-            {% if r.id > 0 %}
-                <a href="/iat/adjetivo/remove/{{r.id}}?car_id={{car.id}}">[Eliminar]</a>               
+        <b>N:{{cal.nombre}}
+            {% if cal.id > 0 %}
+                <a href="/config_02/calificativo/remove/{{cal.id}}?atrib_id={{atrib.id}}">[Eliminar]</a>               
             {% endif %}
         </b>
     </div>
@@ -36,7 +36,7 @@
         
         <div class="row mt-3">
             <div class="col">
-                <form action="/iat/adjetivo/add/{{car.id}}" method="POST">
+                <form action="/config_02/calificativo/add/{{atrib.id}}" method="POST">
                     {% csrf_token %}
                     <select name="adj_id" id="adj_id">
                         <option value="">Seleccione un adjetivo</option>
@@ -70,7 +70,7 @@
         </div>
     </div>
     {% endif %}
-    <a href="/iat/{{iat.id}}">Volver a Caracteristicas</a>
+    <a href="/config_02/{{iat.id}}">Volver a Atributos</a>
 </div>
 <script>
     $('#adj_id').on('change',function(){

@@ -10,6 +10,7 @@ def sondeos(request):
         user =  User.objects.get(id=request.POST['user'])
         s=Sondeo.objects.filter(test=test,participante=user)
         print(f"t:{request.POST['iat']},u:{request.POST['user']}")
+        #si no existe sondeo lo activo
         if len(s) == 0 :
             sond= Sondeo.objects.create(test=test,participante=user,estado="A")
             print("nuevo")

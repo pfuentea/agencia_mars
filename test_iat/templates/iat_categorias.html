@@ -15,10 +15,11 @@
                 <label for="categoria" class="form-label">Categoria</label>
                 <select name="categoria" id="categoria">
                     <option value="">Seleccione una categoria</option>
+                    <option value="otro">Nueva Categoria</option>
                     {% for c in categorias %}
                         <option value="{{c.id}}">{{c.nombre}}</option>
                     {% endfor %}
-                    <option value="otro">Nueva Categoria</option>
+                   
                 </select>
                 <input type="text" class="form-control" id="categoria_new" name="categoria_new">
             </div>
