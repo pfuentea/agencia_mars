@@ -12,6 +12,10 @@
         max-width: 150px; 
         max-height: 150px;
     }
+    .imagen_producto{
+        width:200px;
+        height: auto;
+    }
 </style>
 <div class="container">
     <div class="row">
@@ -27,7 +31,7 @@
     {% load static %}
     <div class="row">
         <div class="col text-center">
-            <img src="{% static "/image/"%}{{combinacion.producto}}.jpg" alt="">
+            <img src="{% static "/image/"%}{{combinacion.producto}}.jpg" alt="" class="imagen_producto">
             {% if request.session.user.role == "admin" %}
             <p>restantes: ({{restantes}}) - posicion:({{posicion_azar}}) - original:({{combinacion.pos}}) <br>
             </p>
@@ -52,15 +56,7 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-        </div>
-        <div class="col-6  text-center">
-            <a href="/siguiente_paso/2/{{request.session.iat_id}}/{{dispositivo}}" class="btn btn-primary">SIGUIENTE </a>
-        </div>
-        <div class="col">
-        </div>
-    </div>
+   
 </div>
 
 <form action="/estudio/paso2/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">

@@ -7,6 +7,21 @@ from django.db import IntegrityError
 import json
 from .decorators import login_required 
 
+def landing(request):
+    context = {
+        
+    }
+    return render(request, 'landing.html', context)
+
+def sitio_privado(request):
+    user=User.objects.get(id=request.session['user_id'])
+    estudios=Sondeo.objects.filter(participante=user,estado='A')
+
+    context = {
+        "estudios":estudios
+    }
+    return render(request, 'sitio_privado.html', context)
+
 def index_resultados(request):
     context = {
         "saludo":"hola"

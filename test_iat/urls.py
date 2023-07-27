@@ -3,9 +3,13 @@ from . import views,auth,elecciones2021,resumen, elecciones, estudio
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo
 
 urlpatterns = [
+
+    path('', views.landing),
+    path('sitio_privado',views.sitio_privado),
+
     #path('', views.index_resultados), # se comenta cuando hay test activo
     path('descarga', views.descarga_resultados),
-    path('', views.index),# se descomenta cuando hay test activo
+    # path('', views.index),# se descomenta cuando hay test activo
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),

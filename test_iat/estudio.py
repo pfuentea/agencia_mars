@@ -188,7 +188,6 @@ def get_faltantes(iat_id,user_id,analisis_id):
             faltantes.append(quest)
     return faltantes
 
-
 #en esta parte debemos setear primero los datos que nos piden para
 # perfilar al usuario antes de mostrar el START! (OK- solo falta la comuna)
 @login_required
@@ -249,7 +248,7 @@ def start(request,iat_id):
 
     validaciones= get_minimo_atributos(request.session['user']['id'])
     #si estan todas las validaciones ==>1, si no ==>0
-    print(f"validaciones:{validaciones}")
+    print(f"validaciones:{validaciones} (1=ok,0=nok)")
     if validaciones > 0:
         #Resultado.objects.all().delete()
         #Combinacion.objects.all().delete()
@@ -265,11 +264,14 @@ def start(request,iat_id):
             print(f"Sondeo_id:{sondeo.id},estado:{sondeo.estado}")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
+                print("Este sondeo existe y esta disponible")
             elif sondeo.estado == "R": #en el caso que lo finalice ya
                 ok=2
+                print("Este sondeo existe y esta respondido")
         elif len(sondeos) == 0: #que no exista un sondeo
             s=Sondeo.objects.create(test=iat, participante=user,estado="A")
             ok=1
+            print("Este sondeo no existía, se crea")
             
         
         
@@ -359,12 +361,33 @@ def test(request,disp):
             "combinacion":combinacion,
             "dispositivo":disp,
         }
-        return render(request, '/estudio/test_principal.html', context)
+        return render(request, 'estudio/test_principal.html', context)
     else:
-        return redirect('/estudio/end')
+        return redirect('/siguiente_paso/1/'+str(request.session['iat_id'])+'/'+disp)
 
 @login_required
 def end(request):
+    #print("elecciones_end")
+    if request.method == "POST":
+        respuesta_final=request.POST['respuesta_final']
+        print(f"R:{respuesta_final}")
+        #guardo la respuesta de la pregunta final
+        respuesta_final_save(request.session['sondeo_id'],respuesta_final)        
+        #dejo el sondeo como (R)esuelto
+        sondeo=Sondeo.objects.get(id=request.session['sondeo_id'])
+        sondeo.estado='R'
+        sondeo.save()
+        context = {  
+
+            }
+        return redirect('/sitio_privado')
+    else:
+        if 'combinaciones_ok2' in request.session:
+            del request.session['combinaciones_ok2']
+        return redirect('/sitio_privado')
+    
+@login_required
+def end2(request):
     #print("elecciones_end")
     if request.method == "POST":
         respuesta_final=request.POST['respuesta_final']
@@ -410,7 +433,8 @@ def siguiente_paso(request,paso_anterior,iat_id,disp):
     elif paso_anterior==2:
         request.session['analisis']=3
         request.session['iat_id']=iat_id
-        return redirect('/estudio/paso3/'+disp)
+        return redirect('/estudio/end')
+        #return redirect('/estudio/paso3/'+disp)
     elif paso_anterior==3:
         request.session['analisis']=4
         request.session['iat_id']=iat_id
@@ -528,7 +552,8 @@ def paso2(request,disp):
             combis=get_combinaciones_analisis02(iat_id)
             save_combinaciones(combis,iat_id,request.session['user']['id'],2)
         request.session['combinaciones_ok2']='OK'
-
+    else:
+        print("Existe combinaciones_ok2 en request.session")
     # se contrastan las combinaciones contra los Resultados (respondido) y obtenemos las que quedan sin reponder
     faltantes=[]
     faltantes=get_faltantes(iat.id,user.id,2)
@@ -550,11 +575,12 @@ def paso2(request,disp):
         return render(request, 'estudio/segunda_parte.html', context)
     else:
         return redirect('/siguiente_paso/2/'+str(request.session['iat_id'])+'/'+disp)
+    
 def paso3(request,disp):
     context={
 
     }
-    return render(request, 'estudio/tercera_parte.html', context)
+    #return render(request, 'estudio/tercera_parte.html', context)
 
 def paso4(request,disp):
     context={

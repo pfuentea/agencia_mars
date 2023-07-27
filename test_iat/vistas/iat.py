@@ -298,7 +298,7 @@ def iat_add_car(request,iat_id):
     if request.POST['car'] =='otro':
         if request.POST['new_car'] == "":
             messages.warning(request,'La caracteristica no puede ser vacía')
-            return redirect('/iat/'+str(iat_id))
+            return redirect('/config_01/'+str(iat_id))
         else:    
             try:
                 caract= Caracteristica.objects.create(nombre=request.POST['new_car'])
@@ -313,14 +313,14 @@ def iat_add_car(request,iat_id):
     new_car=Tcaracteristicas.objects.create(caracteristica=caract,categoria=tcat)
     messages.success(request,f'Caracteristica agregada exitosamente!')
     
-    return redirect('/iat/'+str(iat_id))
+    return redirect('/config_01/'+str(iat_id))
 
 def iat_rem_car(request,iat_id):
     tcar_id=request.GET['car_id']
     target=Tcaracteristicas.objects.get(id=tcar_id)
     target.delete()
     messages.success(request,f'Caracteristica eliminada exitosamente!')
-    return redirect('/iat/'+str(iat_id))
+    return redirect('/config_01/'+str(iat_id))
 
 def iat_add_calif(request,atrib_id):
     if request.method=='GET':

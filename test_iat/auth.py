@@ -31,7 +31,7 @@ def login(request):
                 request.session['user'] = user
                 request.session['from_login']="y"
                 messages.success(request, "Logueado correctamente.")
-                return redirect("/")
+                return redirect("/sitio_privado")
             else:
                 messages.error(request, "Password o Email  incorrectos.")
         else:
@@ -62,15 +62,18 @@ def registro(request):
             request.session['register_email'] = ""
 
             password_encryp = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt()).decode() 
+            try:
+                usuario_nuevo = User.objects.create(
+                    name = request.POST['name'],
+                    email=request.POST['email'],
+                    password=password_encryp,
+                    role=request.POST['role']
+                )
+                messages.success(request, "El usuario fue agregado con exito.")
+            except:
+                messages.warning(request, "El usuario ya existe.")
+                return redirect("/login")
 
-            usuario_nuevo = User.objects.create(
-                name = request.POST['name'],
-                email=request.POST['email'],
-                password=password_encryp,
-                role=request.POST['role']
-            )
-
-            messages.success(request, "El usuario fue agregado con exito.")
             
 
             request.session['user'] = {
@@ -79,7 +82,7 @@ def registro(request):
                 "email": usuario_nuevo.email,
                 "role": usuario_nuevo.role,
             }
-            return redirect("/")
+            return redirect("/sitio_privado")
 
         return redirect("/registro")
     else:
