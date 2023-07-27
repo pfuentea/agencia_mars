@@ -29,6 +29,7 @@ def login(request):
                 }
                 #print(f"User:{user}")
                 request.session['user'] = user
+                request.session['user_id'] = user.id
                 request.session['from_login']="y"
                 messages.success(request, "Logueado correctamente.")
                 return redirect("/sitio_privado")
@@ -82,6 +83,7 @@ def registro(request):
                 "email": usuario_nuevo.email,
                 "role": usuario_nuevo.role,
             }
+            request.session['user_id'] = request.session['user']['id']
             return redirect("/sitio_privado")
 
         return redirect("/registro")
