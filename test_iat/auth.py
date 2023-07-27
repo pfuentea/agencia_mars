@@ -29,7 +29,7 @@ def login(request):
                 }
                 #print(f"User:{user}")
                 request.session['user'] = user
-                request.session['user_id'] = user.id
+                request.session['user_id'] = request.session['user']['id']
                 request.session['from_login']="y"
                 messages.success(request, "Logueado correctamente.")
                 return redirect("/sitio_privado")
