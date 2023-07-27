@@ -58,16 +58,13 @@ def config_pms(request,iat_id):
         result_tatr_id =tcat.atr_cat.values_list('id')
         j=0
         for r in result_atr_id:
+            print(f"R:{r}-{result_tatr_id[j][0]}")
             at_aux=Caracteristica.objects.get(id=r[0])
             tatrib=Tatributos.objects.get(id=result_tatr_id[j][0])
             n_calif=tatrib.calif_atrib.count()
             atributos.append({"id": result_tatr_id[j][0],"nombre":at_aux.nombre,"n_calif":n_calif})
             
             j+=1
-
-
-
-
 
     prods=Producto.objects.all()
     atribs=Caracteristica.objects.all()
@@ -155,7 +152,13 @@ def iat_rem_prod(request,iat_id):
     pass
 
 def iat_rem_atrib(request,iat_id):
-    pass
+    tarib_id=request.GET['atrib_id']
+    print(f"ID del atributo a borrar:{tarib_id}")
+
+    target=Tatributos.objects.get(id=tarib_id)
+    target.delete()
+    messages.success(request,f'Atributo eliminado exitosamente!')
+    return redirect('/config_02/'+str(iat_id))
 
 def config_cat(request,iat_id):
     context = {        
@@ -317,6 +320,8 @@ def iat_add_car(request,iat_id):
 
 def iat_rem_car(request,iat_id):
     tcar_id=request.GET['car_id']
+    print(f"ID de la caracterista a borrar:{tcar_id}")
+
     target=Tcaracteristicas.objects.get(id=tcar_id)
     target.delete()
     messages.success(request,f'Caracteristica eliminada exitosamente!')

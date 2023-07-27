@@ -104,9 +104,9 @@
                         <tbody>
                         {% for atr in atributos %}  
                             <tr>
-                                <td> {{atr.nombre}}</td>
+                                <td> {{atr.nombre}}-{{atr.id}}</td>
                                 <td> 
-                                    <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{atr.id}}">[Eliminar]</a>        
+                                    <a href="/config_02/atributo/remove/{{iat.id}}?atrib_id={{atr.id}}">[Eliminar]</a>        
                                     <a href="/config_02/calificativo/add/{{atr.id}}">Calificativos({{atr.n_calif}})</a>
                                      {{atr}}                       
                                 </td>
