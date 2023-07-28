@@ -229,7 +229,7 @@ class Sondeo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  
 
     def __str__ (self):
-        resultado="Test:"+self.test.id+"(P:"+self.participante.name+")[E:"+self.estado+"]"
+        resultado="Test:"+str(self.test.id)+"(P:"+self.participante.name+")[E:"+self.estado+"]"
         return resultado
     
 class Descargas(models.Model):

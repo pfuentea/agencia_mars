@@ -384,7 +384,9 @@ def end(request):
     else:
         if 'combinaciones_ok2' in request.session:
             del request.session['combinaciones_ok2']
-        return redirect('/sitio_privado')
+        context = {    
+        }
+        return render(request, 'estudio/final.html', context)
     
 @login_required
 def end2(request):

@@ -14,8 +14,13 @@ def landing(request):
     return render(request, 'landing.html', context)
 
 def sitio_privado(request):
+    
     user=User.objects.get(id=request.session['user_id'])
     estudios=Sondeo.objects.filter(participante=user,estado='A')
+
+    print(f"Estudios:{estudios.count()}")
+    for e in estudios:
+        print(e)
 
     context = {
         "estudios":estudios
