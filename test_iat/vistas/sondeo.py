@@ -1,4 +1,4 @@
-from ..models import Sondeo,User,Test
+from ..models.sondeo import Sondeo,User,Test
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

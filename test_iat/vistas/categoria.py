@@ -1,4 +1,4 @@
-from ..models import Categoria
+from ..models.categoria import Categoria
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

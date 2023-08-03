@@ -3,7 +3,7 @@ from django.db.models.base import Model
 import re
 
 # Create your models here.
-
+'''
 class Categoria(models.Model):
     nombre =  models.CharField(max_length=255,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,7 +81,8 @@ class Tatributos(models.Model):
     categoria = models.ForeignKey(Tcategoria, related_name="atr_cat", on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+'''    
+'''
 #estos seran los calificativos de un atributo (analisis 02)
 class Tcalificativos(models.Model):
     calificativo=models.ForeignKey(Adjetivo, related_name="t_calif", on_delete = models.CASCADE)
@@ -160,7 +161,8 @@ class Comuna(models.Model):
 
     def __str__ (self):
         return self.nombre
-
+'''
+'''
 class User(models.Model):
     CHOICES = (
         ("user", 'User'),
@@ -210,6 +212,7 @@ class Resultado(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)  
 
+
 class Sondeo(models.Model):
     ESTADOS = (
         ("A", 'Activo'),
@@ -232,6 +235,9 @@ class Sondeo(models.Model):
         resultado="Test:"+str(self.test.id)+"(P:"+self.participante.name+")[E:"+self.estado+"]"
         return resultado
     
+
+
+
 class Descargas(models.Model):
     email=models.EmailField(max_length=255)
     name = models.CharField(max_length=100)
@@ -243,3 +249,4 @@ class Descargas(models.Model):
     def __str__ (self):
         resultado=self.id +":"+self.name+"(" +self.email+")"
         return resultado
+'''

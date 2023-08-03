@@ -4,8 +4,13 @@
     <div class="row">
         <div class="col-10">
             <h1>
-                LANDING SITIO PUBLICO
+                Para ingresar al estudio ingrese su correo.
             </h1>
+            <form action="/registro_01" method="post">
+                {% csrf_token %}
+                {{emailForm.as_table}}
+                <input type="submit" value="Enviar">
+            </form>
         </div>
     </div>
     

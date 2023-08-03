@@ -1,4 +1,4 @@
-from ..models import Producto
+from ..models.producto import Producto
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

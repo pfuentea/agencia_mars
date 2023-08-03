@@ -1,6 +1,20 @@
 from django.core.checks import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .models import Categoria, Cliente, Sondeo, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
+#from .models import Categoria, Cliente, Sondeo, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
+from .models.sondeo import Sondeo
+from .models.descarga import Descargas
+from .models.user import User
+from .models.test import Test
+#from .models.cliente import Cliente
+#from .models.comuna import Comuna
+#from .models.provincia import Provincia
+#from .models.region import Region
+from .models.categoria import Categoria, Tcategoria
+from .models.caracteristica import Caracteristica, Tcaracteristicas, Tatributos
+from .models.adjetivo import Adjetivo, Tadjetivos
+from .models.producto import Producto, Tproductos
+from .models.combinacion import Combinacion
+from .models.resultado import Resultado
 from django.contrib import messages
 from django.db import IntegrityError
 import random
@@ -248,11 +262,15 @@ def start(request,iat_id):
 
     validaciones= get_minimo_atributos(request.session['user']['id'])
     #si estan todas las validaciones ==>1, si no ==>0
-    print(f"validaciones:{validaciones} (1=ok,0=nok)")
+    print(f"validaciones:{validaciones} (1=ok, <0=nok)")
+
+    validaciones=1  #esto vale solo para cuando el estudio es publico (no necesita registro previo)
+    
     if validaciones > 0:
         #Resultado.objects.all().delete()
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
+        request.session['analisis']=1
         combis=get_combinaciones_elecciones(iat_id)
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
@@ -277,7 +295,7 @@ def start(request,iat_id):
         
         context = {
             'saludo': 'Hola',
-            "ok":ok,
+            "ok":ok, #esta variable me dice si todos los datos para perfilar estan completos(0=incompletos,1=completos)
             "iat_id": iat_id,
             "comuna_ok":comuna_ok,
             "ciudad_ok":ciudad_ok,
@@ -293,9 +311,10 @@ def start(request,iat_id):
         edad=user.edad
         comuna=user.comuna
         ciudad=user.ciudad
+        #ok=1 #esto vale solo para cuando el estudio es publico (no necesita registro previo)
         context = {
             'saludo': 'Hola',
-            "ok":0,
+            "ok":ok,
             "iat_id": iat_id,
             "comuna_ok":comuna_ok,
             "ciudad_ok":ciudad_ok,
@@ -313,6 +332,7 @@ def test(request,disp):
     iat=Test.objects.get(id=request.session['iat_id'])
     user=User.objects.get(id=request.session['user']['id'])
     #print(f"S-id:{s_id}")
+    request.session['disp']=disp
 
     if request.method == "POST":
         # recibo la respuesta
@@ -421,9 +441,23 @@ def regresar(request):
 
 #Solo pasará por aca si es un dispositivo=desktop
 def instrucciones(request):
+    if request.session['analisis'] == 1:
+        url="/estudio/test/d"
+        instrucciones='A continuación queremos saber si entiende estos conceptos, por favor, si entiende el concepto coloca si, de lo contrario indique que no.'
+    elif request.session['analisis'] == 2:
+        url="/estudio/paso2/"+request.session['disp']        
+        instrucciones=' Aparecerán en pantalla unos conceptos, una marca y dos alternativas. Usted debe responder lo mas certera y rápidamente posible cual de las opciones en pantalla se asocia de mejor forma al concepto y marca presentados'
+    elif request.session['analisis'] == 3:
+        url="/estudio/paso3/"+request.session['disp']   
+        instrucciones='A continuación indique si ha usado estas soluciones logísticas digitales en sus negocios.'
+    elif request.session['analisis'] == 4:
+        url="/estudio/paso4/"+request.session['disp']  
+        instrucciones=''
     context = {    
+        "url":url,
+        "instrucciones":instrucciones,
             }
-    return render(request, 'estudio/instrucciones_desktop.html', context)
+    return render(request, 'estudio/instrucciones_desk.html', context)
 
 def siguiente_paso(request,paso_anterior,iat_id,disp):
     #este metodo dira la ruta del siguiente analisis en caso de terminar 1
@@ -431,6 +465,7 @@ def siguiente_paso(request,paso_anterior,iat_id,disp):
     if paso_anterior==1:
         request.session['analisis']=2
         request.session['iat_id']=iat_id
+        return redirect('/estudio/instrucciones')
         return redirect('/estudio/paso2/'+disp)
     elif paso_anterior==2:
         request.session['analisis']=3

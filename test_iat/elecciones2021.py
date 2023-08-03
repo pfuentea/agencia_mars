@@ -1,6 +1,21 @@
 from django.core.checks import messages
 from django.shortcuts import render, HttpResponse,redirect
-from .models import Categoria, Cliente, Sondeo, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
+#from .models import Categoria, Cliente, Sondeo, Tcaracteristicas, Tcategoria,Test,Caracteristica,Adjetivo, Producto, Tadjetivos, User, Combinacion, Resultado
+from .models.sondeo import Sondeo
+from .models.descarga import Descargas
+from .models.user import User
+from .models.test import Test
+#from .models.cliente import Cliente
+#from .models.comuna import Comuna
+#from .models.provincia import Provincia
+#from .models.region import Region
+from .models.categoria import Categoria, Tcategoria
+from .models.caracteristica import Caracteristica, Tcaracteristicas, Tatributos
+from .models.adjetivo import Adjetivo, Tadjetivos
+from .models.producto import Producto, Tproductos
+from .models.combinacion import Combinacion
+from .models.resultado import Resultado
+
 from django.contrib import messages
 from django.db import IntegrityError
 import random

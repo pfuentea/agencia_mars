@@ -1,4 +1,4 @@
-from ..models import Cliente
+from ..models.cliente import Cliente
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

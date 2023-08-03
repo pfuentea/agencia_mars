@@ -1,4 +1,4 @@
-from ..models import Caracteristica
+from ..models.caracteristica import Caracteristica
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

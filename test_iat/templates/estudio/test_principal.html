@@ -30,22 +30,33 @@
         </div>
         <div class="col-6  text-center">
             <h1>Conceptos</h1>
-            <p>A continuación queremos saber si entiende estos conceptos, por favor, si entiende el concepto coloca si, de lo contrario indique que no.</p>
         </div>
         <div class="col">
            
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
-            
+    <div class="container rounded border">
+        <div class="row ">
+            <div class="col ">
+                
+            </div>
+            <div class="col-6 text-center ">
+                <h1 class="text-danger fw-bold">{{combinacion.car}}</h1>
+            </div>
+            <div class="col">
+                
+            </div>
         </div>
-        <div class="col-6 text-center">
-            <h1 class="text-danger fw-bold">{{combinacion.car}}</h1>
-        </div>
-        <div class="col">
-            
+        <div class="row mb-4">
+            <div class="col-6 text-center">
+                <h2>{{combinacion.adj1}}</h2>
+                (e)
+            </div>
+            <div class="col-6 text-center">
+                <h2>{{combinacion.adj2}}</h2>
+                (i)
+            </div>
         </div>
     </div>
     
@@ -64,49 +75,6 @@
     </div>
     {% endif %}
     {% load static %}
-<!--
-    <div class="row">
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img1}}" alt="my image" class="candidato" id="1">
-
-        </div>
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img2}}" alt="my image" class="candidato" id="2">
-           
-        </div>
-    </div>
-
--->
-    <div class="row">
-        <div class="col-6 text-center">
-            <h2>{{combinacion.adj1}}</h2>
-            (e)
-        </div>
-        <div class="col-6 text-center">
-            <h2>{{combinacion.adj2}}</h2>
-            (i)
-        </div>
-    </div>
-    <!--
-    <div class="row">
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img3}}" alt="my image" class="candidato" id="3">
-        </div>
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img4}}" alt="my image" class="candidato" id="4">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img5}}" alt="my image" class="candidato" id="5">
-        </div>
-        <div class="col-6 text-center">
-            <img src="{% static "/image/"%}{{combinacion.img6}}" alt="my image" class="candidato" id="6">
-        </div>
-    </div>
-    -->
-
-    
 </div>
 
 <form action="/estudio/test/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">

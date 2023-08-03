@@ -1,4 +1,4 @@
-from ..models import User
+from ..models.user import User
 from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages

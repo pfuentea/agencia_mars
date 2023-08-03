@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 import bcrypt
-from .models import User
+from .models.user import User
 
 
 def logout(request):
@@ -89,3 +89,40 @@ def registro(request):
         return redirect("/registro")
     else:
         return render(request, 'registro.html')
+
+def registro_01(request):
+    if request.method == "POST":
+        #validamos si el correo esta bien escrito
+        correo=request.POST['email']
+        estudio_id=10
+        try:            
+            usuario_nuevo = User.objects.create(
+                name=correo.split('@')[0],
+                email=correo,
+                role='guest'
+            )
+            messages.success(request, "El usuario fue agregado con exito.")
+        except:
+            messages.warning(request, "El usuario ya existe.")
+            usuario_nuevo = User.objects.filter(email=correo)
+            usuario_nuevo=usuario_nuevo[0]
+        
+        #si ya existe revisar si tiene el estudio a medio camino o nuevo
+        request.session['user'] = {
+            "id" : usuario_nuevo.id,
+            "name": f"{usuario_nuevo.name}",
+            "email": usuario_nuevo.email,
+            "role": usuario_nuevo.role,
+        }
+        
+        request.session['user_id'] = request.session['user']['id']
+
+        return redirect('/estudio/start/'+str(estudio_id))
+
+        #si no-> enviar mensaje que ya respondió el estudio 
+            
+            
+
+        #return redirect("/sitio_privado")
+    else:
+        return redirect('/')

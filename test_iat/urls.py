@@ -2,6 +2,7 @@ from django.urls import path
 from . import views,auth,elecciones2021,resumen, elecciones, estudio
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo
 
+
 urlpatterns = [
 
     path('', views.landing),
@@ -113,9 +114,13 @@ urlpatterns = [
 
     path('config_03/<int:iat_id>', iat.config_cat), 
     
-    
+    #rutas especiales para estudio PKT1
 
+    #registro
+    path('registro_01', auth.registro_01),
 
 
 
 ]
+
+

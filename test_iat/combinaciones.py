@@ -1,4 +1,19 @@
-from .models import Test,Cliente,Categoria,Tcategoria,Caracteristica,Tcaracteristicas,Adjetivo,Tadjetivos,User,Combinacion,Resultado, Sondeo, Producto,Tproductos, Tatributos,Tcalificativos
+#from .models import Test,Cliente,Categoria,Tcategoria,Caracteristica,Tcaracteristicas,Adjetivo,Tadjetivos,User,Combinacion,Resultado, Sondeo, Producto,Tproductos, Tatributos,Tcalificativos
+from .models.sondeo import Sondeo
+from .models.descarga import Descargas
+from .models.user import User
+from .models.test import Test
+#from .models.cliente import Cliente
+#from .models.comuna import Comuna
+#from .models.provincia import Provincia
+#from .models.region import Region
+from .models.categoria import Categoria, Tcategoria
+from .models.caracteristica import Caracteristica, Tcaracteristicas, Tatributos
+from .models.adjetivo import Adjetivo, Tadjetivos
+from .models.producto import Producto, Tproductos
+from .models.combinacion import Combinacion
+from .models.resultado import Resultado
+
 
 def get_combinaciones_analisis01(iat_id):
     iat=Test.objects.get(id=iat_id)
