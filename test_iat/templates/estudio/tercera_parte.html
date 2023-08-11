@@ -1,43 +1,102 @@
 {% extends '../base.html' %}
 {% block content %}
+<style>
+    .oculto{
+        position: absolute;
+        left:-200px;
+    }
+    .candidato2{
+        height: auto; 
+        width: auto; 
+        max-width: 150px; 
+        max-height: 150px;
+    }
+    .imagen_producto{
+        width:200px;
+        height: auto;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col">
         </div>
-        <div class="col-6  text-center">
-            <h1>Entiende las Siguientes Soluciones Logísticas Digitales</h1>
+        <div class="col-10  text-center">
+            <h3> {% if request.session.analisis == 3 %}
+                Conoce 
+                {% elif request.session.analisis == 4 %}
+                Entiende
+                {% elif request.session.analisis == 5 %}
+                Ha usado
+                {% endif %}
+                las Siguientes Soluciones Logísticas Digitales</h3>
         </div>
         <div class="col">
         </div>
     </div>
 
+    {% load static %}
+    <div class="rounded border">
+        <div class="row ">
+            <div class="col text-center">
+                <img src="{% static "/image/"%}{{combinacion.car}}.jpg" alt="" class="imagen_producto">
+                {% if request.session.user.role == "admin" %}
+                <p>restantes: ({{restantes}}) - posicion:({{posicion_azar}}) - original:({{combinacion.pos}}) <br>
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    
+        <!--
+            <div class="row">
+            <div class="col">
+            </div>
+            <div class="col-6  text-center">
+                <h2>{{combinacion.car}}</h2>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+        !-->
+        <div class="row">
+            <div class="col-6 text-center">
+                <h2>{{combinacion.adj1}}</h2>
+            </div>
+            <div class="col-6 text-center">
+                <h2>{{combinacion.adj2}}</h2>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-6 text-center">
-            <h2>Estimulo 1<br>Adjetivo 1</h2>
-        </div>
-        <div class="col-6 text-center">
-            <h2>Estimulo 2<br>Adjetivo 2</h2>
-        </div>
     </div>
-    <div class="row">
-        
-        <div class="col-6  text-center">
-            <h2>Variable-imagenes</h2>
-        </div>
-        <div class="col-6  text-center">
-            <h2>Variable-caracteristicas</h2>
-        </div>
-        
-    </div>
-    <div class="row">
-        <div class="col">
-        </div>
-        <div class="col-6  text-center">
-            <a href="paso4" class="btn btn-primary">SIGUIENTE </a>
-        </div>
-        <div class="col">
-        </div>
-    </div>
+
+   
 </div>
+
+<form action="/estudio/paso{{request.session.analisis}}/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">
+    {% csrf_token %}
+    <input type="hidden" name="milisegundos" value="" id="milisegundos">
+    <input type="hidden" name="combinacion" value="{{combinacion.pos}}">
+    <input type="hidden" name="analisis" value="{{request.session.analisis}}">
+    <input type="hidden" name="iat_id" value="{{request.session.iat_id}}">
+    <input type="hidden" name="user_id" value="{{request.session.user.id}}">
+    <input type="hidden" name="opcion" value="" id="opcion">
+    
+</form>
+
+
+<div id="resultado">
+</div>
+<div class="oculto">
+    <input type="text" id="escribe" >
+</div>
+
+    {% if dispositivo != "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo_click.js' %}"></script>
+        </script> 
+    {% endif %}
+    {% if dispositivo == "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo.js' %}"></script>
+        </script> 
+    {% endif %}
 {% endblock %}

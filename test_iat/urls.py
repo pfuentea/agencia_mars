@@ -59,7 +59,7 @@ urlpatterns = [
     ### analisis categoria 
     path('iat/categoria/add/<int:iat_id>', iat.iat_add_cat),
     path('iat/caracteristica/add/<int:iat_id>', iat.iat_add_car),
-    path('iat/caracteristica/remove/<int:iat_id>', iat.iat_rem_car),
+    path('iat/caracteristica/remove/<int:iat_id>/<int:analisis_id>', iat.iat_rem_car),
     path('iat/adjetivo/add/<int:car_id>', iat.iat_add_adj),
     path('iat/adjetivo/remove/<int:adj_id>', iat.iat_rem_adj),
 
@@ -86,6 +86,7 @@ urlpatterns = [
     path('estudio/paso2/<str:disp>', estudio.paso2), #analisis 02
     path('estudio/paso3/<str:disp>', estudio.paso3), #analisis 03
     path('estudio/paso4/<str:disp>', estudio.paso4), #analisis 04
+    path('estudio/paso5/<str:disp>', estudio.paso5), #analisis 05
     path('estudio/end', estudio.end), 
     path('estudio/regresar', estudio.regresar), 
     path('estudio/instrucciones', estudio.instrucciones),  

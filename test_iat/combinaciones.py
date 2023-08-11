@@ -126,7 +126,42 @@ def get_combinaciones_analisis02(iat_id): #analisis producto-marca-servicio
     return combinaciones
 
 def get_combinaciones_analisis03(iat_id):
-    pass
+    iat=Test.objects.get(id=iat_id)
+    c=[]
+    if iat.categorias.count() > 0:
+        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
+        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        if tcat.car_cat.count() > 0:
+            car_ids=tcat.car_cat.values_list('caracteristica_id')
+            tcar_ids =tcat.car_cat.values_list('id')
+            i=0
+            pos=0
+            
+            for r in car_ids:                  
+                c_aux=Caracteristica.objects.get(id=r[0])
+                tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                #print(tcar.analisis)
+                if tcar.analisis == 3:
+                    #print(tcar.analisis)
+                    if tcar.adj_car.count() > 0 :
+                        adj=tcar.adj_car.values_list('adjetivo_id')
+                        tadj=tcar.adj_car.values_list('id')
+                        if tcar.adj_car.count() == 1:
+                            adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1,"adj2":"","tadj1":tadj[0][0],"tadj2":""})
+                        elif tcar.adj_car.count() == 2:
+                            #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
+                            adj1=Adjetivo.objects.get(id=adj[0][0])  
+                            adj2=Adjetivo.objects.get(id=adj[1][0])                         
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
+                            pos+=1
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
+                            pos+=1                            
+                    else: # Caso cuando no tiene adjetivos 
+                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":"","tadj1":"","tadj2":""})
+                i+=1
+    return c
+
 def get_combinaciones_analisis04(iat_id):
     pass
 

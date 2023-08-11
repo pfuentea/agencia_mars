@@ -191,7 +191,7 @@
                             <tr>
                                 <td> {{t.nombre}}</td>
                                 <td> 
-                                    <a href="/iat/caracteristica/remove/{{iat.id}}?car_id={{t.id}}">[Eliminar]</a> 
+                                    <a href="/iat/caracteristica/remove/{{iat.id}}/1?car_id={{t.id}}">[Eliminar]</a> 
                                     <a href="/iat/adjetivo/add/{{t.id}}">Adjetivos({{t.n_adj}})</a>
                                 </td>
                             </tr>  
@@ -216,6 +216,7 @@
 
         <form action="/iat/caracteristica/add/{{iat.id}}" method="POST">
         {% csrf_token %}
+        <input type="hidden" name="analisis" value="1">
         <div class="row">
             <div class="col-8">
                     <select name="car" id="car">

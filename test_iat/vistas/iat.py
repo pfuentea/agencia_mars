@@ -41,7 +41,7 @@ def config(request,iat_id):
         }
     return render(request, 'config_iat.html', context)
 
-def config_pms(request,iat_id):
+def config_pms(request,iat_id): #analisis02
     iat=Test.objects.get(id=iat_id)
     productos=[]
     atributos=[]
@@ -175,12 +175,6 @@ def iat_rem_atrib(request,iat_id):
     messages.success(request,f'Atributo eliminado exitosamente!')
     return redirect('/config_02/'+str(iat_id))
 
-def config_cat(request,iat_id):
-    context = {        
-        "iat_id":iat_id
-        }
-    return render(request, 'config_analisis03.html', context)
-
 def iat_new(request):
     if request.method=='GET':
         clientes=Cliente.objects.all()
@@ -259,7 +253,7 @@ def iat_add_cat(request,iat_id):
         
         return redirect('/iat')
 
-def iat_detalle(request,iat_id):
+def iat_detalle(request,iat_id): #analisis01
     iat=Test.objects.get(id=iat_id)
     caract=[]
     categoria="vacio"
@@ -309,6 +303,63 @@ def iat_detalle(request,iat_id):
     }
     return render(request, 'iat.html', context)
 
+def config_cat(request,iat_id): #analisis03
+    iat=Test.objects.get(id=iat_id)
+    caract=[]
+    categoria="vacio"
+    cars=[]
+    tcat=[]
+    combinaciones=[]
+    participantes=[]
+    if iat.categorias.count() > 0:
+        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
+        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        result=tcat.car_cat.values_list('caracteristica_id') # id de car
+        result2 =tcat.car_cat.values_list('id') #id de  tcar
+        #print(result2)
+
+        i=0
+        for r in result:
+            c_aux=Caracteristica.objects.get(id=r[0])
+            tcar=Tcaracteristicas.objects.get(id=result2[i][0])
+            #print(f"tcar:{tcar}")
+            n_adj=tcar.adj_car.count()
+            #id corresponde a tcat y nombre corresponde a car
+            #print(f"Valor a agregar:({result2[i][0]} ,{c_aux.nombre},{tcar.analisis})")
+            if tcar.analisis == 3:
+                caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
+            i+=1
+            
+        cars=Caracteristica.objects.all()
+
+        combinaciones=get_combinaciones_analisis03(iat_id)
+
+        for c in iat.combinaciones.all():
+            p={"nombre":c.participante.name,"user_id":c.participante.id}
+            participantes.append(p)
+
+        participantes=[dict(t) for t in {tuple(d.items()) for d in participantes}]
+        
+        #for x in participantes:
+        #    print(x['nombre'])
+        
+        #resultados=Resultado.objects.filter(combinacion__test=iat)
+        #print(resultados[0].combinacion.participante.name)
+        
+
+    context={
+        "iat":iat,
+        "accion":"detalle",
+        "categoria": categoria,
+        "tcat": tcat,
+        "caract": caract,
+        "cars": cars,
+        "combinaciones":combinaciones,
+        "participantes":participantes
+    }
+    print("go to config03")
+    return render(request, 'config_analisis03.html', context)
+
 def iat_add_car(request,iat_id):
     #falta validar que no se agregue 2 veces
     iat=Test.objects.get(id=iat_id)
@@ -328,19 +379,26 @@ def iat_add_car(request,iat_id):
         caract=Caracteristica.objects.get(id=request.POST['car']) 
     #agregamos la caract a la categoria
     #tcat.car_cat.nombre
-    new_car=Tcaracteristicas.objects.create(caracteristica=caract,categoria=tcat)
+    analisis_id=int(request.POST['analisis'])
+    print(f"Analisis:{analisis_id}")
+    new_car=Tcaracteristicas.objects.create(caracteristica=caract,categoria=tcat,analisis=analisis_id)
+    new_car.analisis=analisis_id
+    new_car.save()
+    print(f"analisis:{new_car.analisis}")
     messages.success(request,f'Caracteristica agregada exitosamente!')
     
-    return redirect('/config_01/'+str(iat_id))
+    return redirect('/config_0'+str(analisis_id)+'/'+str(iat_id))
 
-def iat_rem_car(request,iat_id):
+def iat_rem_car(request,iat_id,analisis_id):
     tcar_id=request.GET['car_id']
     print(f"ID de la caracterista a borrar:{tcar_id}")
 
     target=Tcaracteristicas.objects.get(id=tcar_id)
     target.delete()
+
+    
     messages.success(request,f'Caracteristica eliminada exitosamente!')
-    return redirect('/config_01/'+str(iat_id))
+    return redirect('/config_0'+str(analisis_id)+'/'+str(iat_id))
 
 def iat_add_calif(request,atrib_id):
     if request.method=='GET':

@@ -1,5 +1,181 @@
 {% extends './base.html' %}
 {% block content %}
+<div class="container">
+    <h1>Configuración Analisis 03</h1>
+    {% if accion == "detalle" %}
+    <a href="/iat/">Volver al listado</a> / <a href="/iat/{{iat.id}}">Config</a>
+        <div class="row">
+            <div class="col-6">
+                <h3>Cliente : {{iat.cliente.nombre}}</h3>
+                <h3>Nombre Test : {{iat.nombre}}</h3>
+                <h4>Categoria : 
+                    {{categoria.nombre}}
+                    {% if categoria == "vacio" %}
+                    <a href="/iat/categoria/add/{{iat.id}}">ADD CAT</a>
+                    {% endif %}
+                </h4>
 
+                <h4>Caracteristicas :</h4>
+            </div>
+            
+        </div>
+        {% if tcat.car_cat.count > 0 %}
+        <div class="row">
+            <div class="col-6">
+                <div class="table-responsive">
+                    <table id="caracteristicas" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>Caracteristica</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for t in caract %}  
+                            <tr>
+                                <td> {{t.nombre}}</td>
+                                <td> 
+                                    <a href="/iat/caracteristica/remove/{{iat.id}}/3?car_id={{t.id}}">[Eliminar]</a> 
+                                    <a href="/iat/adjetivo/add/{{t.id}}">Adjetivos({{t.n_adj}})</a>
+                                </td>
+                            </tr>  
+                        {% empty %}     
+                        <tr>
+                            <td> No existen caracteristicas asociadas aún</td>
+                            <td> X </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% elif tcat.car_cat.count == 0 %}
+        <div class="row">
+            <div class="col-8">
+                NO existen aun Caracteristicas
+            </div>
+        </div>
+        {% endif %}
+
+        <form action="/iat/caracteristica/add/{{iat.id}}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="analisis" value="3">
+        <div class="row">
+            <div class="col-8">
+                    <select name="car" id="car">
+                        <option value="">Seleccione Caracteristica</option>
+                        <option value="otro">Nueva Caracteristica</option>
+                        {% for c in cars %}
+                        <option value="{{c.id}}">{{c.nombre}}</option>
+                        {% endfor %}
+                        
+                    </select>
+                    <input type="text" name="new_car" id="new_car" placeholder="Nueva Caracteristica" class="form-control form-control-sm d-none mt-3" >
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <button type="submit" class="btn btn-outline-primary mt-3">Agregar nueva caracteristica</a>                                    
+            </div>
+        </div>
+        </form>
+
+        <div class="rounded-3 p-1 bg-secondary">
+
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        <h2>Combinaciones ({{combinaciones|length}})</h2>
+                        
+                    </button>
+                  </h2>
+                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        {% for c in combinaciones %}
+                            <p>{{c}}</p>
+                        {% empty %}     
+                            Sin combinaciones
+                        {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        
+        <div class="row">
+
+            <div class="col-6">
+                <h2>Resultados:</h2>
+                <div class="table-responsive">
+                    <table id="respuestas" class="table table-striped table-bordered" width="100%" >
+                        <thead>
+                            <tr>
+                                <th>Participante</th>
+                                <th>Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in participantes %}  
+                            <tr>
+                                <td>
+                                    <a href="/iat/resultado/{{iat.id}}/1/{{p.user_id}}">
+                                        {{p.nombre}} 
+                                    </a>
+                                </td>
+                                <td>
+                                    {{p.user_id}}
+                                </td>
+                            </tr>  
+                        {% empty %}     
+                        <tr>
+                            <td> No existen caracteristicas asociadas aún</td>
+                            
+                        </tr>
+                        {% endfor %}
+                        </tbody>    
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    $(document).ready(function() {
+        var oTblReport = $('#shows')
+        oTblReport.DataTable({
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
+            "iDisplayLength":5
+        });
+        var oTblUsers = $('#respuestas')
+        oTblUsers.DataTable({
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,20,40,-1],[5,10,20,40,"All"]],
+            "iDisplayLength":20
+        });
+    });
+</script>
+<script>
+    $('#car').on('change',function(){
+        if ( $(this).val() =='otro' ){
+            $('#new_car').removeClass('d-none');
+            $('#new_car').focus();
+        }
+        else{
+            $('#new_car').addClass('d-none');
+        }
+    });
+
+    $('.btn-delete-iat').on('click',function(){        
+        iat_id=$(this).attr('iat_id')
+        action='/iat/'+iat_id+'/destroy'   
+        $('#iat_del').attr('action',action)
+        console.log( action)
+    });
+</script>
 
 {% endblock %}

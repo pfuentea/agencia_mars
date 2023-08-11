@@ -217,6 +217,9 @@ def start(request,iat_id):
     ciudad=""
     edad=0
     sexo="N"
+
+    
+
     if request.method == "POST":
         if request.POST['sexo'] != "":
             sexo = request.POST['sexo']
@@ -400,10 +403,28 @@ def end(request):
         context = {  
 
             }
-        return redirect('/sitio_privado')
+        user=User.objects.get(id=request.session['user']['id'])
+        print(user.role)
+        if user.role =='guest':
+            return redirect('/')
+        else:
+            return redirect('/sitio_privado')
     else:
         if 'combinaciones_ok2' in request.session:
             del request.session['combinaciones_ok2']
+            del request.session['combinaciones_ok3']
+            del request.session['combinaciones_ok4']
+            del request.session['combinaciones_ok5']
+        
+        if 'combinaciones_ok2' in request.session:
+            print("existe 02")
+        if 'combinaciones_ok3' in request.session:
+            print("existe 03")
+        if 'combinaciones_ok4' in request.session:
+            print("existe 04")
+        if 'combinaciones_ok5' in request.session:
+            print("existe 05")
+
         context = {    
         }
         return render(request, 'estudio/final.html', context)
@@ -441,6 +462,15 @@ def regresar(request):
 
 #Solo pasará por aca si es un dispositivo=desktop
 def instrucciones(request):
+    if 'combinaciones_ok2' in request.session:
+            print("existe 02")
+    if 'combinaciones_ok3' in request.session:
+        print("existe 03")
+    if 'combinaciones_ok4' in request.session:
+        print("existe 04")
+    if 'combinaciones_ok5' in request.session:
+        print("existe 05")
+
     if request.session['analisis'] == 1:
         url="/estudio/test/d"
         instrucciones='A continuación queremos saber si entiende estos conceptos, por favor, si entiende el concepto coloca si, de lo contrario indique que no.'
@@ -449,10 +479,14 @@ def instrucciones(request):
         instrucciones=' Aparecerán en pantalla unos conceptos, una marca y dos alternativas. Usted debe responder lo mas certera y rápidamente posible cual de las opciones en pantalla se asocia de mejor forma al concepto y marca presentados'
     elif request.session['analisis'] == 3:
         url="/estudio/paso3/"+request.session['disp']   
-        instrucciones='A continuación indique si ha usado estas soluciones logísticas digitales en sus negocios.'
-    elif request.session['analisis'] == 4:
+        instrucciones='A continuación indique si usted CONOCE estas soluciones logísticas digitales.'
+    elif request.session['analisis'] == 4:        
         url="/estudio/paso4/"+request.session['disp']  
-        instrucciones=''
+        instrucciones='A continuación indique si usted ENTIENDE estas soluciones logísticas digitales.'
+    elif request.session['analisis'] == 5:
+        url="/estudio/paso5/"+request.session['disp']  
+        instrucciones='A continuación indique si usted USA estas soluciones logísticas digitales.'
+    print(f"instrucciones:{request.session['analisis']}")
     context = {    
         "url":url,
         "instrucciones":instrucciones,
@@ -470,16 +504,24 @@ def siguiente_paso(request,paso_anterior,iat_id,disp):
     elif paso_anterior==2:
         request.session['analisis']=3
         request.session['iat_id']=iat_id
-        return redirect('/estudio/end')
-        #return redirect('/estudio/paso3/'+disp)
+        #return redirect('/estudio/end')
+        return redirect('/estudio/instrucciones')
+        return redirect('/estudio/paso3/'+disp)
     elif paso_anterior==3:
         request.session['analisis']=4
         request.session['iat_id']=iat_id
+        return redirect('/estudio/instrucciones')
         return redirect('/estudio/paso4/'+disp)
     elif paso_anterior==4:
         request.session['analisis']=5
         request.session['iat_id']=iat_id
+        return redirect('/estudio/instrucciones')
         return redirect('/estudio/end')
+    elif paso_anterior==5:
+        request.session['analisis']=5
+        request.session['iat_id']=iat_id
+        return redirect('/estudio/end')
+    
 
 def paso1(request):
     s_id=request.session['sondeo_id']
@@ -614,13 +656,224 @@ def paso2(request,disp):
         return redirect('/siguiente_paso/2/'+str(request.session['iat_id'])+'/'+disp)
     
 def paso3(request,disp):
-    context={
+    s_id=request.session['sondeo_id']
+    iat_id=request.session['iat_id']
+    iat=Test.objects.get(id=iat_id)
+    user=User.objects.get(id=request.session['user']['id'])
+    # si es post, pasó al menos una vez antes por este metodo
+    if request.method == "POST":
+        # recibo la respuesta
+        milisegundos=request.POST['milisegundos']
+        combinacion_id=request.POST['combinacion']
+        analisis=request.POST['analisis']
+        opcion=request.POST['opcion']
+        #obtengo el usuario y el estudio
+        test=Test.objects.get(id=request.POST['iat_id'])
+        user=User.objects.get(id=request.POST['user_id'])        
 
-    }
-    #return render(request, 'estudio/tercera_parte.html', context)
+        print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        #busco la combinacion
+        combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #genero una llave con la respuesta para decir cual es el adj-n que respondió
+        llave="adj"+str(opcion)
+        #print(f"n_combinaciones:{combi.count()}")
+        for c in combi:
+            print(f"combinacion:{c.valor}")
+            valores=c.valor
+            json_acceptable_string = valores.replace("'", "\"")
+            quest = json.loads(json_acceptable_string)
+            #print(quest)
+            #preg=quest['producto']+'-'+quest['atributo']
+            preg=quest['car']
+            respuesta=quest[llave]
+            print(f"pregunta:{preg}")
+            print(f"respuesta:{respuesta}")
+        #Respuesta
+            res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)  
+    borrar=0
+    if borrar == 1:
+        combis=get_combinaciones_analisis03(iat_id)
+        save_combinaciones(combis,iat_id,request.session['user']['id'],3)
+        request.session['combinaciones_ok3']='OK'
+        print("se borra!")
+    if 'combinaciones_ok3' not in request.session:
+        #revisamos la BD
+        print("No existe combinaciones_ok3 en request.session")
+        combi=Combinacion.objects.filter(analisis=3,test=iat,participante=user)
+        print(f"Cantidad de combinaciones:{combi.count()}")
+        if combi.count() == 0: #si no existen las genero y las guardo
+            combis=get_combinaciones_analisis03(iat_id)
+            save_combinaciones(combis,iat_id,request.session['user']['id'],3)
+        request.session['combinaciones_ok3']='OK'
+    else:
+        print("Existe combinaciones_ok3 en request.session")
+
+    faltantes=[]
+    faltantes=get_faltantes(iat.id,user.id,3)
+    print(f"Preguntas faltantes analisis03:{len(faltantes)}")
+
+    if len(faltantes) > 0 :
+        posicion_azar=random.randint(0, len(faltantes)-1)
+        combinacion=faltantes.pop(posicion_azar)        
+        print(f"Sacamos la combinacion:{combinacion}, Tipo{type(combinacion)}")
+
+        restantes=len(faltantes)
+        #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
+        context = {    
+            "restantes":restantes,
+            "posicion_azar":posicion_azar ,
+            "combinacion":combinacion,
+            "dispositivo":disp,
+        }
+        return render(request, 'estudio/tercera_parte.html', context)
+    else:
+        return redirect('/siguiente_paso/3/'+str(request.session['iat_id'])+'/'+disp)
 
 def paso4(request,disp):
-    context={
+    s_id=request.session['sondeo_id']
+    iat_id=request.session['iat_id']
+    iat=Test.objects.get(id=iat_id)
+    user=User.objects.get(id=request.session['user']['id'])
+    # si es post, pasó al menos una vez antes por este metodo
+    if request.method == "POST":
+        # recibo la respuesta
+        milisegundos=request.POST['milisegundos']
+        combinacion_id=request.POST['combinacion']
+        analisis=request.POST['analisis']
+        opcion=request.POST['opcion']
+        #obtengo el usuario y el estudio
+        test=Test.objects.get(id=request.POST['iat_id'])
+        user=User.objects.get(id=request.POST['user_id'])        
 
-    }
-    return render(request, 'estudio/cuarta_parte.html', context)
+        print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        #busco la combinacion
+        combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #genero una llave con la respuesta para decir cual es el adj-n que respondió
+        llave="adj"+str(opcion)
+        #print(f"n_combinaciones:{combi.count()}")
+        for c in combi:
+            print(f"combinacion:{c.valor}")
+            valores=c.valor
+            json_acceptable_string = valores.replace("'", "\"")
+            quest = json.loads(json_acceptable_string)
+            #print(quest)
+            #preg=quest['producto']+'-'+quest['atributo']
+            preg=quest['car']
+            respuesta=quest[llave]
+            print(f"pregunta:{preg}")
+            print(f"respuesta:{respuesta}")
+        #Respuesta
+            res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)  
+    borrar=0
+    if borrar == 1:
+        combis=get_combinaciones_analisis03(iat_id)
+        save_combinaciones(combis,iat_id,request.session['user']['id'],4)
+        request.session['combinaciones_ok4']='OK'
+        print("se borra!")
+    if 'combinaciones_ok4' not in request.session:
+        #revisamos la BD
+        print("No existe combinaciones_ok4 en request.session")
+        combi=Combinacion.objects.filter(analisis=4,test=iat,participante=user)
+        print(f"Cantidad de combinaciones:{combi.count()}")
+        if combi.count() == 0: #si no existen las genero y las guardo
+            combis=get_combinaciones_analisis03(iat_id)
+            save_combinaciones(combis,iat_id,request.session['user']['id'],4)
+        request.session['combinaciones_ok4']='OK'
+    else:
+        print("Existe combinaciones_ok4 en request.session")
+
+    faltantes=[]
+    faltantes=get_faltantes(iat.id,user.id,4)
+    print(f"Preguntas faltantes analisis04:{len(faltantes)}")
+
+    if len(faltantes) > 0 :
+        posicion_azar=random.randint(0, len(faltantes)-1)
+        combinacion=faltantes.pop(posicion_azar)        
+        print(f"Sacamos la combinacion:{combinacion}, Tipo{type(combinacion)}")
+
+        restantes=len(faltantes)
+        #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
+        context = {    
+            "restantes":restantes,
+            "posicion_azar":posicion_azar ,
+            "combinacion":combinacion,
+            "dispositivo":disp,
+        }
+        return render(request, 'estudio/tercera_parte.html', context)
+    else:
+        return redirect('/siguiente_paso/4/'+str(request.session['iat_id'])+'/'+disp)
+    
+def paso5(request,disp):
+    s_id=request.session['sondeo_id']
+    iat_id=request.session['iat_id']
+    iat=Test.objects.get(id=iat_id)
+    user=User.objects.get(id=request.session['user']['id'])
+    # si es post, pasó al menos una vez antes por este metodo
+    if request.method == "POST":
+        # recibo la respuesta
+        milisegundos=request.POST['milisegundos']
+        combinacion_id=request.POST['combinacion']
+        analisis=request.POST['analisis']
+        opcion=request.POST['opcion']
+        #obtengo el usuario y el estudio
+        test=Test.objects.get(id=request.POST['iat_id'])
+        user=User.objects.get(id=request.POST['user_id'])        
+
+        print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        #busco la combinacion
+        combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #genero una llave con la respuesta para decir cual es el adj-n que respondió
+        llave="adj"+str(opcion)
+        #print(f"n_combinaciones:{combi.count()}")
+        for c in combi:
+            print(f"combinacion:{c.valor}")
+            valores=c.valor
+            json_acceptable_string = valores.replace("'", "\"")
+            quest = json.loads(json_acceptable_string)
+            #print(quest)
+            #preg=quest['producto']+'-'+quest['atributo']
+            preg=quest['car']
+            respuesta=quest[llave]
+            print(f"pregunta:{preg}")
+            print(f"respuesta:{respuesta}")
+        #Respuesta
+            res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)  
+    borrar=0
+    if borrar == 1:
+        combis=get_combinaciones_analisis03(iat_id)
+        save_combinaciones(combis,iat_id,request.session['user']['id'],5)
+        request.session['combinaciones_ok5']='OK'
+        print("se borra!")
+    if 'combinaciones_ok5' not in request.session:
+        #revisamos la BD
+        print("No existe combinaciones_ok5 en request.session")
+        combi=Combinacion.objects.filter(analisis=5,test=iat,participante=user)
+        print(f"Cantidad de combinaciones:{combi.count()}")
+        if combi.count() == 0: #si no existen las genero y las guardo
+            combis=get_combinaciones_analisis03(iat_id)
+            save_combinaciones(combis,iat_id,request.session['user']['id'],5)
+        request.session['combinaciones_ok5']='OK'
+    else:
+        print("Existe combinaciones_ok5 en request.session")
+
+    faltantes=[]
+    faltantes=get_faltantes(iat.id,user.id,5)
+    print(f"Preguntas faltantes analisis05:{len(faltantes)}")
+
+    if len(faltantes) > 0 :
+        posicion_azar=random.randint(0, len(faltantes)-1)
+        combinacion=faltantes.pop(posicion_azar)        
+        print(f"Sacamos la combinacion:{combinacion}, Tipo{type(combinacion)}")
+
+        restantes=len(faltantes)
+        #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
+        context = {    
+            "restantes":restantes,
+            "posicion_azar":posicion_azar ,
+            "combinacion":combinacion,
+            "dispositivo":disp,
+        }
+        return render(request, 'estudio/tercera_parte.html', context)
+    else:
+        return redirect('/siguiente_paso/5/'+str(request.session['iat_id'])+'/'+disp)
+    

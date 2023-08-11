@@ -7,6 +7,7 @@
             <h1>ADD ADJETIVO (en modo normal solo se pueden agregar hasta 2) </h1>
             <h3>Test : {{iat.nombre}} ({{iat.tipo}})</h3>
             <h3>Caracteristica : {{car.caracteristica.nombre}}</h3>
+            
 
         </div>
     </div>
@@ -69,8 +70,9 @@
             </form>
         </div>
     </div>
+    
     {% endif %}
-    <a href="/config_01/{{iat.id}}">Volver a Caracteristicas</a>
+    <a href="/config_0{{car.analisis}}/{{iat.id}}">Volver a Caracteristicas</a>
 </div>
 <script>
     $('#adj_id').on('change',function(){
