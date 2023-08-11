@@ -94,7 +94,7 @@ def registro_01(request):
     if request.method == "POST":
         #validamos si el correo esta bien escrito
         correo=request.POST['email']
-        estudio_id=10
+        estudio_id=1
         try:            
             usuario_nuevo = User.objects.create(
                 name=correo.split('@')[0],

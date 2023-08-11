@@ -9,7 +9,7 @@ from ..models.cliente import Cliente
 #from ..models.region import Region
 from ..models.categoria import Categoria, Tcategoria
 from ..models.caracteristica import Caracteristica, Tcaracteristicas, Tatributos
-from ..models.adjetivo import Adjetivo, Tadjetivos
+from ..models.adjetivo import Adjetivo, Tadjetivos, Tcalificativos
 from ..models.producto import Producto, Tproductos
 from ..models.combinacion import Combinacion
 from ..models.resultado import Resultado
