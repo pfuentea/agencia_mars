@@ -271,7 +271,8 @@ def iat_detalle(request,iat_id): #analisis01
             c_aux=Caracteristica.objects.get(id=r[0])
             tcar=Tcaracteristicas.objects.get(id=result2[i][0])
             n_adj=tcar.adj_car.count()
-            caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
+            if tcar.analisis == 1:
+                caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
             i+=1
             
         cars=Caracteristica.objects.all()
@@ -316,7 +317,7 @@ def config_cat(request,iat_id): #analisis03
         categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
         result=tcat.car_cat.values_list('caracteristica_id') # id de car
         result2 =tcat.car_cat.values_list('id') #id de  tcar
-        #print(result2)
+        print(result2)
 
         i=0
         for r in result:
@@ -325,7 +326,7 @@ def config_cat(request,iat_id): #analisis03
             #print(f"tcar:{tcar}")
             n_adj=tcar.adj_car.count()
             #id corresponde a tcat y nombre corresponde a car
-            #print(f"Valor a agregar:({result2[i][0]} ,{c_aux.nombre},{tcar.analisis})")
+            print(f"Valor a agregar:({result2[i][0]} ,{c_aux.nombre},{tcar.analisis})")
             if tcar.analisis == 3:
                 caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
             i+=1
