@@ -1,6 +1,15 @@
-{% extends './base.html' %}
+{% extends '../base.html' %}
 {% block content %}
 <div class="container">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="/iat/">Listado IAT</a></li>
+            <li class="breadcrumb-item"><a href="/iat/resultado/{{iat.id}}">Resultados IAT</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Resultado Analisis {{analisis}}</li>
+        </ol>
+    </nav>
     <h2>Resultados</h2>
     <div class="row">
         <div class="col">

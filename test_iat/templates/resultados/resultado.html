@@ -1,0 +1,70 @@
+{% extends '../base.html' %}
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="/iat/">Listado IAT</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Resultado IAT</li>
+        </ol>
+    </nav>
+    <h2>Resultados</h2> 
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table id="respuestas" class="table table-striped table-bordered" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Participante</th>
+                            <th>Id</th>
+                            <th>Analisis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in participantes %}  
+                        <tr>
+                            <td>
+                                <a href="/iat/resultado/{{iat.id}}/1/{{p.user_id}}">
+                                    {{p.nombre}} 
+                                </a>
+                            </td>
+                            <td>
+                                {{p.user_id}}
+                            </td>
+                            <td>
+                                {% for enlace in p.enlaces %}
+                                    <a href="/iat/resultado/{{iat.id}}/{{ enlace }}/{{p.user_id}}">{{ enlace }}</a>
+                                {% endfor %}
+                            </td>
+                        </tr>  
+                    {% empty %}     
+                    <tr>
+                        <td> No existen caracteristicas asociadas aún</td>
+                        
+                    </tr>
+                    {% endfor %}
+                    </tbody>    
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        var oTblReport = $('#respuestas')
+        oTblReport.DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "search": 'Buscar',
+            "aLengthMenu":[[5,10,15,25,-1],[5,10,15,25,"All"]],
+            "iDisplayLength":15
+        });
+    
+    });
+</script>
+
+{% endblock %}

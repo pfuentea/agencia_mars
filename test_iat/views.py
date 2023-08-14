@@ -183,28 +183,8 @@ def registro(request):
 
 #Creación de nuevo test:
 
-
-def resultado(request,iat_id,analisis_id,user_id):
-    iat=Test.objects.get(id=iat_id)
-    participante=User.objects.get(id=user_id)
-    resultados=Resultado.objects.filter(combinacion__test=iat,combinacion__participante=participante,combinacion__analisis=analisis_id)
-    '''
-    print(f"Resultados total:{len(resultados)}")
-    valores=resultados[0].combinacion.valor
-    json_acceptable_string = valores.replace("'", "\"")
-    quest = json.loads(json_acceptable_string)
-    print(f"quest:{quest}")
-    if analisis_id == 1:
-        pregunta = quest['car']
-    elif analisis_id == 2:
-        pregunta = quest['producto']+'-'+quest['atributo']
-    '''
-    #print(resultados[0].combinacion.valor)
-    #print(resultados.combinacion)
-    context={
-        "resultados":resultados
-        }
-    return render(request, 'resultado.html', context)
+#RESULTADOS
+# en vistas/resultado.py
 
 #USUARIOS
 # en vistas/usuarios.py
