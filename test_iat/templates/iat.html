@@ -189,7 +189,7 @@
                         <tbody>
                         {% for t in caract %}  
                             <tr>
-                                <td> {{t.nombre}}</td>
+                                <td> {{t.nombre}} ({{t.analisis}})</td>
                                 <td> 
                                     <a href="/iat/caracteristica/remove/{{iat.id}}/1?car_id={{t.id}}">[Eliminar]</a> 
                                     <a href="/iat/adjetivo/add/{{t.id}}">Adjetivos({{t.n_adj}})</a>

@@ -272,7 +272,7 @@ def iat_detalle(request,iat_id): #analisis01
             tcar=Tcaracteristicas.objects.get(id=result2[i][0])
             n_adj=tcar.adj_car.count()
             if tcar.analisis == 1:
-                caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj})
+                caract.append({"id": result2[i][0],"nombre":c_aux.nombre,"n_adj":n_adj,"analisis":tcar.analisis})
             i+=1
             
         cars=Caracteristica.objects.all()

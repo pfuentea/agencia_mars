@@ -33,16 +33,19 @@ def get_combinaciones_analisis01(iat_id):
                     adj=tcar.adj_car.values_list('adjetivo_id')
                     tadj=tcar.adj_car.values_list('id')
                     if tcar.adj_car.count() == 1:
-                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1,"adj2":"","tadj1":tadj[0][0],"tadj2":""})
+                        if tcar.analisis == 1:
+                            adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1,"adj2":"","tadj1":tadj[0][0],"tadj2":""})
                     elif tcar.adj_car.count() == 2:
                         #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
-                        adj1=Adjetivo.objects.get(id=adj[0][0])  
-                        adj2=Adjetivo.objects.get(id=adj[1][0])                         
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
-                        pos+=1
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
-                        pos+=1
+                        #print(f"analisis:{tcar.analisis}")
+                        if tcar.analisis == 1:
+                            adj1=Adjetivo.objects.get(id=adj[0][0])  
+                            adj2=Adjetivo.objects.get(id=adj[1][0])                         
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
+                            pos+=1
+                            c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
+                            pos+=1
                 else: # Caso cuando no tiene adjetivos 
                     c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":"","tadj1":"","tadj2":""})
                 i+=1
