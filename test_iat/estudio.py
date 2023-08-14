@@ -274,7 +274,7 @@ def start(request,iat_id):
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
         request.session['analisis']=1
-        combis=get_combinaciones_elecciones(iat_id)
+        combis=get_combinaciones_analisis01(iat_id)
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
