@@ -280,8 +280,7 @@ def start(request,iat_id):
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
 
         if len(sondeos)>0: #que exista un sondeo
-            sondeo=sondeos[0]
-            request.session['sondeo_id']=sondeo.id
+            sondeo=sondeos[0]            
             print(f"Sondeo_id:{sondeo.id},estado:{sondeo.estado}")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
@@ -290,10 +289,11 @@ def start(request,iat_id):
                 ok=2
                 print("Este sondeo existe y esta respondido")
         elif len(sondeos) == 0: #que no exista un sondeo
-            s=Sondeo.objects.create(test=iat, participante=user,estado="A")
+            sondeo=Sondeo.objects.create(test=iat, participante=user,estado="A")
             ok=1
             print("Este sondeo no existía, se crea")
-            
+
+        request.session['sondeo_id']=sondeo.id    
         
         
         context = {
