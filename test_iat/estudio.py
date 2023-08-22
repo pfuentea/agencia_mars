@@ -22,41 +22,7 @@ import json
 from .decorators import login_required
 from .combinaciones import get_combinaciones_analisis01,get_combinaciones_analisis02,get_combinaciones_analisis03,get_combinaciones_analisis04,save_combinaciones
 
-'''
-def get_combinaciones_analisis01(iat_id):
-    iat=Test.objects.get(id=iat_id)
-    c=[]
-    if iat.categorias.count() > 0:
-        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
-        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
-        if tcat.car_cat.count() > 0:
-            car_ids=tcat.car_cat.values_list('caracteristica_id')
-            tcar_ids =tcat.car_cat.values_list('id')
-            i=0
-            pos=0
-            for r in car_ids:                
-                c_aux=Caracteristica.objects.get(id=r[0])
-                tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
-                if tcar.adj_car.count() > 0:
-                    adj=tcar.adj_car.values_list('adjetivo_id')
-                    tadj=tcar.adj_car.values_list('id')
-                    if tcar.adj_car.count() == 1:
-                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1,"adj2":"","tadj1":tadj[0][0],"tadj2":""})
-                    elif tcar.adj_car.count() == 2:
-                        #caract.append({"id": tcar_ids[i][0],"nombre":c_aux.nombre})
-                        adj1=Adjetivo.objects.get(id=adj[0][0])  
-                        adj2=Adjetivo.objects.get(id=adj[1][0])                         
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj1.nombre,"adj2":adj2.nombre,"tadj1":tadj[0][0],"tadj2":tadj[1][0],"pos":pos})
-                        pos+=1
-                        c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":adj2.nombre,"adj2":adj1.nombre,"tadj1":tadj[1][0],"tadj2":tadj[0][0],"pos":pos})
-                        pos+=1
-                else: # Caso cuando no tiene adjetivos 
-                    c.append({"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre,"adj1":"","adj2":"","tadj1":"","tadj2":""})
-                i+=1
 
-    return c
-'''
 def get_combinaciones_elecciones(iat_id):
     iat=Test.objects.get(id=iat_id)
     c=[]
@@ -132,32 +98,7 @@ def get_combinaciones_elecciones(iat_id):
                 i+=1
 
     return c
-'''
-def save_combinaciones(combis,test_id,user_id,analisis_id):
-    print("init: save_combinaciones")
-    test=Test.objects.get(id=test_id)
-    participante=User.objects.get(id=user_id)
-    index=0
-    #revisamos si no existe y si no guardamos
-    c_test=Combinacion.objects.filter(test=test,participante=participante)
-    #con borra=1 elimino las combinaciones
-    borrar=0
-    if borrar == 1:
-        c_test.delete()        
-        print("se borraron las combinaciones")
 
-    if c_test.count()>0:
-        print("combinaciones ya existen para ese test y usuario")
-    else:
-        print("combinaciones no existen para ese test y usuario, se agregan")        
-        for c in combis:
-            #guardamos los registros       
-            Combinacion.objects.create(test=test,participante=participante,indice=index,valor=c,analisis=analisis_id)
-            index+=1
-        print(f"Se guardaron {index} registros ")
-    
-    print("end: save_combinaciones")
-'''
 def get_minimo_atributos(user_id):
     u=User.objects.get(id=user_id)
     resultado=-3
