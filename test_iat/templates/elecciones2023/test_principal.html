@@ -12,6 +12,7 @@
         max-width: 150px; 
         max-height: 150px;
     }
+    
 </style>
 
 <div class="container">
@@ -54,12 +55,12 @@
 
     <div class="row">
         <div class="col-6 text-center">
-            <B>
+            <B class="candidato {% if dispositivo != "d" %} btn {% endif %}" id="1">
                 {{combinacion.adj1}}
             </B>
         </div>
         <div class="col-6 text-center">
-            <B>{{combinacion.adj2}}</B>
+            <B class="candidato {% if dispositivo != "d" %} btn {% endif %}" id="2">{{combinacion.adj2}}</B>
            
         </div>
     </div>
