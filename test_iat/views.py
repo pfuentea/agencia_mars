@@ -26,12 +26,29 @@ import json
 from .decorators import login_required 
 
 from .forms.emailForm import EmailForm
+def clean(request):
+    print("limpando variable init")
+    if 'init' in request.session:
+        del request.session['init']
+    print("limpando variable iat_id")
+    if 'iat_id' in request.session:
+        del request.session['iat_id']
+    return redirect( '/' )
 
 def landing(request):
+    print("Landing")
     emailForm=EmailForm()
     context = {
         "emailForm":emailForm
     }
+    if 'init' in request.session:
+        print("init:ELECCIONES 2023")
+        context = {
+            'invitado_nuevo':1,
+            'invitado_antiguo': 0,
+        }
+        return render(request, 'elecciones2023/inicio.html', context)
+    #print(f"VIEW-L:ref:{ref}")
     return render(request, 'landing.html', context)
 
 def sitio_privado(request):
@@ -71,7 +88,11 @@ def index(request):
 
     invitado_antiguo=0
     # aca seteamos el id que dejamos disponible
-    iat_id=10
+    if request.session['iat_id'] :
+            estudio_id=request.session['iat_id']
+    else:
+        estudio_id=10
+        
     
     #entro al index, existe la variable USER(ingreso al index antes), pero no FROM_LOGIN(usuario tipo user y no guest) => limpiamos USER
     if request.method == "GET":
@@ -150,7 +171,7 @@ def index(request):
     if user_nuevo == 0 and invitado_antiguo == 0:
         return redirect('/estudio/start/'+str(iat_id))  #esa ruta debe ser variable segun test activo
     else:
-        return render(request, 'landing_estudio03.html', context) #esa ruta debe ser variable segun test activo
+        return render(request, 'landing_estudio04.html', context) #esa ruta debe ser variable segun test activo
 
 def login(request):
     context = {

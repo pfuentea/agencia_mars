@@ -94,7 +94,12 @@ def registro_01(request):
     if request.method == "POST":
         #validamos si el correo esta bien escrito
         correo=request.POST['email']
-        estudio_id=1
+        if 'iat_id' in request.session :
+            print(f"El estudio id es:{request.session['iat_id']}")
+            estudio_id=request.session['iat_id']
+        else:
+            estudio_id=10
+            request.session['iat_id']=estudio_id
         try:            
             usuario_nuevo = User.objects.create(
                 name=correo.split('@')[0],
@@ -116,7 +121,9 @@ def registro_01(request):
         }
         
         request.session['user_id'] = request.session['user']['id']
-
+        if 'init' in request.session:
+            estudio=request.session['init']
+            return redirect(estudio+'/start/'+str(estudio_id))
         return redirect('/estudio/start/'+str(estudio_id))
 
         #si no-> enviar mensaje que ya respondió el estudio 

@@ -1,0 +1,77 @@
+{% extends './base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <h1>
+                Estudio IAT Plebiscito Constitucional 2023
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 mb-4">
+            <p>
+                Muchas Gracias por su participación en la versión del 
+                estudio IAT de Plebiscito Constitucional 2023.
+            </p>
+            <p>
+                Este es un estudio experimental, realizado 100% por Agencia Mars y busca medir las asociaciones implícitas entre los diferentes conceptos tratados y los candidatos políticos presentes en la papeleta 2021.
+            </p>
+            <p>
+                Todos los datos entregados a nuestra empresa no serán usados con fines ajenos a este estudio, ni con fines comerciales, y no serán vendidos o entregados a ningún tercero.
+            </p>
+            <p>¡Comencemos!</p>
+        </div>
+    </div>
+   
+        {% if invitado_antiguo == 0 %}
+            {% if invitado_nuevo == 1 %}
+            <form method="post" action="/registro_01">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-10">
+                        <br>
+                        <div class="row">
+                            <div class="col">
+                                <label for="nombre" class="form-label">
+                                    Escribe tu nombre:
+                                </label>   
+                                <input type="text" name="nombre" id="nombre" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+
+                            <div class="col"> 
+                                <label for="email" class="form-label">
+                                    Escribe tu correo:
+                                </label>
+                                <input type="email" name="email" id="email" class="form-control">
+                            </div>
+                        </div>
+                       
+                            <div class=" d-flex justify-content-center mb-3">
+                                <button type="submit" class="btn btn-sm btn-primary">Continuar</button>
+                            </div>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        {% endif %}
+    {% if invitado_antiguo == 0 %}    
+    </div>
+        {% if invitado_nuevo == 0 %}
+        <div class="text-center">
+            <a href="/elecciones2023/start/11" class="btn btn-primary btn-sm">Comenzar el test</a>
+        </div>
+        {% endif %}
+    {% endif %}
+    {% if invitado_antiguo == 1 %}  
+    <div class="text-center">
+        <p class="text-info bg-dark">
+            Usted ya ha respondido este estudio. Le agradecemos que lo haya hecho y pronto lo invitaremos a nuevos estudios.
+        </p>
+    </div>
+    <a href="/elecciones2023/regresar" class="btn btn-sm btn-primary">Realizar estudio con otro usuario</a>
+    {% endif %}
+    
+{% endblock %}

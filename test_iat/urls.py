@@ -14,6 +14,9 @@ urlpatterns = [
     path('registro', auth.registro),
     path('login', auth.login),
     path('logout', auth.logout),
+
+    
+    path('clean', views.clean),
     #ir al test especifico
     #path('exec_test/<int:test_id>', iat.exec_test),
     #ejecucion
@@ -79,6 +82,16 @@ urlpatterns = [
     path('elecciones2022/end', elecciones.elecciones_end), 
     path('elecciones2022/regresar', elecciones.regresar), 
     path('elecciones2022/instrucciones', elecciones.instrucciones),  
+
+    #iat elecciones 2023
+    path('elecciones2023/', elecciones.elecciones2023),
+    #path('elecciones2023/start/', elecciones.elecciones_start),
+    path('elecciones2023/start/<int:iat_id>', elecciones.elecciones_start),
+    path('elecciones2023/test/<str:disp>', elecciones.elecciones_test), 
+    path('elecciones2023/test2/<str:disp>', elecciones.elecciones_test2), 
+    path('elecciones2023/end', elecciones.elecciones_end), 
+    path('elecciones2023/regresar', elecciones.regresar), 
+    path('elecciones2023/instrucciones', elecciones.instrucciones),  
 
     #iat cualquiera:
     path('estudio/start/<int:iat_id>', estudio.start), 

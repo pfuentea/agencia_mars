@@ -17,6 +17,7 @@ from django.db import IntegrityError
 import random
 import json
 from .decorators import login_required
+from .combinaciones import *
 
 def get_combinaciones_elecciones(iat_id):
     iat=Test.objects.get(id=iat_id)
@@ -93,7 +94,7 @@ def get_combinaciones_elecciones(iat_id):
                 i+=1
 
     return c
-
+'''
 def save_combinaciones(combis,test_id,user_id,analisis_id):
     print("init: save_combinaciones")
     test=Test.objects.get(id=test_id)
@@ -102,7 +103,7 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
     #revisamos si no existe y si no guardamos
     c_test=Combinacion.objects.filter(test=test,participante=participante)
     #con borra=1 elimino las combinaciones
-    borrar=0
+    borrar=1
     if borrar == 1:
         c_test.delete()        
         print("se borraron las combinaciones")
@@ -118,6 +119,7 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
         print(f"Se guardaron {index} registros ")
     
     print("end: save_combinaciones")
+'''
 
 def get_minimo_atributos(user_id):
     u=User.objects.get(id=user_id)
@@ -166,11 +168,32 @@ def get_faltantes(iat_id,user_id,analisis_id):
 
 #en esta parte debemos setear primero los datos que nos piden para
 # perfilar al usuario antes de mostrar el START! (OK- solo falta la comuna)
+def elecciones2023(request):
+    print("Elecciones_2023!")
+    iat_id=11
+    iat=Test.objects.get(id=iat_id)
+    request.session['iat_nombre']=iat.nombre
+    if 'init' not in request.session:
+        request.session['init']='elecciones2023'
+    context = {
+        'invitado_nuevo':1,
+        'invitado_antiguo': 0,
+        'ok':0
+        }
+    return render(request, 'landing_estudio04.html', context)
+
 @login_required
-def elecciones_start(request,iat_id):
+def elecciones_start(request,iat_id=0):
+    print("Elecciones_start!")
+    iat_id=11
+    request.session['iat_id']=iat_id
     iat=Test.objects.get(id=iat_id)
     request.session['iat_nombre']=iat.nombre
     user=User.objects.get(id=request.session['user']['id'])
+    if 'init' not in request.session:
+        print("set init")
+        request.session['init']='elecciones2023'
+
     print("Elecciones_start!")
     #print(iat.nombre)
     comuna_ok=0
@@ -227,15 +250,17 @@ def elecciones_start(request,iat_id):
         #Resultado.objects.all().delete()
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
-        combis=get_combinaciones_elecciones(iat_id)
+        combis=get_combinaciones_analisis01(iat_id)
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
+        combis=get_combinaciones_analisis03(iat_id)
+        save_combinaciones(combis,iat_id,request.session['user']['id'],3)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
 
         if len(sondeos)>0: #que exista un sondeo
             sondeo=sondeos[0]
             request.session['sondeo_id']=sondeo.id
-            print(f"Sondeo_id:{sondeo.id},estado:{sondeo.estado}")
+            print(f"Sondeo_id:{sondeo.id},estado:{sondeo.estado} (A=activo,R=resuelto)")
             if sondeo.estado == "A": #en el caso que no lo finalice aun
                 ok=1
             elif sondeo.estado == "R": #en el caso que lo finalice ya
@@ -275,7 +300,8 @@ def elecciones_start(request,iat_id):
             "edad":edad,
             "sexo":sexo,
         }
-    return render(request, './elecciones2022/inicio.html', context)
+        print(f"IAT_ID:{iat_id}")
+    return render(request, './elecciones2023/inicio.html', context)
 
 #esta parte está lista
 @login_required
@@ -317,7 +343,7 @@ def elecciones_test(request,disp):
     #llenamos con las preguntas que faltan responder
     faltantes=[]
     faltantes=get_faltantes(iat.id,user.id,1)
-    print(f"Largo analisis01:{len(faltantes)}")
+    print(f"Largo analisis01:{len(faltantes)} comb")
     
     if len(faltantes) > 0 :
         posicion_azar=random.randint(0, len(faltantes)-1)
@@ -332,9 +358,72 @@ def elecciones_test(request,disp):
             "combinacion":combinacion,
             "dispositivo":disp,
         }
-        return render(request, 'elecciones2022/test_principal.html', context)
+        return render(request, 'elecciones2023/test_principal.html', context)
     else:
-        return redirect('/elecciones2022/end')
+        print("se acabo este paso...siguiente")
+        return redirect('/elecciones2023/test2/'+str(disp))
+
+
+@login_required
+def elecciones_test2(request,disp):
+    print("T2:init")
+    s_id=request.session['sondeo_id']
+    iat=Test.objects.get(id=request.session['iat_id'])
+    user=User.objects.get(id=request.session['user']['id'])
+    #print(f"S-id:{s_id}")
+    print(f"T2:RM:{request.method}")
+
+    if request.method == "POST":
+        # recibo la respuesta
+        print("T2:post")
+        milisegundos=request.POST['milisegundos']
+        combinacion_id=request.POST['combinacion']
+        analisis=3
+        opcion=request.POST['opcion']
+        #obtengo el usuario y el estudio
+        test=Test.objects.get(id=request.POST['iat_id'])
+        user=User.objects.get(id=request.POST['user_id'])        
+
+        print(f"pos:{combinacion_id} , analisis:{analisis},test:{request.POST['iat_id']},user:{request.POST['user_id']},opcion:{opcion}")
+        #busco la combinacion
+        combi=Combinacion.objects.filter(indice=combinacion_id,analisis=analisis,test=test,participante=user)
+        #genero una llave con la respuesta para decir cual es el adj-n que respondió
+        llave="adj"+str(opcion)
+        #print(f"n_combinaciones:{combi.count()}")
+        for c in combi:
+            print(f"c:{c.valor}")
+            valores=c.valor
+            json_acceptable_string = valores.replace("'", "\"")
+            quest = json.loads(json_acceptable_string)
+            preg=quest['car']
+            respuesta=quest[llave]
+            #print(f"pregunta:{preg}")
+            #print(f"respuesta:{respuesta}")
+        #Respuesta
+            res=Resultado.objects.create(combinacion=c,milisegundos=milisegundos,opcion=opcion,pregunta=preg,respuesta=respuesta)    
+
+    #preguntamos si quedan preguntas(combinaciones) por responder
+    #llenamos con las preguntas que faltan responder
+    faltantes=[]
+    faltantes=get_faltantes(iat.id,user.id,3)
+    print(f"Largo analisis03:{len(faltantes)}")
+    
+    if len(faltantes) > 0 :
+        posicion_azar=random.randint(0, len(faltantes)-1)
+        combinacion=faltantes.pop(posicion_azar)        
+        print(f"Sacamos la combinacion:{combinacion}, Tipo{type(combinacion)}")
+
+        restantes=len(faltantes)
+        #b)al enviar guardamos el resultado en la BD y quitamos esa combinacion de la lista
+        context = {    
+            "restantes":restantes,
+            "posicion_azar":posicion_azar ,
+            "combinacion":combinacion,
+            "dispositivo":disp,
+        }
+        return render(request, 'elecciones2023/parte_01.html', context)
+    else:
+        return redirect('/elecciones2023/end')
 
 @login_required
 def elecciones_end(request):
@@ -351,24 +440,27 @@ def elecciones_end(request):
         #limpiamos USER para que alguien más pueda responder
         if 'user' in request.session:
             del request.session['user']
-            return redirect('/')
+            return redirect('/elecciones2023/')
 
         context = {  
 
             }
-        return render(request, 'elecciones2022/final.html', context)
+        return render(request, 'elecciones2023/final.html', context)
     else:
         context = {    
         }
-        return render(request, 'elecciones2022/final.html', context)
+        return render(request, 'elecciones2023/final.html', context)
 
 def regresar(request):
+    if 'init' in request.session:
+        estudio=request.session['init']
+        
     if 'user' in request.session:
             del request.session['user']
-    return redirect('/')
+    return redirect('/'+estudio)
 
 #Solo pasará por aca si es un dispositivo=desktop
 def instrucciones(request):
     context = {    
             }
-    return render(request, 'elecciones2022/instrucciones_desktop.html', context)
+    return render(request, 'elecciones2023/instrucciones_desktop.html', context)
