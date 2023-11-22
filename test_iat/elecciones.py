@@ -170,7 +170,7 @@ def get_faltantes(iat_id,user_id,analisis_id):
 # perfilar al usuario antes de mostrar el START! (OK- solo falta la comuna)
 def elecciones2023(request):
     print("Elecciones_2023!")
-    iat_id=11
+    iat_id=2
     iat=Test.objects.get(id=iat_id)
     request.session['iat_nombre']=iat.nombre
     if 'init' not in request.session:
@@ -185,7 +185,7 @@ def elecciones2023(request):
 @login_required
 def elecciones_start(request,iat_id=0):
     print("Elecciones_start!")
-    iat_id=11
+    iat_id=2
     request.session['iat_id']=iat_id
     iat=Test.objects.get(id=iat_id)
     request.session['iat_nombre']=iat.nombre
