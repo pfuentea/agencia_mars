@@ -3,7 +3,7 @@
 <h2>Usuarios - Participantes</h2>
 
 <div class="container">
-    {% ifequal accion "default" %}
+    {% if accion == "default" %}
     <div class="row">
         <div class="col">
             <div class="table-responsive">
@@ -58,8 +58,8 @@
             </div>
         </div>
     </div>
-    {% endifequal %}
-    {% ifequal accion "detalle" %}
+    {% endif %}
+    {% if accion == "detalle" %}
     <div class="row">
         <div class="col">
             <h1>Detalles del usuario <b>{{Usuario.name}}</b> </h1>
@@ -96,7 +96,7 @@
         </div>
     </div>
     <a href="/usuarios" class="btn btn-sm btn-primary">Volver a Usuarios</a>
-    {% endifequal %}
+    {% endif %}
 
 </div>
 
