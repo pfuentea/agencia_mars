@@ -10,7 +10,7 @@ class Caracteristica(models.Model):
 class Tcaracteristicas(models.Model):
     caracteristica=models.ForeignKey(Caracteristica, related_name="t_car", on_delete = models.CASCADE)
     categoria = models.ForeignKey(Tcategoria, related_name="car_cat", on_delete = models.CASCADE)
-    analisis = models.IntegerField() # del 1 al 4
+    analisis = models.IntegerField(default=1) # del 1 al 4
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     def __str__ (self):
@@ -19,7 +19,7 @@ class Tcaracteristicas(models.Model):
 
 class Tatributos(models.Model):
     caracteristica =models.ForeignKey(Caracteristica, related_name="t_atr", on_delete = models.CASCADE)
-    categoria = models.ForeignKey(Tcategoria, related_name="atr_cat", on_delete = models.CASCADE)
+    categoria = models.ForeignKey(Tcategoria, related_name="atr_cat", on_delete = models.CASCADE,null=True,blank=True)
     analisis = models.IntegerField(default=2) # del 1 al 4
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
