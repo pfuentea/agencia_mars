@@ -6,4 +6,5 @@ db.sqlite3
 agencia_mars/env.py
 implicita.pem
 pasos_mars.txt
+.env
 
