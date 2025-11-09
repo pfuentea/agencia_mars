@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,12 +77,14 @@ WSGI_APPLICATION = 'agencia_mars.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+env = environ.Env()
+environ.Env.read_env() 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, '/db.sqlite3'),
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
-    }
+    'default': env.db(
+        'DATABASE_URL',
+        default='sqlite:///db.sqlite3'  # fallback local si no existe la variable
+    )
 }
 
 
