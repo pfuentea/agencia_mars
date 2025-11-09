@@ -14,7 +14,8 @@ from .models.adjetivo import Adjetivo, Tadjetivos
 from .models.producto import Producto, Tproductos
 from .models.combinacion import Combinacion
 from .models.resultado import Resultado
-
+from django.contrib import admin
+from django.contrib.sessions.models import Session
 
 # Register your models here.
 admin.site.register(User)
@@ -42,4 +43,6 @@ admin.site.register(Combinacion)
 admin.site.register(Resultado)
 
 
-
+@admin.register(Session)
+class SessionAdmin(admin.ModelAdmin):
+    list_display = ('session_key', 'expire_date')
