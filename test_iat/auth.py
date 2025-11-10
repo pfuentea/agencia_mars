@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render
 import bcrypt
 from .models.user import User
 
-
 def logout(request):
     if 'user' in request.session:
         del request.session['user']
