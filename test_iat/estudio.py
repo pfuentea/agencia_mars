@@ -20,7 +20,7 @@ from django.db import IntegrityError
 import random
 import json
 from .decorators import login_required
-from .combinaciones import get_combinaciones_analisis01,get_combinaciones_analisis02,get_combinaciones_analisis03,get_combinaciones_analisis04,save_combinaciones
+from .combinaciones import get_combinaciones_analisis01,get_combinaciones_analisis02,get_combinaciones_analisis03,get_combinaciones_analisis04,save_combinaciones,get_combinaciones_elecciones2021
 
 
 def get_combinaciones_elecciones(iat_id):
@@ -216,7 +216,8 @@ def start(request,iat_id):
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
         request.session['analisis']=1
-        combis=get_combinaciones_analisis01(iat_id)
+        #combis=get_combinaciones_analisis01(iat_id)
+        combis=get_combinaciones_elecciones2021(iat_id)
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
@@ -326,7 +327,8 @@ def test(request,disp):
             "combinacion":combinacion,
             "dispositivo":disp,
         }
-        return render(request, 'estudio/test_principal.html', context)
+        #return render(request, 'estudio/test_principal.html', context)
+        return render(request, 'elecciones2025/test_principal.html', context)
     else:
         return redirect('/siguiente_paso/1/'+str(request.session['iat_id'])+'/'+disp)
 

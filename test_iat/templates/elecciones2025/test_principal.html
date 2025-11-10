@@ -110,15 +110,9 @@
 <div class="oculto">
     <input type="text" id="escribe" >
 </div>
-
-    {% if dispositivo != "d" %}
         {% load static %}
         <script  src="{% static 'js/tiempo_click.js' %}"></script>
         </script> 
-    {% endif %}
-    {% if dispositivo == "d" %}
-        {% load static %}
-        <script  src="{% static 'js/tiempo.js' %}"></script>
-        </script> 
-    {% endif %}
+
+    
 {% endblock %}

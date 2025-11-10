@@ -301,12 +301,12 @@ def get_combinaciones_elecciones2021(iat_id):
                         dict_comb["tadj4"] = tadj[3][0]
                         dict_comb["img4"]  = adj4.nombre + ".JPG"
 
-                        dict_comb_2["adj3"]  = adj3.nombre
-                        dict_comb_2["tadj3"] = tadj[2][0]
-                        dict_comb_2["img3"]  = adj3.nombre + ".JPG"
-                        dict_comb_2["adj4"]  = adj4.nombre
-                        dict_comb_2["tadj4"] = tadj[3][0]
-                        dict_comb_2["img4"]  = adj4.nombre + ".JPG"
+                        dict_comb_2["adj3"]  = adj4.nombre
+                        dict_comb_2["tadj3"] = tadj[3][0]
+                        dict_comb_2["img3"]  = adj4.nombre + ".JPG"
+                        dict_comb_2["adj4"]  = adj3.nombre
+                        dict_comb_2["tadj4"] = tadj[2][0]
+                        dict_comb_2["img4"]  = adj3.nombre + ".JPG"
 
                     if max_adj >= 6:
                         adj5 = Adjetivo.objects.get(id=adj[4][0])
@@ -319,12 +319,12 @@ def get_combinaciones_elecciones2021(iat_id):
                         dict_comb["tadj6"] = tadj[5][0]
                         dict_comb["img6"]  = adj6.nombre + ".JPG"
 
-                        dict_comb_2["adj5"]  = adj5.nombre
-                        dict_comb_2["tadj5"] = tadj[4][0]
-                        dict_comb_2["img5"]  = adj5.nombre + ".JPG"
-                        dict_comb_2["adj6"]  = adj6.nombre
-                        dict_comb_2["tadj6"] = tadj[5][0]
-                        dict_comb_2["img6"]  = adj6.nombre + ".JPG"
+                        dict_comb_2["adj5"]  = adj6.nombre
+                        dict_comb_2["tadj5"] = tadj[5][0]
+                        dict_comb_2["img5"]  = adj6.nombre + ".JPG"
+                        dict_comb_2["adj6"]  = adj5.nombre
+                        dict_comb_2["tadj6"] = tadj[4][0]
+                        dict_comb_2["img6"]  = adj5.nombre + ".JPG"
 
                     # Guardar copias finales (para evitar mutaciones posteriores)
                     c.append(dict_comb.copy())

@@ -128,12 +128,12 @@ def get_combinaciones_elecciones2021(iat_id):
                         dict_comb["tadj4"] = tadj[3][0]
                         dict_comb["img4"]  = adj4.nombre + ".JPG"
 
-                        dict_comb_2["adj3"]  = adj3.nombre
-                        dict_comb_2["tadj3"] = tadj[2][0]
-                        dict_comb_2["img3"]  = adj3.nombre + ".JPG"
-                        dict_comb_2["adj4"]  = adj4.nombre
-                        dict_comb_2["tadj4"] = tadj[3][0]
-                        dict_comb_2["img4"]  = adj4.nombre + ".JPG"
+                        dict_comb_2["adj3"]  = adj4.nombre
+                        dict_comb_2["tadj3"] = tadj[3][0]
+                        dict_comb_2["img3"]  = adj4.nombre + ".JPG"
+                        dict_comb_2["adj4"]  = adj3.nombre
+                        dict_comb_2["tadj4"] = tadj[2][0]
+                        dict_comb_2["img4"]  = adj3.nombre + ".JPG"
 
                     if max_adj >= 6:
                         adj5 = Adjetivo.objects.get(id=adj[4][0])
@@ -146,12 +146,12 @@ def get_combinaciones_elecciones2021(iat_id):
                         dict_comb["tadj6"] = tadj[5][0]
                         dict_comb["img6"]  = adj6.nombre + ".JPG"
 
-                        dict_comb_2["adj5"]  = adj5.nombre
-                        dict_comb_2["tadj5"] = tadj[4][0]
-                        dict_comb_2["img5"]  = adj5.nombre + ".JPG"
-                        dict_comb_2["adj6"]  = adj6.nombre
-                        dict_comb_2["tadj6"] = tadj[5][0]
-                        dict_comb_2["img6"]  = adj6.nombre + ".JPG"
+                        dict_comb_2["adj5"]  = adj6.nombre
+                        dict_comb_2["tadj5"] = tadj[5][0]
+                        dict_comb_2["img5"]  = adj6.nombre + ".JPG"
+                        dict_comb_2["adj6"]  = adj5.nombre
+                        dict_comb_2["tadj6"] = tadj[4][0]
+                        dict_comb_2["img6"]  = adj5.nombre + ".JPG"
 
                     # Guardar copias finales (para evitar mutaciones posteriores)
                     c.append(dict_comb.copy())
@@ -177,7 +177,8 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
     if c_test.count()>0:
         print("combinaciones ya existen para ese test y usuario")
     else:
-        print("combinaciones no existen para ese test y usuario, se agregan")        
+        print("combinaciones no existen para ese test y usuario, se agregan")   
+        print(f'# combis:{combis.count()}')     
         for c in combis:
             #guardamos los registros       
             Combinacion.objects.create(test=test,participante=participante,indice=index,valor=c,analisis=analisis_id)
@@ -293,6 +294,7 @@ def elecciones_start(request,iat_id):
         #Combinacion.objects.all().delete()
         request.session['iat_id']=iat_id
         combis=get_combinaciones_elecciones2021(iat_id)
+        print(f'# combis:{combis.count()}')
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
