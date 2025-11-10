@@ -90,6 +90,7 @@ def registro(request):
         return render(request, 'registro.html')
 
 def registro_01(request):
+    request.session['iat_id']=1
     if request.method == "POST":
         #validamos si el correo esta bien escrito
         correo=request.POST['email']
