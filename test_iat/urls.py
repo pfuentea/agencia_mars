@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views,auth,elecciones2021,resumen, elecciones, estudio
+from . import views,auth,elecciones2021,resumen, elecciones, estudio, elecciones2025
 from .vistas import categoria,cliente,producto,caracteristica,adjetivo,iat,usuarios,sondeo,resultado
 
 
@@ -134,7 +134,12 @@ urlpatterns = [
     #registro
     path('registro_01', auth.registro_01),
 
-
+#iat elecciones 2025
+    path('elecciones2025/start/<int:iat_id>', elecciones2025.elecciones_start),
+    path('elecciones2025/test/<str:disp>', elecciones2025.elecciones_test), 
+    path('elecciones2025/end', elecciones2025.elecciones_end), 
+    path('elecciones2025/regresar', elecciones2025.regresar), 
+    path('elecciones2025/instrucciones', elecciones2025.instrucciones),  
 
 ]
 

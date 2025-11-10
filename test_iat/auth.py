@@ -98,7 +98,7 @@ def registro_01(request):
             print(f"El estudio id es:{request.session['iat_id']}")
             estudio_id=request.session['iat_id']
         else:
-            estudio_id=10
+            estudio_id=1
             request.session['iat_id']=estudio_id
         try:            
             usuario_nuevo = User.objects.create(

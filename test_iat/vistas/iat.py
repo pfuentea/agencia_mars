@@ -18,7 +18,7 @@ from django.core.checks import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import IntegrityError
-from ..combinaciones import get_combinaciones_analisis01,get_combinaciones_analisis02,get_combinaciones_analisis03,get_combinaciones_analisis04,save_combinaciones
+from ..combinaciones import get_combinaciones_analisis01,get_combinaciones_analisis02,get_combinaciones_analisis03,get_combinaciones_analisis04,save_combinaciones,get_combinaciones_elecciones2021
 import random
 
 
@@ -277,11 +277,15 @@ def iat_detalle(request,iat_id): #analisis01
             
         cars=Caracteristica.objects.all()
 
-        combinaciones=get_combinaciones_analisis01(iat_id)
+        #combinaciones=get_combinaciones_analisis01(iat_id)
+        combinaciones=get_combinaciones_elecciones2021(iat_id)
+        print(combinaciones)
+        #print(f'# combis:{combinaciones.count()}')
 
         for c in iat.combinaciones.all():
             p={"nombre":c.participante.name,"user_id":c.participante.id}
             participantes.append(p)
+           
 
         participantes=[dict(t) for t in {tuple(d.items()) for d in participantes}]
         

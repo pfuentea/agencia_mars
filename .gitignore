@@ -7,4 +7,5 @@ agencia_mars/env.py
 implicita.pem
 pasos_mars.txt
 .env
+agencia_mars/.env
 

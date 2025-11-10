@@ -1,0 +1,124 @@
+{% extends '../base.html' %}
+{% block content %}
+
+<style>
+    .oculto{
+        position: absolute;
+        left:-200px;
+    }
+    .candidato{
+        height: auto; 
+        width: auto; 
+        max-width: 150px; 
+        max-height: 150px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col-8  text-center">
+            <h5>Estudio IAT Elecciones Presidenciales 2025</h5>
+        </div>
+        <div class="col">
+           
+        </div>
+        <div class="row">
+            <div class="col">
+               
+            </div>
+            <div class="col-6 text-center">
+                <h1 class="text-danger fw-bold">{{combinacion.car}}</h1>
+            </div>
+            <div class="col">
+               
+            </div>
+        </div>
+    </div>
+    {% if request.session.user.role == "admin" %}
+    <div class="row">
+        <div class="col">
+           
+        </div>
+        <div class="col-6 text-center">
+            restantes: ({{restantes}}) - posicion:({{posicion_azar}}) - original:({{combinacion.pos}}) <br>
+            <h2>{{combinacion.car}}</h2>
+        </div>
+        <div class="col">
+           
+        </div>
+    </div>
+    {% endif %}
+    {% load static %}
+
+    
+    <div class="row">
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img1}}" alt="my image" class="candidato" id="1">
+        </div>
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img2}}" alt="my image" class="candidato" id="2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img3}}" alt="my image" class="candidato" id="3">
+        </div>
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img4}}" alt="my image" class="candidato" id="4">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img5}}" alt="my image" class="candidato" id="5">
+        </div>
+        <div class="col-6 text-center">
+            <img src="{% static "/image/"%}{{combinacion.img6}}" alt="my image" class="candidato" id="6">
+        </div>
+    </div>
+    
+
+    <div class="row">
+        <div class="col">
+        </div>
+        <div class="col-6  text-center">
+            {% if restantes < 0 %}
+            <a href="paso2" class="btn btn-primary">SIGUIENTE </a>
+            {% endif %}
+        </div>
+        <div class="col">
+        </div>
+    </div>
+</div>
+
+<form action="/elecciones2025/test/{{dispositivo}}" method="POST" id="form_tiempo" name="form_tiempo">
+    {% csrf_token %}
+    <input type="hidden" name="milisegundos" value="" id="milisegundos">
+    <input type="hidden" name="combinacion" value="{{combinacion.pos}}">
+    <input type="hidden" name="analisis" value="1">
+    <input type="hidden" name="iat_id" value="{{request.session.iat_id}}">
+    <input type="hidden" name="user_id" value="{{request.session.user.id}}">
+    <input type="hidden" name="opcion" value="" id="opcion">
+    
+</form>
+
+
+<div id="resultado">
+</div>
+<div class="oculto">
+    <input type="text" id="escribe" >
+</div>
+
+    {% if dispositivo != "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo_click.js' %}"></script>
+        </script> 
+    {% endif %}
+    {% if dispositivo == "d" %}
+        {% load static %}
+        <script  src="{% static 'js/tiempo.js' %}"></script>
+        </script> 
+    {% endif %}
+{% endblock %}

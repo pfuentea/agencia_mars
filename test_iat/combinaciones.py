@@ -18,9 +18,11 @@ from .models.resultado import Resultado
 def get_combinaciones_analisis01(iat_id):
     iat=Test.objects.get(id=iat_id)
     c=[]
+    print(f'iat.categorias.count():{iat.categorias.count()}')
     if iat.categorias.count() > 0:
         tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
         categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        print(f'tcat.car_cat.count():{tcat.car_cat.count()}')
         if tcat.car_cat.count() > 0:
             car_ids=tcat.car_cat.values_list('caracteristica_id')
             tcar_ids =tcat.car_cat.values_list('id')
@@ -29,6 +31,7 @@ def get_combinaciones_analisis01(iat_id):
             for r in car_ids:                
                 c_aux=Caracteristica.objects.get(id=r[0])
                 tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                print(f'tcar.adj_car.count():{tcar.adj_car.count()}')
                 if tcar.adj_car.count() > 0:
                     adj=tcar.adj_car.values_list('adjetivo_id')
                     tadj=tcar.adj_car.values_list('id')
@@ -190,3 +193,221 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
             Combinacion.objects.create(test=test,participante=participante,indice=index,valor=c,analisis=analisis_id)
             index+=1
         print(f"Se guardaron {index} registros ")
+
+
+def get_combinaciones_elecciones2021(iat_id):
+    iat=Test.objects.get(id=iat_id)
+    c=[]
+    if iat.categorias.count() > 0:
+        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
+        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        if tcat.car_cat.count() > 0:
+            car_ids=tcat.car_cat.values_list('caracteristica_id')
+            tcar_ids =tcat.car_cat.values_list('id')
+            i=0
+            pos=0
+            for r in car_ids:                
+                c_aux=Caracteristica.objects.get(id=r[0])
+                tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                max_adj=tcar.adj_car.count()
+                #print(f"ADJ_MAX:{max_adj}")
+                if tcar.adj_car.count() > 0:
+                    adj=tcar.adj_car.values_list('adjetivo_id')
+                    tadj=tcar.adj_car.values_list('id')
+                    #aca van las combinaciones por adjetivos 1-2, 3-4, 5-6
+                    dict_comb={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+                    dict_comb_2={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+                    '''
+                    if max_adj == 2:
+                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                        dict_comb['adj1']=adj1.nombre
+                        dict_comb['tadj1']=tadj[0][0]
+                        dict_comb['img1']=adj1.nombre+".JPG"
+                        dict_comb['pos']=pos
+                        
+                        adj2=Adjetivo.objects.get(id=adj[1][0])
+                        dict_comb['adj2']=adj2.nombre
+                        dict_comb['tadj2']=tadj[1][0]
+                        dict_comb['img2']=adj2.nombre+".JPG"
+                        pos+=1      
+                        dict_comb_2['adj1']=adj2.nombre
+                        dict_comb_2['tadj1']=tadj[1][0]
+                        dict_comb_2['img1']=adj2.nombre+".JPG"
+                        
+                        dict_comb_2['adj2']=adj1.nombre
+                        dict_comb_2['tadj2']=tadj[0][0]
+                        dict_comb_2['img2']=adj1.nombre+".JPG"
+                        dict_comb_2['pos']=pos
+                        pos+=1
+
+
+                    if max_adj == 4:
+                        adj3=Adjetivo.objects.get(id=adj[2][0])  
+                        dict_comb['ajd3']=adj3.nombre
+                        dict_comb['tajd3']=tadj[2][0]
+                        dict_comb['img1']=adj3.nombre+".JPG"
+                        adj4=Adjetivo.objects.get(id=adj[3][0])
+                        dict_comb['ajd4']=adj4.nombre
+                        dict_comb['tajd4']=tadj[3][0]
+                        dict_comb['img2']=adj4.nombre+".JPG"
+                    
+                    if max_adj == 6:
+                        adj5=Adjetivo.objects.get(id=adj[4][0])  
+                        dict_comb['ajd5']=adj5.nombre
+                        dict_comb['tajd5']=tadj[4][0]
+                        dict_comb['img1']=adj5.nombre+".JPG"
+
+                        adj6=Adjetivo.objects.get(id=adj[5][0])
+                        dict_comb['ajd6']=adj6.nombre
+                        dict_comb['tajd6']=tadj[5][0]
+                        dict_comb['img2']=adj6.nombre+".JPG"
+
+                    # 1 con 2
+                    c.append(dict_comb)
+                    
+                    c.append(dict_comb_2)
+                    '''
+                    if max_adj >= 2:
+                        adj1 = Adjetivo.objects.get(id=adj[0][0])
+                        dict_comb["adj1"]  = adj1.nombre
+                        dict_comb["tadj1"] = tadj[0][0]
+                        dict_comb["img1"]  = adj1.nombre + ".JPG"
+                        dict_comb["pos"]   = pos
+
+                        adj2 = Adjetivo.objects.get(id=adj[1][0])
+                        dict_comb["adj2"]  = adj2.nombre
+                        dict_comb["tadj2"] = tadj[1][0]
+                        dict_comb["img2"]  = adj2.nombre + ".JPG"
+                        pos += 1
+
+                        # Invertida
+                        dict_comb_2["adj1"]  = adj2.nombre
+                        dict_comb_2["tadj1"] = tadj[1][0]
+                        dict_comb_2["img1"]  = adj2.nombre + ".JPG"
+                        dict_comb_2["adj2"]  = adj1.nombre
+                        dict_comb_2["tadj2"] = tadj[0][0]
+                        dict_comb_2["img2"]  = adj1.nombre + ".JPG"
+                        dict_comb_2["pos"]   = pos
+                        pos += 1
+
+                    if max_adj >= 4:
+                        adj3 = Adjetivo.objects.get(id=adj[2][0])
+                        adj4 = Adjetivo.objects.get(id=adj[3][0])
+
+                        dict_comb["adj3"]  = adj3.nombre
+                        dict_comb["tadj3"] = tadj[2][0]
+                        dict_comb["img3"]  = adj3.nombre + ".JPG"
+                        dict_comb["adj4"]  = adj4.nombre
+                        dict_comb["tadj4"] = tadj[3][0]
+                        dict_comb["img4"]  = adj4.nombre + ".JPG"
+
+                        dict_comb_2["adj3"]  = adj3.nombre
+                        dict_comb_2["tadj3"] = tadj[2][0]
+                        dict_comb_2["img3"]  = adj3.nombre + ".JPG"
+                        dict_comb_2["adj4"]  = adj4.nombre
+                        dict_comb_2["tadj4"] = tadj[3][0]
+                        dict_comb_2["img4"]  = adj4.nombre + ".JPG"
+
+                    if max_adj >= 6:
+                        adj5 = Adjetivo.objects.get(id=adj[4][0])
+                        adj6 = Adjetivo.objects.get(id=adj[5][0])
+
+                        dict_comb["adj5"]  = adj5.nombre
+                        dict_comb["tadj5"] = tadj[4][0]
+                        dict_comb["img5"]  = adj5.nombre + ".JPG"
+                        dict_comb["adj6"]  = adj6.nombre
+                        dict_comb["tadj6"] = tadj[5][0]
+                        dict_comb["img6"]  = adj6.nombre + ".JPG"
+
+                        dict_comb_2["adj5"]  = adj5.nombre
+                        dict_comb_2["tadj5"] = tadj[4][0]
+                        dict_comb_2["img5"]  = adj5.nombre + ".JPG"
+                        dict_comb_2["adj6"]  = adj6.nombre
+                        dict_comb_2["tadj6"] = tadj[5][0]
+                        dict_comb_2["img6"]  = adj6.nombre + ".JPG"
+
+                    # Guardar copias finales (para evitar mutaciones posteriores)
+                    c.append(dict_comb.copy())
+                    c.append(dict_comb_2.copy())
+                    
+                i+=1
+
+    return c
+
+    iat=Test.objects.get(id=iat_id)
+    c=[]
+    print(f'iat.categorias.count():{iat.categorias.count()}')
+    if iat.categorias.count() > 0:
+        tcat=Tcategoria.objects.get(id=iat.categorias.values_list('id')[0][0])
+        categoria=Categoria.objects.get(id=iat.categorias.values_list('categoria_id')[0][0])
+        print(f'tcat.car_cat.count():{tcat.car_cat.count()}')
+        if tcat.car_cat.count() > 0:
+            car_ids=tcat.car_cat.values_list('caracteristica_id')
+            tcar_ids =tcat.car_cat.values_list('id')
+            i=0
+            pos=0
+            for r in car_ids:                
+                c_aux=Caracteristica.objects.get(id=r[0])
+                tcar=Tcaracteristicas.objects.get(id=tcar_ids[i][0])
+                max_adj=tcar.adj_car.count()
+                print(f"ADJ_MAX:{max_adj}")
+                print(f'tcar.adj_car.count():{tcar.adj_car.count()}')
+                if tcar.adj_car.count() > 0:
+                    adj=tcar.adj_car.values_list('adjetivo_id')
+                    tadj=tcar.adj_car.values_list('id')
+                    #aca van las combinaciones por adjetivos 1-2, 3-4, 5-6
+                    dict_comb={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+                    dict_comb_2={"iat":iat.nombre,"cat":categoria.nombre,"car":c_aux.nombre}
+            
+                    if max_adj == 2:
+                        adj1=Adjetivo.objects.get(id=adj[0][0]) 
+                        dict_comb['adj1']=adj1.nombre
+                        dict_comb['tadj1']=tadj[0][0]
+                        dict_comb['img1']=adj1.nombre+".JPG"
+                        dict_comb['pos']=pos
+                        
+                        adj2=Adjetivo.objects.get(id=adj[1][0])
+                        dict_comb['adj2']=adj2.nombre
+                        dict_comb['tadj2']=tadj[1][0]
+                        dict_comb['img2']=adj2.nombre+".JPG"
+                        pos+=1      
+                        dict_comb_2['adj1']=adj2.nombre
+                        dict_comb_2['tadj1']=tadj[1][0]
+                        dict_comb_2['img1']=adj2.nombre+".JPG"
+                        
+                        dict_comb_2['adj2']=adj1.nombre
+                        dict_comb_2['tadj2']=tadj[0][0]
+                        dict_comb_2['img2']=adj1.nombre+".JPG"
+                        dict_comb_2['pos']=pos
+                        pos+=1
+
+
+                    if max_adj == 4:
+                        adj3=Adjetivo.objects.get(id=adj[2][0])  
+                        dict_comb['ajd3']=adj3.nombre
+                        dict_comb['tajd3']=tadj[2][0]
+                        dict_comb['img1']=adj3.nombre+".JPG"
+                        adj4=Adjetivo.objects.get(id=adj[3][0])
+                        dict_comb['ajd4']=adj4.nombre
+                        dict_comb['tajd4']=tadj[3][0]
+                        dict_comb['img2']=adj4.nombre+".JPG"
+                    
+                    if max_adj == 6:
+                        adj5=Adjetivo.objects.get(id=adj[4][0])  
+                        dict_comb['ajd5']=adj5.nombre
+                        dict_comb['tajd5']=tadj[4][0]
+                        dict_comb['img1']=adj5.nombre+".JPG"
+
+                        adj6=Adjetivo.objects.get(id=adj[5][0])
+                        dict_comb['ajd6']=adj6.nombre
+                        dict_comb['tajd6']=tadj[5][0]
+                        dict_comb['img2']=adj6.nombre+".JPG"
+
+                    # 1 con 2
+                    c.append(dict_comb)
+                    
+                    c.append(dict_comb_2)
+                    
+                i+=1
+    print(f"#combis :{c}")
+    return c

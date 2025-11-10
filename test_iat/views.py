@@ -42,12 +42,12 @@ def landing(request):
         "emailForm":emailForm
     }
     if 'init' in request.session:
-        print("init:ELECCIONES 2023")
+        print("init:ELECCIONES 2025")
         context = {
             'invitado_nuevo':1,
             'invitado_antiguo': 0,
         }
-        return render(request, 'elecciones2023/inicio.html', context)
+        return render(request, 'elecciones2025/inicio.html', context)
     #print(f"VIEW-L:ref:{ref}")
     return render(request, 'landing.html', context)
 

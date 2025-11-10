@@ -158,6 +158,7 @@ def start(request,iat_id):
     ciudad=""
     edad=0
     sexo="N"
+    ok=0
 
     
 
@@ -208,7 +209,7 @@ def start(request,iat_id):
     #si estan todas las validaciones ==>1, si no ==>0
     print(f"validaciones:{validaciones} (1=ok, <0=nok)")
 
-    validaciones=1  #esto vale solo para cuando el estudio es publico (no necesita registro previo)
+    #validaciones=1  #esto vale solo para cuando el estudio es publico (no necesita registro previo)
     
     if validaciones > 0:
         #Resultado.objects.all().delete()
