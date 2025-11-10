@@ -3,11 +3,16 @@
 <div class="container">
     <div class="row">
         <div class="col-10">
-            <p>El navegador redirigirá dentro de 25 segundos al estudio.
+            <p>El navegador redirigirá dentro de <b><span id="countdown"></span></b> segundos al estudio.
             </p>
+            <p>
+                Para responder este estudio por favor haga click sobre el candidato que piensa usted se acerca más al concepto mostrado como titulo al centro.
+            </p>
+        <!--
             <p>Para responder este estudio por favor posicione su dedo índice de la mano izquierda sobre la tecla <b>E</b> y el índice de su mano derecha sobre la tecla <b>I</b>, el test debe ser respondido lo más rápido y preciso posible.
             </p>
             <p>Los candidatos serán mostrados a la izquierda o a la derecha y usted deberá teclear la letra <b>E</b>  cuando el candidato asociado está a la <b>izquierda</b>  o la letra <b>I</b>  cuando el candidato asociado está a la  <b>derecha</b>   .</p>
+        -->
         </div>
     </div>
 </div>
@@ -15,9 +20,19 @@
 
 <script type="text/javascript">
     setTimeout( function() { 
-        window.location.href = "/elecciones2025/test/d"; 
-    }, 27000 );
-
+        url='{{url}}'
+        window.location.href = url ; 
+    }, 15000 );
+    
+    window.onload = updateClock;
+    var totalTime = 15;
+    function updateClock() {
+        document.getElementById('countdown').innerHTML = totalTime;
+        if(totalTime > 0){
+            totalTime-=1;
+            setTimeout("updateClock()",1000);
+        }
+    }   
 </script>
 
 

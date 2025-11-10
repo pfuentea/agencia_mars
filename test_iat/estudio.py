@@ -406,6 +406,14 @@ def regresar(request):
 
 #Solo pasará por aca si es un dispositivo=desktop
 def instrucciones(request):
+
+    if True:
+        url="/estudio/test/d"
+        context = {    
+        "url":url,
+            }
+        return render(request, 'elecciones2025/instrucciones_desktop.html', context)
+
     if 'combinaciones_ok2' in request.session:
             print("existe 02")
     if 'combinaciones_ok3' in request.session:

@@ -194,6 +194,20 @@ def save_combinaciones(combis,test_id,user_id,analisis_id):
             index+=1
         print(f"Se guardaron {index} registros ")
 
+def sel_imagen(candidato):
+    if candidato=='jara':
+        return '5/jara_vejqmg.jpg'
+    if candidato=='kast':
+        return '6/kast_okt5we.jpg'
+    if candidato=='kaiser':
+        return '6/kaiser_ukmwuk.jpg'
+    if candidato=='meo':
+        return '5/meo_ppevxs.jpg'
+    if candidato=='matthei':
+        return '5/matthei_c8cxq3.jpg'
+    if candidato=='parisi':
+        return '5/parisi_hdgzzf.jpg'
+
 
 def get_combinaciones_elecciones2021(iat_id):
     iat=Test.objects.get(id=iat_id)
@@ -271,22 +285,22 @@ def get_combinaciones_elecciones2021(iat_id):
                         adj1 = Adjetivo.objects.get(id=adj[0][0])
                         dict_comb["adj1"]  = adj1.nombre
                         dict_comb["tadj1"] = tadj[0][0]
-                        dict_comb["img1"]  = adj1.nombre + ".JPG"
+                        dict_comb["img1"]  = sel_imagen(adj1.nombre)
                         dict_comb["pos"]   = pos
 
                         adj2 = Adjetivo.objects.get(id=adj[1][0])
                         dict_comb["adj2"]  = adj2.nombre
                         dict_comb["tadj2"] = tadj[1][0]
-                        dict_comb["img2"]  = adj2.nombre + ".JPG"
+                        dict_comb["img2"]  = sel_imagen(adj2.nombre)
                         pos += 1
 
                         # Invertida
                         dict_comb_2["adj1"]  = adj2.nombre
                         dict_comb_2["tadj1"] = tadj[1][0]
-                        dict_comb_2["img1"]  = adj2.nombre + ".JPG"
+                        dict_comb_2["img1"]  = sel_imagen(adj2.nombre)
                         dict_comb_2["adj2"]  = adj1.nombre
                         dict_comb_2["tadj2"] = tadj[0][0]
-                        dict_comb_2["img2"]  = adj1.nombre + ".JPG"
+                        dict_comb_2["img2"]  = sel_imagen(adj1.nombre)
                         dict_comb_2["pos"]   = pos
                         pos += 1
 
@@ -296,17 +310,17 @@ def get_combinaciones_elecciones2021(iat_id):
 
                         dict_comb["adj3"]  = adj3.nombre
                         dict_comb["tadj3"] = tadj[2][0]
-                        dict_comb["img3"]  = adj3.nombre + ".JPG"
+                        dict_comb["img3"]  = sel_imagen(adj3.nombre)
                         dict_comb["adj4"]  = adj4.nombre
                         dict_comb["tadj4"] = tadj[3][0]
-                        dict_comb["img4"]  = adj4.nombre + ".JPG"
+                        dict_comb["img4"]  = sel_imagen(adj4.nombre)
 
                         dict_comb_2["adj3"]  = adj4.nombre
                         dict_comb_2["tadj3"] = tadj[3][0]
-                        dict_comb_2["img3"]  = adj4.nombre + ".JPG"
+                        dict_comb_2["img3"]  = sel_imagen(adj4.nombre)
                         dict_comb_2["adj4"]  = adj3.nombre
                         dict_comb_2["tadj4"] = tadj[2][0]
-                        dict_comb_2["img4"]  = adj3.nombre + ".JPG"
+                        dict_comb_2["img4"]  = sel_imagen(adj3.nombre)
 
                     if max_adj >= 6:
                         adj5 = Adjetivo.objects.get(id=adj[4][0])
@@ -314,17 +328,17 @@ def get_combinaciones_elecciones2021(iat_id):
 
                         dict_comb["adj5"]  = adj5.nombre
                         dict_comb["tadj5"] = tadj[4][0]
-                        dict_comb["img5"]  = adj5.nombre + ".JPG"
+                        dict_comb["img5"]  = sel_imagen(adj5.nombre)
                         dict_comb["adj6"]  = adj6.nombre
                         dict_comb["tadj6"] = tadj[5][0]
-                        dict_comb["img6"]  = adj6.nombre + ".JPG"
+                        dict_comb["img6"]  = sel_imagen(adj6.nombre)
 
                         dict_comb_2["adj5"]  = adj6.nombre
                         dict_comb_2["tadj5"] = tadj[5][0]
-                        dict_comb_2["img5"]  = adj6.nombre + ".JPG"
+                        dict_comb_2["img5"]  = sel_imagen(adj6.nombre)
                         dict_comb_2["adj6"]  = adj5.nombre
                         dict_comb_2["tadj6"] = tadj[4][0]
-                        dict_comb_2["img6"]  = adj5.nombre + ".JPG"
+                        dict_comb_2["img6"]  = sel_imagen(adj5.nombre)
 
                     # Guardar copias finales (para evitar mutaciones posteriores)
                     c.append(dict_comb.copy())
