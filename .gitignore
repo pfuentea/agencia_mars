@@ -1,6 +1,6 @@
 **/*/__pycache__
 **/*/migrations
-**/*/static
+
 **/*/test_iat/__pycache__
 db.sqlite3
 agencia_mars/env.py
