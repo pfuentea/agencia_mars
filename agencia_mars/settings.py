@@ -25,11 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY='django-insecure-zxwcee_p8ylweop)r7t6i8^cz-7%x(gcm+w!2u--uzh9=f7zk0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost','agencia-mars-vvsjd.ondigitalocean.app']
 
-STATIC_ROOT=os.path.join(BASE_DIR,'static')
+#STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
 # Application definition
 
@@ -136,3 +136,4 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',   # por ejemplo: /project_root/static
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
