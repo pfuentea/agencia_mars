@@ -130,3 +130,9 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Carpeta(s) donde tienes tus estáticos de desarrollo (js, css, imágenes)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',   # por ejemplo: /project_root/static
+]
