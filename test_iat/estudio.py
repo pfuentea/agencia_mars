@@ -125,6 +125,11 @@ def respuesta_final_save(sondeo_id,respuesta_final):
     sondeo.respuesta_final= respuesta_final
     sondeo.save()
 
+def respuesta_inicial_save(sondeo_id,respuesta_inicial):
+    sondeo=Sondeo.objects.get(id=sondeo_id)
+    sondeo.respuesta_inicial= respuesta_inicial
+    sondeo.save()
+
 def get_faltantes(iat_id,user_id,analisis_id):
     iat=Test.objects.get(id=iat_id)
     user=User.objects.get(id=user_id)
@@ -296,13 +301,13 @@ def test(request,disp):
         if request.method == "POST" and request.session['pregunta_inicial']=="ingreso":
             #esto es cuando responde
             print(f"preg_init:{request.session['pregunta_inicial']}, POST!")
-            respuesta={
-                "milisegundos":request.POST['milisegundos'],
-                "combinacion_id":request.POST['combinacion'],
-                "analisis":request.POST['analisis'],
-                "opcion":request.POST['opcion'],
-            }
-            print(f"RESPUESTA:{respuesta}")
+            if request.POST['opcion']==1:
+                respuesta_inicial='kast'
+            else:
+                respuesta_inicial='jara'
+           
+            #guardo la respuesta de la pregunta final
+            respuesta_inicial_save(request.session['sondeo_id'],respuesta_inicial)  
             
             request.session['pregunta_inicial']="respondio"
             return  render(request, 'elecciones2025/pregunta_inicial.html', context)
