@@ -77,44 +77,34 @@
     <div class="mobile" id="mobile">
         <a href="/estudio/test/m" class="btn btn-sm btn-primary">Estamos listos!</a>
     </div>
+
     <div class="tablet" id="tablet">
         <a href="/estudio/test/t" class="btn btn-sm btn-primary">Estamos listos!</a>
     </div>
+
     <div class="desktop" id="desktop">
         <a href="/estudio/instrucciones" class="btn btn-sm btn-primary">Estamos listos!</a>
     </div>
     <style>
-        .mobile{
+        .mobile,
+        .tablet,
+        .desktop {
             display: none;
         }
-        .tablet{
-            display: none;
+
+        /* 📱 Mobile: hasta 600px */
+        @media (max-width: 600px) {
+            .mobile { display: inline-block; }
         }
-        .desktop{
-            display: inline-block;
+
+        /* 📱📟 Tablet: entre 601px y 1100px */
+        @media (min-width: 601px) and (max-width: 1100px) {
+            .tablet { display: inline-block; }
         }
-        
-        @media only screen and (max-width: 1100px){
-            .mobile{
-                display: none;
-            }
-            .tablet{
-                display: inline-block;
-            }
-            .desktop{
-                display: none;
-            }            
-        }
-        @media only screen and (max-width: 600px){
-            .mobile{
-                display: inline-block;
-            }
-            .tablet{
-                display: none;
-            }
-            .desktop{
-                display: none;
-            }            
+
+        /* 🖥️ Desktop: desde 1101px en adelante */
+        @media (min-width: 1101px) {
+            .desktop { display: inline-block; }
         }
     </style>
     {% endif %}

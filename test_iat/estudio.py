@@ -218,6 +218,7 @@ def start(request,iat_id):
         request.session['analisis']=1
         #combis=get_combinaciones_analisis01(iat_id)
         combis=get_combinaciones_elecciones2021(iat_id)
+        #el 1 es para analisis_id
         save_combinaciones(combis,iat_id,request.session['user']['id'],1)
         #revisamos si esta disponible el sondeo
         sondeos=Sondeo.objects.filter(test=iat, participante=user)
@@ -279,6 +280,37 @@ def test(request,disp):
     user=User.objects.get(id=request.session['user']['id'])
     #print(f"S-id:{s_id}")
     request.session['disp']=disp
+    context={
+        "dispositivo":disp,
+    }
+    request.session.pop('pregunta_inicial')
+
+    print("TEST")
+
+    if 'pregunta_inicial' not in request.session: #si es primera vez que pasa por aqui
+        print("preg_init=>ingreso")
+        request.session['pregunta_inicial']="ingreso"        
+        return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+    else: #si ya paso por aqui, porque esta respondiendo o porque recargo
+        print(f"preg_init:{request.session['pregunta_inicial']}")
+        if request.method == "POST" and request.session['pregunta_inicial']=="ingreso":
+            #esto es cuando responde
+            print(f"preg_init:{request.session['pregunta_inicial']}, POST!")
+            respuesta={
+                "milisegundos":request.POST['milisegundos'],
+                "combinacion_id":request.POST['combinacion'],
+                "analisis":request.POST['analisis'],
+                "opcion":request.POST['opcion'],
+            }
+            print(f"RESPUESTA:{respuesta}")
+            
+            request.session['pregunta_inicial']="respondio"
+            return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+        else:
+            #esto es cuando recarga sin responder aun
+            print("refresh")
+            return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+    
 
     if request.method == "POST":
         # recibo la respuesta

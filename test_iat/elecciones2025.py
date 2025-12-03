@@ -378,8 +378,39 @@ def elecciones_test(request,disp):
     iat=Test.objects.get(id=request.session['iat_id'])
     user=User.objects.get(id=request.session['user']['id'])
     #print(f"S-id:{s_id}")
+    context={
+        "dispositivo":disp,
+    }
+    #request.session.pop('pregunta_inicial')
 
-    if request.method == "POST":
+    print("TEST")
+
+    if 'pregunta_inicial' not in request.session: #si es primera vez que pasa por aqui
+        print("preg_init=>ingreso")
+        request.session['pregunta_inicial']="ingreso"        
+        return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+    else: #si ya paso por aqui, porque esta respondiendo o porque recargo
+        print(f"preg_init:{request.session['pregunta_inicial']}")
+        if request.method == "POST" and request.session['pregunta_inicial']=="ingreso":
+            #esto es cuando responde
+            print(f"preg_init:{request.session['pregunta_inicial']}, POST!")
+            respuesta={
+                "milisegundos":request.POST['milisegundos'],
+                "combinacion_id":request.POST['combinacion'],
+                "analisis":request.POST['analisis'],
+                "opcion":request.POST['opcion'],
+            }
+            print(f"RESPUESTA:{respuesta}")
+            
+            
+            #return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+        elif request.method == "GET":
+            #esto es cuando recarga sin responder aun
+            print("refresh")
+            return  render(request, 'elecciones2025/pregunta_inicial.html', context)
+
+    if request.method == "POST" and request.session['pregunta_inicial']=="respondio":
+        
         # recibo la respuesta
         milisegundos=request.POST['milisegundos']
         combinacion_id=request.POST['combinacion']
@@ -409,7 +440,9 @@ def elecciones_test(request,disp):
 
     #preguntamos si quedan preguntas(combinaciones) por responder
     #llenamos con las preguntas que faltan responder
+    request.session['pregunta_inicial']="respondio"
     faltantes=[]
+    print("Obteniedo faltantes...")
     faltantes=get_faltantes(iat.id,user.id,1)
     print(f"Largo analisis01:{len(faltantes)}")
     
