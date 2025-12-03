@@ -381,7 +381,7 @@ def elecciones_test(request,disp):
     context={
         "dispositivo":disp,
     }
-    #request.session.pop('pregunta_inicial')
+    request.session.pop('pregunta_inicial')
 
     print("TEST")
 
