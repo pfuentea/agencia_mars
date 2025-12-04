@@ -288,7 +288,9 @@ def test(request,disp):
     context={
         "dispositivo":disp,
     }
-    request.session.pop('pregunta_inicial')
+
+    if 'pregunta_inicial' in request.session:
+        request.session.pop('pregunta_inicial')
 
     print("TEST")
 
